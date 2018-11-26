@@ -1,0 +1,16 @@
+#config
+unhealthydying.config.title=Unhealthy Dying Config
+
+configgui.unhealthydying.general.minimumHealth=Minimum amount of health the player can end up with (2 = 1 heart) [default: 2]
+configgui.unhealthydying.general.healthPerDeath=The amount of health taken from the player upon death (2 = 1 heart) [default: 2]
+configgui.unhealthydying.general.reducedHealthMessage=When set to true it notifies the player about their new max health when they respawn [default: true]
+
+configgui.unhealthydying.regen.regenHealth=When set to true allows you to gain back health upon killing set target(s) [default: false]
+configgui.unhealthydying.regen.healthPerKill=The amount of health given back to the player upon killing set target (2 = 1 heart) [default: 2]
+configgui.unhealthydying.regen.maxRegen=The amount of max health the player can get from killing the target(s) (20 = 10 hearts) [default: 20]
+configgui.unhealthydying.regen.regennedHealthMessage=When set to true it notifies the player about their new max health when they respawn [default: true]
+configgui.unhealthydying.regen.regenTargets=Adding lines / removing lines specifies which mobs will cause the players to regen max health
+
+#Message
+unhealthydying:reducedHealth.message=Your max health has been reduced to %s.
+unhealthydying:regennedHealth.message=Your max health has been increased back to %s.
