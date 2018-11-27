@@ -7,7 +7,6 @@ import com.Mrbysco.UnhealthyDying.util.UnhealthyHelper;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -48,17 +47,22 @@ public class EasterEgg {
 								}
 							    else
 							    {
-							    	int oldMaxHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
-									int healthPlusKill = oldMaxHealth + healthPerKill;
-									int newMaxHealth = healthPlusKill >= maxRegained ? maxRegained : healthPlusKill;
-									
-									data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
-									playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-									UnhealthyHelper.setHealth(player, newMaxHealth, true);
-
-									if(DyingConfigGen.regen.regennedHealthMessage)
-									{
-										player.sendStatusMessage(new TextComponentTranslation("unhealthydying:regennedHealth.message", new Object[newMaxHealth]), true);
+							    	switch (DyingConfigGen.general.HealthSetting) {
+									case EVERYBODY:
+										UnhealthyHelper.setEveryonesHealth(player, true);
+										break;
+									case SEPERATE:
+										UnhealthyHelper.SetThatHealth(player, true);
+										break;
+									case SCOREBOARD_TEAM:
+										UnhealthyHelper.setScoreboardHealth(player, true);
+										break;
+									case FTB_TEAMS:
+										UnhealthyHelper.teamHealth(player, true);
+										break;
+									default:
+										UnhealthyHelper.SetThatHealth(player, true);
+										break;
 									}
 							    }
 						    }

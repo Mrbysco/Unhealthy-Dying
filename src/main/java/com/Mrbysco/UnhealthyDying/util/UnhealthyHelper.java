@@ -1,13 +1,24 @@
 package com.Mrbysco.UnhealthyDying.util;
 
+import com.Mrbysco.UnhealthyDying.Reference;
+import com.Mrbysco.UnhealthyDying.UnhealthyDying;
 import com.Mrbysco.UnhealthyDying.config.DyingConfigGen;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 
 public class UnhealthyHelper {
+	/**
+	 * Sets the players health and maxHealth.
+	 */
 	public static void setHealth(EntityPlayer entity, int maxHealth, boolean regained) {
         entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)maxHealth);
         if(regained)
@@ -21,6 +32,9 @@ public class UnhealthyHelper {
         }
 	}
 	
+	/**
+	 * Sets the players health and maxHealth.
+	 */
 	public static void setHealth(EntityPlayer entity, double maxHealth, boolean regained) {
         entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(maxHealth);
         if(regained)
@@ -33,7 +47,19 @@ public class UnhealthyHelper {
             entity.setHealth((int)maxHealth);
         }
 	}
+
+	/**
+	 * Sets the players Max Health only.
+	 */
+	public static void setMaxHealth(EntityPlayer entity, int maxHealth) {
+        entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)maxHealth);
+        int entityHealth = (int)entity.getHealth();
+        entity.setHealth(entityHealth);
+	}
 	
+	/**
+	 * Returns a proper ResourceLocation for the given String.
+	 */
 	public static ResourceLocation getEntityLocation(String name)
 	{
 		String[] splitResource = name.split(":");
@@ -48,5 +74,154 @@ public class UnhealthyHelper {
 			return new NBTTagCompound();
 		}
 		return tag.getCompoundTag(key);
+	}
+	
+	
+	@Optional.Method(modid = "ftblib")
+	public static void teamHealth(EntityPlayer player, boolean regained)
+	{
+		World world = player.world;
+		String team = com.feed_the_beast.ftblib.lib.data.FTBLibAPI.getTeam(player.getUniqueID());
+		if(!team.isEmpty())
+		{
+			for(EntityPlayer players : world.playerEntities)
+			{
+				if(players.equals(player))
+					SetThatHealth(player, regained);
+				else
+				{
+					if(com.feed_the_beast.ftblib.lib.data.FTBLibAPI.isPlayerInTeam(player.getOfflineUUID(players.getName()), team))
+					{
+						SetThatMaxHealth(players, regained);
+					}
+				}
+			}
+		}
+	}
+	
+	public static void setEveryonesHealth(EntityPlayer player, boolean regained)
+	{
+		for(EntityPlayer players : player.world.playerEntities)
+		{
+			if(players.equals(player))
+				SetThatHealth(player, regained);
+			else
+				SetThatMaxHealth(players, regained);
+		}
+	}
+	
+	public static void setScoreboardHealth(EntityPlayer player, boolean regained)
+	{
+		World world = player.world;
+		if(player.getTeam() != null)
+		{
+			Team team = player.getTeam();
+			for(EntityPlayer players : world.playerEntities)
+			{
+				if(players.equals(player))
+					SetThatHealth(player, regained);
+				else
+				{
+					if(players.isOnScoreboardTeam(team))
+					{
+						SetThatMaxHealth(players, regained);
+					}
+				}
+			}
+		}
+		else
+		{
+			UnhealthyDying.logger.error(player.getName() + " is not in a team");
+		}
+	}
+	
+	public static void SetThatHealth(EntityPlayer player, boolean regained)
+	{
+		NBTTagCompound playerData = player.getEntityData();
+		NBTTagCompound data = getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
+
+	    int maxRegained = DyingConfigGen.regen.maxRegenned;
+	    int healthPerDeath = DyingConfigGen.general.healthPerDeath;
+	    int healthPerKill = DyingConfigGen.regen.healthPerKill;
+	    
+		int oldMaxHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
+
+		if(regained)
+		{
+			int healthPlusKill = oldMaxHealth + healthPerKill;
+			int newMaxHealth = healthPlusKill >= maxRegained ? maxRegained : healthPlusKill;
+
+			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
+			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+			setHealth(player, newMaxHealth, true);
+
+			if(DyingConfigGen.regen.regennedHealthMessage)
+			{
+				ITextComponent text = new TextComponentTranslation("unhealthydying:regennedHealth.message", new Object[] {newMaxHealth});
+				text.getStyle().setColor(TextFormatting.DARK_GREEN);
+				player.sendStatusMessage(text, true);
+			}
+		}
+		else
+		{
+			int healthMinusDeath = oldMaxHealth - healthPerDeath;
+			int newMaxHealth = healthMinusDeath <= DyingConfigGen.general.minimumHealth ? DyingConfigGen.general.minimumHealth : healthMinusDeath;
+
+			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
+			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+			setHealth(player, newMaxHealth, false);
+			
+			if(DyingConfigGen.general.reducedHealthMessage)
+			{
+				ITextComponent text = new TextComponentTranslation("unhealthydying:reducedHealth.message", new Object[] {newMaxHealth});
+				text.getStyle().setColor(TextFormatting.DARK_RED);
+				player.sendStatusMessage(text, true);
+			}
+		}
+	}
+	
+	public static void SetThatMaxHealth(EntityPlayer player, boolean regained)
+	{
+		NBTTagCompound playerData = player.getEntityData();
+		NBTTagCompound data = getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
+
+	    int maxRegained = DyingConfigGen.regen.maxRegenned;
+	    int healthPerDeath = DyingConfigGen.general.healthPerDeath;
+	    int healthPerKill = DyingConfigGen.regen.healthPerKill;
+	    
+		int oldMaxHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
+
+		if(regained)
+		{
+			int healthPlusKill = oldMaxHealth + healthPerKill;
+			int newMaxHealth = healthPlusKill >= maxRegained ? maxRegained : healthPlusKill;
+
+			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
+			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+			setMaxHealth(player, newMaxHealth);
+
+			if(DyingConfigGen.regen.regennedHealthMessage)
+			{
+				ITextComponent text = new TextComponentTranslation("unhealthydying:regennedHealth.message", new Object[] {newMaxHealth});
+				text.getStyle().setColor(TextFormatting.DARK_GREEN);
+				player.sendStatusMessage(text, true);
+			}
+		}
+		else
+		{
+			int healthMinusDeath = oldMaxHealth - healthPerDeath;
+			int newMaxHealth = healthMinusDeath <= DyingConfigGen.general.minimumHealth ? DyingConfigGen.general.minimumHealth : healthMinusDeath;
+
+			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
+			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+			setMaxHealth(player, newMaxHealth);
+			
+			if(DyingConfigGen.general.reducedHealthMessage)
+			{
+				ITextComponent text = new TextComponentTranslation("unhealthydying:reducedHealth.message", new Object[] {newMaxHealth});
+				text.getStyle().setColor(TextFormatting.DARK_RED);
+				player.sendStatusMessage(text, true);
+			}
+		}
 	}
 }

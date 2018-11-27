@@ -7,7 +7,6 @@ import com.Mrbysco.UnhealthyDying.util.UnhealthyHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
@@ -55,17 +54,22 @@ public class HealthHandler {
 			}
 			else
 			{
-				int oldMaxHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
-				int healthMinusDeath = oldMaxHealth - DyingConfigGen.general.healthPerDeath;
-				int newMaxHealth = healthMinusDeath <= DyingConfigGen.general.minimumHealth ? DyingConfigGen.general.minimumHealth : healthMinusDeath;
-				
-				data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
-				playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-				UnhealthyHelper.setHealth(player, newMaxHealth, false);
-				
-				if(DyingConfigGen.general.reducedHealthMessage)
-				{
-					player.sendStatusMessage(new TextComponentTranslation("unhealthydying:reducedHealth.message", new Object[newMaxHealth]), true);
+				switch (DyingConfigGen.general.HealthSetting) {
+				case EVERYBODY:
+					UnhealthyHelper.setEveryonesHealth(player, false);
+					break;
+				case SEPERATE:
+					UnhealthyHelper.SetThatHealth(player, false);
+					break;
+				case SCOREBOARD_TEAM:
+					UnhealthyHelper.setScoreboardHealth(player, false);
+					break;
+				case FTB_TEAMS:
+					UnhealthyHelper.teamHealth(player, false);
+					break;
+				default:
+					UnhealthyHelper.SetThatHealth(player, false);
+					break;
 				}
 			}
 		}
