@@ -45,10 +45,6 @@ public class DyingConfigGen {
 	public static class Regen{
 		@Config.Comment("When set to true allows you to gain back health upon killing set target(s) [default: false]")
 		public boolean regenHealth = false;
-
-		@Config.Comment("The amount of health given back to the player upon killing set target (2 = 1 heart) [default: 2]")
-		@Config.RangeInt(min = 1, max = 20)
-		public int healthPerKill = 2;
 		
 		@Config.Comment("The amount of max health the player can get from killing the target(s) (20 = 10 hearts) [default: 20]")
 		@Config.RangeInt(min = 1)
@@ -57,10 +53,14 @@ public class DyingConfigGen {
 		@Config.Comment("When set to true it notifies the player about their new max health when they respawn [default: true]")
 		public boolean regennedHealthMessage = true;
 		
-		@Config.Comment("Adding lines / removing lines specifies which mobs will cause the players to regen max health")
+		@Config.Comment({"Adding lines / removing lines specifies which mobs will cause the players to regen max health",
+				"Syntax: modid:mobname,healthRegenned,amount",
+				"For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart",
+				"While [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart"})
 		public String[] regenTargets = new String[]
 				{
-						"minecraft:ender_dragon"
+						"minecraft:ender_dragon,4,1",
+						"minecraft:wither,2,1"
 				};
 	}
 	

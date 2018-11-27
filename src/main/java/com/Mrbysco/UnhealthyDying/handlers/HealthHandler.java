@@ -48,7 +48,7 @@ public class HealthHandler {
 					{
 						data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)playerHealth);
 						playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-						UnhealthyHelper.setHealth(player, playerHealth, false);
+						UnhealthyHelper.setHealth(player, playerHealth, false, -1);
 					}
 				}
 			}
@@ -56,19 +56,19 @@ public class HealthHandler {
 			{
 				switch (DyingConfigGen.general.HealthSetting) {
 				case EVERYBODY:
-					UnhealthyHelper.setEveryonesHealth(player, false);
+					UnhealthyHelper.setEveryonesHealth(player, false, -1);
 					break;
 				case SEPERATE:
-					UnhealthyHelper.SetThatHealth(player, false);
+					UnhealthyHelper.SetThatHealth(player, false, -1);
 					break;
 				case SCOREBOARD_TEAM:
-					UnhealthyHelper.setScoreboardHealth(player, false);
+					UnhealthyHelper.setScoreboardHealth(player, false, -1);
 					break;
 				case FTB_TEAMS:
-					UnhealthyHelper.teamHealth(player, false);
+					UnhealthyHelper.teamHealth(player, false, -1);
 					break;
 				default:
-					UnhealthyHelper.SetThatHealth(player, false);
+					UnhealthyHelper.SetThatHealth(player, false, -1);
 					break;
 				}
 			}

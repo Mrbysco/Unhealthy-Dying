@@ -19,11 +19,11 @@ public class UnhealthyHelper {
 	/**
 	 * Sets the players health and maxHealth.
 	 */
-	public static void setHealth(EntityPlayer entity, int maxHealth, boolean regained) {
+	public static void setHealth(EntityPlayer entity, int maxHealth, boolean regained, int healthGained) {
         entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)maxHealth);
         if(regained)
         {
-        	int entityHealth = (int)entity.getHealth() + DyingConfigGen.regen.healthPerKill;
+        	int entityHealth = (int)entity.getHealth() + healthGained;
             entity.setHealth(entityHealth);
         }
         else
@@ -35,11 +35,11 @@ public class UnhealthyHelper {
 	/**
 	 * Sets the players health and maxHealth.
 	 */
-	public static void setHealth(EntityPlayer entity, double maxHealth, boolean regained) {
+	public static void setHealth(EntityPlayer entity, double maxHealth, boolean regained, int healthGained) {
         entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(maxHealth);
         if(regained)
         {
-        	int entityHealth = (int)entity.getHealth() + DyingConfigGen.regen.healthPerKill;
+        	int entityHealth = (int)entity.getHealth() + healthGained;
             entity.setHealth(entityHealth);
         }
         else
@@ -78,7 +78,7 @@ public class UnhealthyHelper {
 	
 	
 	@Optional.Method(modid = "ftblib")
-	public static void teamHealth(EntityPlayer player, boolean regained)
+	public static void teamHealth(EntityPlayer player, boolean regained, int healthGained)
 	{
 		World world = player.world;
 		String team = com.feed_the_beast.ftblib.lib.data.FTBLibAPI.getTeam(player.getUniqueID());
@@ -87,30 +87,30 @@ public class UnhealthyHelper {
 			for(EntityPlayer players : world.playerEntities)
 			{
 				if(players.equals(player))
-					SetThatHealth(player, regained);
+					SetThatHealth(player, regained, healthGained);
 				else
 				{
 					if(com.feed_the_beast.ftblib.lib.data.FTBLibAPI.isPlayerInTeam(player.getOfflineUUID(players.getName()), team))
 					{
-						SetThatMaxHealth(players, regained);
+						SetThatMaxHealth(players, regained, healthGained);
 					}
 				}
 			}
 		}
 	}
 	
-	public static void setEveryonesHealth(EntityPlayer player, boolean regained)
+	public static void setEveryonesHealth(EntityPlayer player, boolean regained, int healthGained)
 	{
 		for(EntityPlayer players : player.world.playerEntities)
 		{
 			if(players.equals(player))
-				SetThatHealth(player, regained);
+				SetThatHealth(player, regained, healthGained);
 			else
-				SetThatMaxHealth(players, regained);
+				SetThatMaxHealth(players, regained, healthGained);
 		}
 	}
 	
-	public static void setScoreboardHealth(EntityPlayer player, boolean regained)
+	public static void setScoreboardHealth(EntityPlayer player, boolean regained, int healthGained)
 	{
 		World world = player.world;
 		if(player.getTeam() != null)
@@ -119,12 +119,12 @@ public class UnhealthyHelper {
 			for(EntityPlayer players : world.playerEntities)
 			{
 				if(players.equals(player))
-					SetThatHealth(player, regained);
+					SetThatHealth(player, regained, healthGained);
 				else
 				{
 					if(players.isOnScoreboardTeam(team))
 					{
-						SetThatMaxHealth(players, regained);
+						SetThatMaxHealth(players, regained, healthGained);
 					}
 				}
 			}
@@ -135,25 +135,24 @@ public class UnhealthyHelper {
 		}
 	}
 	
-	public static void SetThatHealth(EntityPlayer player, boolean regained)
+	public static void SetThatHealth(EntityPlayer player, boolean regained, int healthGained)
 	{
 		NBTTagCompound playerData = player.getEntityData();
 		NBTTagCompound data = getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
 
 	    int maxRegained = DyingConfigGen.regen.maxRegenned;
 	    int healthPerDeath = DyingConfigGen.general.healthPerDeath;
-	    int healthPerKill = DyingConfigGen.regen.healthPerKill;
 	    
 		int oldMaxHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
-
+		
 		if(regained)
 		{
-			int healthPlusKill = oldMaxHealth + healthPerKill;
+			int healthPlusKill = oldMaxHealth + healthGained;
 			int newMaxHealth = healthPlusKill >= maxRegained ? maxRegained : healthPlusKill;
-
+			
 			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
 			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-			setHealth(player, newMaxHealth, true);
+			setHealth(player, newMaxHealth, true, healthGained);
 
 			if(DyingConfigGen.regen.regennedHealthMessage)
 			{
@@ -166,10 +165,9 @@ public class UnhealthyHelper {
 		{
 			int healthMinusDeath = oldMaxHealth - healthPerDeath;
 			int newMaxHealth = healthMinusDeath <= DyingConfigGen.general.minimumHealth ? DyingConfigGen.general.minimumHealth : healthMinusDeath;
-
 			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
 			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-			setHealth(player, newMaxHealth, false);
+			setHealth(player, newMaxHealth, false, -1);
 			
 			if(DyingConfigGen.general.reducedHealthMessage)
 			{
@@ -180,20 +178,19 @@ public class UnhealthyHelper {
 		}
 	}
 	
-	public static void SetThatMaxHealth(EntityPlayer player, boolean regained)
+	public static void SetThatMaxHealth(EntityPlayer player, boolean regained, int healthGained)
 	{
 		NBTTagCompound playerData = player.getEntityData();
 		NBTTagCompound data = getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
 
 	    int maxRegained = DyingConfigGen.regen.maxRegenned;
 	    int healthPerDeath = DyingConfigGen.general.healthPerDeath;
-	    int healthPerKill = DyingConfigGen.regen.healthPerKill;
 	    
 		int oldMaxHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
 
 		if(regained)
 		{
-			int healthPlusKill = oldMaxHealth + healthPerKill;
+			int healthPlusKill = oldMaxHealth + healthGained;
 			int newMaxHealth = healthPlusKill >= maxRegained ? maxRegained : healthPlusKill;
 
 			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
