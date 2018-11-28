@@ -221,4 +221,16 @@ public class UnhealthyHelper {
 			}
 		}
 	}
+	
+	public static void SyncHealth(EntityPlayer player)
+	{
+		NBTTagCompound playerData = player.getEntityData();
+		NBTTagCompound data = getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
+	    
+		int oldMaxHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
+
+		data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)oldMaxHealth);
+		playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+		setMaxHealth(player, oldMaxHealth);
+	}
 }

@@ -8,6 +8,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
@@ -73,5 +74,17 @@ public class HealthHandler {
 				}
 			}
 		}
+		else
+		{
+			//Sync health
+			UnhealthyHelper.SyncHealth(event.player);
+		}
+	}
+	
+	@SubscribeEvent
+	public void DimensionChange(PlayerChangedDimensionEvent event)
+	{
+		//Sync health
+		UnhealthyHelper.SyncHealth(event.player);
 	}
 }
