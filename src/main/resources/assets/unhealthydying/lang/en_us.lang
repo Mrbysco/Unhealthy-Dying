@@ -9,7 +9,7 @@ configgui.unhealthydying.general.HealthSetting.tooltip=Decides if the reduced he
 configgui.unhealthydying.regen.regenHealth.tooltip=When set to true allows you to gain back health upon killing set target(s) [default: false]
 configgui.unhealthydying.regen.maxRegen.tooltip=The amount of max health the player can get from killing the target(s) (20 = 10 hearts) [default: 20]
 configgui.unhealthydying.regen.regennedHealthMessage.tooltip=When set to true it notifies the player about their new max health when they respawn [default: true]
-configgui.unhealthydying.regen.regenTargets.tooltip=Adding lines / removing lines specifies which mobs will cause the players to regen max health, Syntax: modid:mobname,healthRegenned,amount. For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart. While [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart
+configgui.unhealthydying.regen.regenTargets.tooltip=Adding lines / removing lines specifies which mobs will cause the players to regen max health, \nSyntax: modid:mobname,healthRegenned,amount. For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart. \nWhile [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart
 
 #Message
 unhealthydying:reducedHealth.message=§cYour max health has been reduced to %s.§r
