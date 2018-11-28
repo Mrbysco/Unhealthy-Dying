@@ -1,16 +1,15 @@
 #config
 unhealthydying.config.title=Unhealthy Dying Config
 
-configgui.unhealthydying.general.minimumHealth=Минимальное количество здоровья, которое игрок может получить (2 = 1 сердце) [default: 2]
-configgui.unhealthydying.general.healthPerDeath=Количество здоровья, взятого у игрока после смерти (2 = 1 сердце) [default: 2]
-configgui.unhealthydying.general.reducedHealthMessage=Когда установлено значение true, он уведомляет игрока об \nих новом максимальном здоровье, когда они появляются [default: true]
-configgui.unhealthydying.general.HealthSetting=Решает, является ли снижение здоровья на игрока, для всех, \nна команду или на команду FTB (работает только при установке FTBUtils) [default: true]
+configgui.unhealthydying.general.minimumHealth.tooltip=Минимальное количество здоровья, которое игрок может получить (2 = 1 сердце) [default: 2]
+configgui.unhealthydying.general.healthPerDeath.tooltip=Количество здоровья, взятого у игрока после смерти (2 = 1 сердце) [default: 2]
+configgui.unhealthydying.general.reducedHealthMessage.tooltip=Когда установлено значение true, он уведомляет игрока об их новом максимальном здоровье, когда они появляются [default: true]
+configgui.unhealthydying.general.HealthSetting.tooltip=Решает, является ли снижение здоровья на игрока, для всех, на команду или на команду FTB (работает только при установке FTBUtils) [default: true]
 
-configgui.unhealthydying.regen.regenHealth=Если установлено значение true, вы можете восстановить здоровье \nпосле убийства заданных целей [default: false]
-configgui.unhealthydying.regen.healthPerKill=Количество здоровья, возвращаемого игроку \nпосле убийства заданной цели (2 = 1 сердце) [default: 2]
-configgui.unhealthydying.regen.maxRegen=Максимальное количество здоровья, которое игрок может получить от \nубийства цели (20 = 10 сердец) [default: 20]
-configgui.unhealthydying.regen.regennedHealthMessage=Когда установлено значение true, он уведомляет игрока \nоб их новом максимальном здоровье, когда они появляются [default: true]
-configgui.unhealthydying.regen.regenTargets=Добавление линий / удаление линий указывает, какие мобы \nзаставят игроков восстановить максимальное здоровье
+configgui.unhealthydying.regen.regenHealth.tooltip=Если установлено значение true, вы можете восстановить здоровье после убийства заданных целей [default: false]
+configgui.unhealthydying.regen.maxRegen.tooltip=Максимальное количество здоровья, которое игрок может получить от убийства цели (20 = 10 сердец) [default: 20]
+configgui.unhealthydying.regen.regennedHealthMessage.tooltip=Когда установлено значение true, он уведомляет игрока об их новом максимальном здоровье, когда они появляются [default: true]
+configgui.unhealthydying.regen.regenTargets.tooltip=Adding lines / removing lines specifies which mobs will cause the players to regen max health, Syntax: modid:mobname,healthRegenned,amount. For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart. While [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart
 
 #Message
 unhealthydying:reducedHealth.message=§cВаше максимальное здоровье уменьшено до %s.§r

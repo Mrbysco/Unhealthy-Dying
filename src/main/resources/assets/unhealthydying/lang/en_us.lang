@@ -1,16 +1,15 @@
 #config
 unhealthydying.config.title=Unhealthy Dying Config
 
-configgui.unhealthydying.general.minimumHealth=Minimum amount of health the player can end up with (2 = 1 heart) [default: 2]
-configgui.unhealthydying.general.healthPerDeath=The amount of health taken from the player upon death (2 = 1 heart) [default: 2]
-configgui.unhealthydying.general.reducedHealthMessage=When set to true it notifies the player about \ntheir new max health when they respawn [default: true]
-configgui.unhealthydying.general.HealthSetting=Decides if the reduced health is per player, for everybody, \nper team or per FTB Team (Only works when FTBUtils is installed) [default: true]
+configgui.unhealthydying.general.minimumHealth.tooltip=Minimum amount of health the player can end up with (2 = 1 heart) [default: 2]
+configgui.unhealthydying.general.healthPerDeath.tooltip=The amount of health taken from the player upon death (2 = 1 heart) [default: 2]
+configgui.unhealthydying.general.reducedHealthMessage.tooltip=When set to true it notifies the player about their new max health when they respawn [default: true]
+configgui.unhealthydying.general.HealthSetting.tooltip=Decides if the reduced health is per player, for everybody, per team or per FTB Team (Only works when FTBUtils is installed) [default: true]
 
-configgui.unhealthydying.regen.regenHealth=When set to true allows you to gain back health \nupon killing set target(s) [default: false]
-configgui.unhealthydying.regen.healthPerKill=The amount of health given back to the player \nupon killing set target (2 = 1 heart) [default: 2]
-configgui.unhealthydying.regen.maxRegen=The amount of max health the player can get from \nkilling the target(s) (20 = 10 hearts) [default: 20]
-configgui.unhealthydying.regen.regennedHealthMessage=When set to true it notifies the player \nabout their new max health when they respawn [default: true]
-configgui.unhealthydying.regen.regenTargets=Adding lines / removing lines specifies which mobs \nwill cause the players to regen max health
+configgui.unhealthydying.regen.regenHealth.tooltip=When set to true allows you to gain back health upon killing set target(s) [default: false]
+configgui.unhealthydying.regen.maxRegen.tooltip=The amount of max health the player can get from killing the target(s) (20 = 10 hearts) [default: 20]
+configgui.unhealthydying.regen.regennedHealthMessage.tooltip=When set to true it notifies the player about their new max health when they respawn [default: true]
+configgui.unhealthydying.regen.regenTargets.tooltip=Adding lines / removing lines specifies which mobs will cause the players to regen max health, Syntax: modid:mobname,healthRegenned,amount. For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart. While [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart
 
 #Message
 unhealthydying:reducedHealth.message=§cYour max health has been reduced to %s.§r
