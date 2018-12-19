@@ -14,3 +14,10 @@ configgui.unhealthydying.regen.regenTargets.tooltip=Adding lines / removing line
 #Message
 unhealthydying:reducedHealth.message=§cYour max health has been reduced to %s.§r
 unhealthydying:regennedHealth.message=§aYour max health has been increased back to %s.§r
+unhealthydying:sethealth.message=§aYour max health has set to %s.§r
+
+#Commands
+commands.unhealthydying.usage=/unhealthydying
+commands.unhealthydying.sethearts.usage=/unhealthydying sethearts [player] <amount>
+commands.unhealthydying.sethearts.invalid.number=Unable to set health because %s is not a valid amount
+commands.unhealthydying.sethearts.success=Set %s 's max health to %s

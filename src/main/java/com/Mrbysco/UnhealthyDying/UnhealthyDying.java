@@ -3,6 +3,7 @@ package com.Mrbysco.UnhealthyDying;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.Mrbysco.UnhealthyDying.commands.CommandUDTree;
 import com.Mrbysco.UnhealthyDying.handlers.EasterEgg;
 import com.Mrbysco.UnhealthyDying.handlers.HealthHandler;
 import com.Mrbysco.UnhealthyDying.proxy.CommonProxy;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 @Mod(modid = Reference.MOD_ID, 
 	name = Reference.MOD_NAME, 
@@ -53,5 +55,11 @@ public class UnhealthyDying {
     public void postInit(FMLPostInitializationEvent event)
     {
 		proxy.PostInit();
+    }
+	
+	@EventHandler
+	public void serverStarting(FMLServerStartingEvent event)
+    {
+		event.registerServerCommand(new CommandUDTree());
     }
 }
