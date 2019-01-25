@@ -1,8 +1,8 @@
-package com.Mrbysco.UnhealthyDying.util;
+package com.mrbysco.unhealthydying.util;
 
-import com.Mrbysco.UnhealthyDying.Reference;
-import com.Mrbysco.UnhealthyDying.UnhealthyDying;
-import com.Mrbysco.UnhealthyDying.config.DyingConfigGen;
+import com.mrbysco.unhealthydying.Reference;
+import com.mrbysco.unhealthydying.UnhealthyDying;
+import com.mrbysco.unhealthydying.config.DyingConfigGen;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;

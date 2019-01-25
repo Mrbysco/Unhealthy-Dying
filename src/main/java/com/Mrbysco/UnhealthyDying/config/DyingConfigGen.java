@@ -1,6 +1,6 @@
-package com.Mrbysco.UnhealthyDying.config;
+package com.mrbysco.unhealthydying.config;
 
-import com.Mrbysco.UnhealthyDying.Reference;
+import com.mrbysco.unhealthydying.Reference;
 
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;

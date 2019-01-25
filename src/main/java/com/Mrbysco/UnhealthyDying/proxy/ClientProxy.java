@@ -1,4 +1,4 @@
-package com.Mrbysco.UnhealthyDying.proxy;
+package com.mrbysco.unhealthydying.proxy;
 
 public class ClientProxy extends CommonProxy{
 	@Override

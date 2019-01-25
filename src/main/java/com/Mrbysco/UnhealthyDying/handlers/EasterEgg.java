@@ -1,9 +1,9 @@
-package com.Mrbysco.UnhealthyDying.handlers;
+package com.mrbysco.unhealthydying.handlers;
 
-import com.Mrbysco.UnhealthyDying.Reference;
-import com.Mrbysco.UnhealthyDying.UnhealthyDying;
-import com.Mrbysco.UnhealthyDying.config.DyingConfigGen;
-import com.Mrbysco.UnhealthyDying.util.UnhealthyHelper;
+import com.mrbysco.unhealthydying.Reference;
+import com.mrbysco.unhealthydying.UnhealthyDying;
+import com.mrbysco.unhealthydying.config.DyingConfigGen;
+import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,11 +32,17 @@ public class EasterEgg {
 						String[] targetInfo = targets[i].split(",");
 						if(targetInfo.length > 2)
 						{
-							ResourceLocation EntityLocation = EntityList.getKey(event.getEntityLiving());;
+							ResourceLocation EntityLocation = EntityList.getKey(event.getEntityLiving());
+							if(event.getEntityLiving() instanceof EntityPlayer)
+							{
+								EntityLocation = new ResourceLocation("minecraft", "player");
+							}
+							
 							ResourceLocation targetEntity = UnhealthyHelper.getEntityLocation(targetInfo[0]);
+							System.out.println("hey");
 							int healthFromKill = Integer.valueOf(targetInfo[1]);
 							int targetAmount = Integer.valueOf(targetInfo[2]);
-
+							
 							if(targetInfo[0].equals("*:*")) {
 								{
 									ProcessKill(player, targetEntity, healthFromKill, targetAmount);

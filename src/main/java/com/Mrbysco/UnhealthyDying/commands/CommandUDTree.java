@@ -1,4 +1,4 @@
-package com.Mrbysco.UnhealthyDying.commands;
+package com.mrbysco.unhealthydying.commands;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.server.command.CommandTreeBase;
@@ -7,6 +7,9 @@ public class CommandUDTree extends CommandTreeBase{
 
 	public CommandUDTree() {
 		super.addSubcommand(new CommandSetHearts());
+		super.addSubcommand(new CommandSetMaxHealth());
+		super.addSubcommand(new CommandAddHearts());
+		super.addSubcommand(new CommandRemoveHearts());
 	}
 	
 	@Override

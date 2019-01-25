@@ -1,12 +1,12 @@
-package com.Mrbysco.UnhealthyDying;
+package com.mrbysco.unhealthydying;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.Mrbysco.UnhealthyDying.commands.CommandUDTree;
-import com.Mrbysco.UnhealthyDying.handlers.EasterEgg;
-import com.Mrbysco.UnhealthyDying.handlers.HealthHandler;
-import com.Mrbysco.UnhealthyDying.proxy.CommonProxy;
+import com.mrbysco.unhealthydying.commands.CommandUDTree;
+import com.mrbysco.unhealthydying.handlers.EasterEgg;
+import com.mrbysco.unhealthydying.handlers.HealthHandler;
+import com.mrbysco.unhealthydying.proxy.CommonProxy;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;

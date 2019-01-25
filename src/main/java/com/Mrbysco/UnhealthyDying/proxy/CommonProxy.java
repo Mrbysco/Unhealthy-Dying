@@ -1,4 +1,4 @@
-package com.Mrbysco.UnhealthyDying.proxy;
+package com.mrbysco.unhealthydying.proxy;
 
 public class CommonProxy {
 	public void PreInit()

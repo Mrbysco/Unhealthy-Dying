@@ -12,12 +12,24 @@ configgui.unhealthydying.regen.regennedHealthMessage.tooltip=When set to true it
 configgui.unhealthydying.regen.regenTargets.tooltip=Adding lines / removing lines specifies which mobs will cause the players to regen max health, \nSyntax: modid:mobname,healthRegenned,amount. For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart. \nWhile [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart
 
 #Message
-unhealthydying:reducedHealth.message=§cYour max health has been reduced to %s.§r
-unhealthydying:regennedHealth.message=§aYour max health has been increased back to %s.§r
-unhealthydying:sethealth.message=§aYour max health has set to %s.§r
+unhealthydying:reducedHealth.message=§cYour max health has been reduced to §r%s.§cY§r
+unhealthydying:regennedHealth.message=§aYour max health has been increased back to §r%s§cY.§r
+unhealthydying:sethealth.message=§aYour health and max health has set to §r%s§a.§r
+unhealthydying:setmaxhealth.message=§aYour max health has set to §r%s§a.§r
+unhealthydying:addhearts.message=§aYour health has been increased by %s§r §aheart(s).
+unhealthydying:removehearts.message=§cYour health has been reduced by %s §cheart(s).
 
 #Commands
 commands.unhealthydying.usage=/unhealthydying
 commands.unhealthydying.sethearts.usage=/unhealthydying sethearts [player] <amount>
 commands.unhealthydying.sethearts.invalid.number=Unable to set health because %s is not a valid amount
-commands.unhealthydying.sethearts.success=Set %s 's max health to %s
+commands.unhealthydying.sethearts.success=Set %s 's health to %s
+commands.unhealthydying.setmaxhealth.usage=/unhealthydying setmaxhealth [player] <amount>
+commands.unhealthydying.setmaxhealth.invalid.number=Unable to set max health because %s is not a valid amount
+commands.unhealthydying.setmaxhealth.success=Set %s 's max health to %s
+commands.unhealthydying.addhearts.usage=/unhealthydying addhearts [player] <amount>
+commands.unhealthydying.addhearts.invalid.number=Unable to add health because %s is not a valid amount
+commands.unhealthydying.addhearts.success=Added %s heart(s) to %s's health
+commands.unhealthydying.removehearts.usage=/unhealthydying removehearts [player] <amount>
+commands.unhealthydying.removehearts.invalid.number=Unable to remove health because %s is not a valid amount
+commands.unhealthydying.removehearts.success=Removed %s heart(s) from %s's health

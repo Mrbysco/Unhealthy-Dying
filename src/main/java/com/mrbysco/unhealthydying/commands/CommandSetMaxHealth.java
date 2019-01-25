@@ -19,16 +19,16 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-public class CommandSetHearts extends CommandBase{
+public class CommandSetMaxHealth extends CommandBase{
 
 	@Override
 	public String getName() {
-		return "sethearts";
+		return "setmaxhealth";
 	}
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "commands.unhealthydying.sethearts.usage";
+		return "commands.unhealthydying.setmaxhealth.usage";
 	}
 	
 	@Override
@@ -40,7 +40,7 @@ public class CommandSetHearts extends CommandBase{
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if (args.length < 2)
         {
-            throw new WrongUsageException("commands.unhealthydying.sethearts.usage", new Object[0]);
+            throw new WrongUsageException("commands.unhealthydying.setmaxhealth.usage", new Object[0]);
         }
 		else
 		{
@@ -48,7 +48,7 @@ public class CommandSetHearts extends CommandBase{
             Integer health = Integer.valueOf(args[1]);
             if(health == null)
             {
-                throw new NumberInvalidException("commands.unhealthydying.sethearts.invalid.number", new Object[] {args[1]});
+                throw new NumberInvalidException("commands.unhealthydying.setmaxhealth.invalid.number", new Object[] {args[1]});
             }
             
             boolean flag = health != 0;
@@ -62,19 +62,20 @@ public class CommandSetHearts extends CommandBase{
             }
             else
             {
-                throw new NumberInvalidException("commands.unhealthydying.sethearts.invalid.number", new Object[] {args[1]});
+                throw new NumberInvalidException("commands.unhealthydying.setmaxhealth.invalid.number", new Object[] {args[1]});
             }
             
-            notifyCommandListener(sender, this, "commands.unhealthydying.sethearts.success", new Object[] {entityplayer.getName(), health});
+            notifyCommandListener(sender, this, "commands.unhealthydying.setmaxhealth.success", new Object[] {entityplayer.getName(), health});
 		}
 	}
 	
 	public static void setHealth(EntityPlayer player, int amount)
 	{
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)amount);
-		player.setHealth(amount);
+		float currentHealth = player.getHealth();
+		player.setHealth(currentHealth);
 		
-		ITextComponent text = new TextComponentTranslation("unhealthydying:sethealth.message", new Object[] {amount});
+		ITextComponent text = new TextComponentTranslation("unhealthydying:setmaxhealth.message", new Object[] {amount});
 		text.getStyle().setColor(TextFormatting.RED);
 		player.sendStatusMessage(text, true);
 	}
