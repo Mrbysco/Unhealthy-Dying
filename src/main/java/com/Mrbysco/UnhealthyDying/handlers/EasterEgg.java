@@ -39,7 +39,6 @@ public class EasterEgg {
 							}
 							
 							ResourceLocation targetEntity = UnhealthyHelper.getEntityLocation(targetInfo[0]);
-							System.out.println("hey");
 							int healthFromKill = Integer.valueOf(targetInfo[1]);
 							int targetAmount = Integer.valueOf(targetInfo[2]);
 							
