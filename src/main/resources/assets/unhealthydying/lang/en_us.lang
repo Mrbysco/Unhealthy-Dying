@@ -12,8 +12,8 @@ configgui.unhealthydying.regen.regennedHealthMessage.tooltip=When set to true it
 configgui.unhealthydying.regen.regenTargets.tooltip=Adding lines / removing lines specifies which mobs will cause the players to regen max health, \nSyntax: modid:mobname,healthRegenned,amount. For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart. \nWhile [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart
 
 #Message
-unhealthydying:reducedHealth.message=§cYour max health has been reduced to §r%s.§cY§r
-unhealthydying:regennedHealth.message=§aYour max health has been increased back to §r%s§cY.§r
+unhealthydying:reducedHealth.message=§cYour max health has been reduced to §r%s.§c§r
+unhealthydying:regennedHealth.message=§aYour max health has been increased back to §r%s§c.§r
 unhealthydying:sethealth.message=§aYour health and max health has set to §r%s§a.§r
 unhealthydying:setmaxhealth.message=§aYour max health has set to §r%s§a.§r
 unhealthydying:addhearts.message=§aYour health has been increased by %s§r §aheart(s).
