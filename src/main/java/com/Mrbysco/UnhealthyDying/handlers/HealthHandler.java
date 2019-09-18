@@ -23,11 +23,21 @@ public class HealthHandler {
 			NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
 			double playerHealth = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
 			
-			if(!data.hasKey(Reference.REDUCED_HEALTH_TAG)) 
-			{
-				data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)playerHealth);
-				playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+			if(!data.hasKey(Reference.MODIFIED_HEALTH_TAG))
+				data.setInteger(Reference.MODIFIED_HEALTH_TAG, 0);
+			
+			if(data.hasKey(Reference.REDUCED_HEALTH_TAG)) {
+				int reducedHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
+				int maxHealth = (int)player.getMaxHealth();
+				if(DyingConfigGen.regen.regenHealth) {
+					maxHealth = DyingConfigGen.regen.maxRegenned;
+				}
+				data.setInteger(Reference.MODIFIED_HEALTH_TAG, maxHealth - reducedHealth);
+				data.removeTag(Reference.REDUCED_HEALTH_TAG);
+				
 			}
+			
+			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
 		}
 	}
 	
@@ -35,41 +45,40 @@ public class HealthHandler {
 	public void setHealth(PlayerRespawnEvent event) {
 		if(!event.isEndConquered())
 		{
+			int healthPerDeath = -DyingConfigGen.general.healthPerDeath;
 			EntityPlayer player = event.player;
 			NBTTagCompound playerData = player.getEntityData();
 			NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
+			
+			int newHealth = (int)player.getMaxHealth() - healthPerDeath;
 
-			if(!data.hasKey(Reference.REDUCED_HEALTH_TAG))
+			if(!data.hasKey(Reference.MODIFIED_HEALTH_TAG))
 			{
-				double playerHealth = (int)player.getMaxHealth();
 
 				if(!player.world.isRemote)
 				{
-					if(!data.hasKey(Reference.REDUCED_HEALTH_TAG)) 
-					{
-						data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)playerHealth);
-						playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-						UnhealthyHelper.setHealth(player, playerHealth, false, -1);
-					}
+					data.setInteger(Reference.MODIFIED_HEALTH_TAG, healthPerDeath);
+					playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+					UnhealthyHelper.setHealth(player, player.getMaxHealth(), healthPerDeath);
 				}
 			}
 			else
 			{
 				switch (DyingConfigGen.general.HealthSetting) {
 				case EVERYBODY:
-					UnhealthyHelper.setEveryonesHealth(player, false, -1);
+					UnhealthyHelper.setEveryonesHealth(player, healthPerDeath);
 					break;
 				case SEPERATE:
-					UnhealthyHelper.SetThatHealth(player, false, -1);
+					UnhealthyHelper.SetThatHealth(player, healthPerDeath);
 					break;
 				case SCOREBOARD_TEAM:
-					UnhealthyHelper.setScoreboardHealth(player, false, -1);
+					UnhealthyHelper.setScoreboardHealth(player, healthPerDeath);
 					break;
 				case FTB_TEAMS:
-					UnhealthyHelper.teamHealth(player, false, -1);
+					UnhealthyHelper.teamHealth(player, healthPerDeath);
 					break;
 				default:
-					UnhealthyHelper.SetThatHealth(player, false, -1);
+					UnhealthyHelper.SetThatHealth(player, healthPerDeath);
 					break;
 				}
 			}

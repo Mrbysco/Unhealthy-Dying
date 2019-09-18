@@ -14,9 +14,12 @@ public class DyingConfigGen {
 	
 	@Config.Comment({"General settings"})
 	public static General general = new General();
-	
+
 	@Config.Comment({"Regen settings"})
 	public static Regen regen = new Regen();
+	
+	@Config.Comment({"Default settings"})
+	public static Default defaultSettings = new Default();
 	
 	public static class General{
 		@Config.LangKey("configgui.unhealthydying.general.minimumHealth")
@@ -70,6 +73,13 @@ public class DyingConfigGen {
 				"minecraft:ender_dragon,4,1",
 				"minecraft:wither,2,1"
 		};
+	}
+	
+	public static class Default{
+		@Config.LangKey("configgui.unhealthydying.default.defaultHealth")
+		@Config.Comment("The default amount of health a player starts with (Only change this if another mod changes starting health) [default: 20]")
+		public int defaultHealth = 20;
+		
 	}
 	
 	@Mod.EventBusSubscriber(modid = Reference.MOD_ID)

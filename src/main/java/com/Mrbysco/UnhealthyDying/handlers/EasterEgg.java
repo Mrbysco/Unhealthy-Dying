@@ -49,9 +49,9 @@ public class EasterEgg {
 							}
 							else
 							{
-								if(targetEntity.getResourcePath().equals("*"))
+								if(targetEntity.getNamespace().equals("*"))
 								{
-									if(EntityLocation.getResourceDomain().equals(targetEntity.getResourceDomain()))
+									if(EntityLocation.getNamespace().equals(targetEntity.getNamespace()))
 									{
 										ProcessKill(player, targetEntity, healthFromKill, targetAmount);
 									}
@@ -81,17 +81,11 @@ public class EasterEgg {
 	    
 	    if(playerHealth < maxRegained)
 	    {
-		    if(!data.hasKey(Reference.REDUCED_HEALTH_TAG))
+		    if(!data.hasKey(Reference.MODIFIED_HEALTH_TAG))
 			{
 				if(!player.world.isRemote)
 				{
-					if(!data.hasKey(Reference.REDUCED_HEALTH_TAG)) 
-					{
-						data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)playerHealth);
-						playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-
-						UnhealthyHelper.setHealth(player, playerHealth, false, -1);
-					}
+					UnhealthyHelper.setHealth(player, healthGained);
 				}
 			}
 		    else
@@ -100,19 +94,19 @@ public class EasterEgg {
 		    	{
 		    		switch (DyingConfigGen.general.HealthSetting) {
 					case EVERYBODY:
-						UnhealthyHelper.setEveryonesHealth(player, true, healthGained);
+						UnhealthyHelper.setEveryonesHealth(player, healthGained);
 						break;
 					case SEPERATE:
-						UnhealthyHelper.SetThatHealth(player, true, healthGained);
+						UnhealthyHelper.SetThatHealth(player, healthGained);
 						break;
 					case SCOREBOARD_TEAM:
-						UnhealthyHelper.setScoreboardHealth(player, true, healthGained);
+						UnhealthyHelper.setScoreboardHealth(player, healthGained);
 						break;
 					case FTB_TEAMS:
-						UnhealthyHelper.teamHealth(player, true, healthGained);
+						UnhealthyHelper.teamHealth(player, healthGained);
 						break;
 					default:
-						UnhealthyHelper.SetThatHealth(player, true, healthGained);
+						UnhealthyHelper.SetThatHealth(player, healthGained);
 						break;
 					}
 		    	}
@@ -219,23 +213,23 @@ public class EasterEgg {
 		if(data.hasKey(customTag))
     	{
     		int currentAmount = data.getInteger(customTag);
-    		if(currentAmount + 1 >= targetAmount)
+    		if((currentAmount + 1) >= targetAmount)
     		{
 		    	switch (DyingConfigGen.general.HealthSetting) {
 				case EVERYBODY:
-					UnhealthyHelper.setEveryonesHealth(player, true, healthGained);
+					UnhealthyHelper.setEveryonesHealth(player, healthGained);
 					break;
 				case SEPERATE:
-					UnhealthyHelper.SetThatHealth(player, true, healthGained);
+					UnhealthyHelper.SetThatHealth(player, healthGained);
 					break;
 				case SCOREBOARD_TEAM:
-					UnhealthyHelper.setScoreboardHealth(player, true, healthGained);
+					UnhealthyHelper.setScoreboardHealth(player, healthGained);
 					break;
 				case FTB_TEAMS:
-					UnhealthyHelper.teamHealth(player, true, healthGained);
+					UnhealthyHelper.teamHealth(player, healthGained);
 					break;
 				default:
-					UnhealthyHelper.SetThatHealth(player, true, healthGained);
+					UnhealthyHelper.SetThatHealth(player, healthGained);
 					break;
 				}
 		    	data.removeTag(customTag);

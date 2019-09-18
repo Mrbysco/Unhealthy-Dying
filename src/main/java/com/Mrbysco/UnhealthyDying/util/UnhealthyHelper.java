@@ -16,45 +16,67 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
 public class UnhealthyHelper {
-	/**
-	 * Sets the players health and maxHealth.
-	 */
-	public static void setHealth(EntityPlayer entity, int maxHealth, boolean regained, int healthGained) {
-        entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)maxHealth);
-        if(regained)
-        {
-        	int entityHealth = (int)entity.getHealth() + healthGained;
-            entity.setHealth(entityHealth);
-        }
-        else
-        {
-            entity.setHealth(maxHealth);
-        }
+
+	public static int getNewModifiedAmount(EntityPlayer player, int healthModifier) {
+		NBTTagCompound playerData = player.getEntityData();
+		NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
+		
+		int oldModified = data.getInteger(Reference.MODIFIED_HEALTH_TAG);
+		int newModified = oldModified + healthModifier;
+		
+		data.setInteger(Reference.MODIFIED_HEALTH_TAG, newModified);
+		
+		playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+		
+		return newModified;
+	}
+	
+	public static int getModifiedAmount(EntityPlayer player) {
+		NBTTagCompound playerData = player.getEntityData();
+		NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
+		return data.getInteger(Reference.MODIFIED_HEALTH_TAG);
 	}
 	
 	/**
 	 * Sets the players health and maxHealth.
 	 */
-	public static void setHealth(EntityPlayer entity, double maxHealth, boolean regained, int healthGained) {
-        entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(maxHealth);
-        if(regained)
-        {
-        	int entityHealth = (int)entity.getHealth() + healthGained;
-            entity.setHealth(entityHealth);
-        }
-        else
-        {
-            entity.setHealth((int)maxHealth);
-        }
-	}
-
+	public static void setHealth(EntityPlayer player, double oldHealth, int healthModifier) {
+		int newModifier = getNewModifiedAmount(player, healthModifier);
+		int newHealth = (int)oldHealth + newModifier;
+		
+		newHealth = safetyCheck(newHealth);
+		
+		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
+       
+		player.setHealth(newHealth);
+	}	
 	/**
-	 * Sets the players Max Health only.
+	 * Sets the players health and maxHealth.
 	 */
-	public static void setMaxHealth(EntityPlayer entity, int maxHealth) {
-        entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)maxHealth);
-        int entityHealth = (int)entity.getHealth();
-        entity.setHealth(entityHealth);
+	public static void setHealth(EntityPlayer player, int newHealth) {
+		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
+        player.setHealth(newHealth);
+	}
+	
+	/*
+	 * Sets the players health without updating the modifier
+	 */
+	public static void SyncHealth(EntityPlayer player) {
+		int oldHealth = getOldHealth(player);
+		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(oldHealth);
+        player.setHealth(oldHealth);
+	}
+	
+	/*
+	 * Get's the players old max health
+	 */	
+	public static int getOldHealth(EntityPlayer player) {
+		int modifier = getModifiedAmount(player);
+		int health = DyingConfigGen.defaultSettings.defaultHealth;
+		
+		int newHealth = health + modifier;
+		
+		return safetyCheck(newHealth);
 	}
 	
 	/**
@@ -78,7 +100,7 @@ public class UnhealthyHelper {
 	
 	
 	@Optional.Method(modid = "ftblib")
-	public static void teamHealth(EntityPlayer player, boolean regained, int healthGained)
+	public static void teamHealth(EntityPlayer player, int healthModifier)
 	{
 		World world = player.world;
 		String team = com.feed_the_beast.ftblib.lib.data.FTBLibAPI.getTeam(player.getUniqueID());
@@ -87,30 +109,30 @@ public class UnhealthyHelper {
 			for(EntityPlayer players : world.playerEntities)
 			{
 				if(players.equals(player))
-					SetThatHealth(player, regained, healthGained);
+					SetThatHealth(player, healthModifier);
 				else
 				{
 					if(com.feed_the_beast.ftblib.lib.data.FTBLibAPI.isPlayerInTeam(player.getOfflineUUID(players.getName()), team))
 					{
-						SetThatMaxHealth(players, regained, healthGained);
+						SetThatMaxHealth(players, healthModifier);
 					}
 				}
 			}
 		}
 	}
 	
-	public static void setEveryonesHealth(EntityPlayer player, boolean regained, int healthGained)
+	public static void setEveryonesHealth(EntityPlayer player, int healthModifier)
 	{
 		for(EntityPlayer players : player.world.playerEntities)
 		{
 			if(players.equals(player))
-				SetThatHealth(player, regained, healthGained);
+				SetThatHealth(player, healthModifier);
 			else
-				SetThatMaxHealth(players, regained, healthGained);
+				SetThatMaxHealth(players, healthModifier);
 		}
 	}
 	
-	public static void setScoreboardHealth(EntityPlayer player, boolean regained, int healthGained)
+	public static void setScoreboardHealth(EntityPlayer player, int healthModifier)
 	{
 		World world = player.world;
 		if(player.getTeam() != null)
@@ -119,12 +141,12 @@ public class UnhealthyHelper {
 			for(EntityPlayer players : world.playerEntities)
 			{
 				if(players.equals(player))
-					SetThatHealth(player, regained, healthGained);
+					SetThatHealth(player, healthModifier);
 				else
 				{
 					if(players.isOnScoreboardTeam(team))
 					{
-						SetThatMaxHealth(players, regained, healthGained);
+						SetThatMaxHealth(players, healthModifier);
 					}
 				}
 			}
@@ -135,102 +157,68 @@ public class UnhealthyHelper {
 		}
 	}
 	
-	public static void SetThatHealth(EntityPlayer player, boolean regained, int healthGained)
+	public static void SetThatHealth(EntityPlayer player, int healthModifier)
 	{
-		NBTTagCompound playerData = player.getEntityData();
-		NBTTagCompound data = getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
-
-	    int maxRegained = DyingConfigGen.regen.maxRegenned;
-	    int healthPerDeath = DyingConfigGen.general.healthPerDeath;
-	    
-		int oldMaxHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
+	    int modifiedHealth = safetyCheck(getOldHealth(player) + healthModifier);
+	    		
+		if(healthModifier > 0)
+		{
+			if(DyingConfigGen.regen.regennedHealthMessage)
+			{
+				ITextComponent text = new TextComponentTranslation("unhealthydying:regennedHealth.message", new Object[] {modifiedHealth});
+				text.getStyle().setColor(TextFormatting.DARK_GREEN);
+				player.sendStatusMessage(text, true);
+			}
+		}
+		else
+		{
+			if(DyingConfigGen.general.reducedHealthMessage)
+			{
+				ITextComponent text = new TextComponentTranslation("unhealthydying:reducedHealth.message", new Object[] {modifiedHealth});
+				text.getStyle().setColor(TextFormatting.DARK_RED);
+				player.sendStatusMessage(text, true);
+			}
+		}
 		
-		if(regained)
+		setHealth(player, modifiedHealth);
+	}
+	
+	public static void SetThatMaxHealth(EntityPlayer player, int healthModifier)
+	{
+	    int modifiedHealth = safetyCheck(getOldHealth(player) + healthModifier);
+	    
+		if(healthModifier > 0)
 		{
-			int healthPlusKill = oldMaxHealth + healthGained;
-			int newMaxHealth = healthPlusKill >= maxRegained ? maxRegained : healthPlusKill;
-			
-			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
-			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-			setHealth(player, newMaxHealth, true, healthGained);
-
 			if(DyingConfigGen.regen.regennedHealthMessage)
 			{
-				ITextComponent text = new TextComponentTranslation("unhealthydying:regennedHealth.message", new Object[] {newMaxHealth});
+				ITextComponent text = new TextComponentTranslation("unhealthydying:regennedHealth.message", new Object[] { modifiedHealth });
 				text.getStyle().setColor(TextFormatting.DARK_GREEN);
 				player.sendStatusMessage(text, true);
 			}
 		}
 		else
 		{
-			int healthMinusDeath = oldMaxHealth - healthPerDeath;
-			int newMaxHealth = healthMinusDeath <= DyingConfigGen.general.minimumHealth ? DyingConfigGen.general.minimumHealth : healthMinusDeath;
-			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
-			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-			setHealth(player, newMaxHealth, false, -1);
-			
 			if(DyingConfigGen.general.reducedHealthMessage)
 			{
-				ITextComponent text = new TextComponentTranslation("unhealthydying:reducedHealth.message", new Object[] {newMaxHealth});
+				ITextComponent text = new TextComponentTranslation("unhealthydying:reducedHealth.message", new Object[] {modifiedHealth});
 				text.getStyle().setColor(TextFormatting.DARK_RED);
 				player.sendStatusMessage(text, true);
 			}
 		}
+
+		setHealth(player, modifiedHealth);
 	}
-	
-	public static void SetThatMaxHealth(EntityPlayer player, boolean regained, int healthGained)
-	{
-		NBTTagCompound playerData = player.getEntityData();
-		NBTTagCompound data = getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
 
-	    int maxRegained = DyingConfigGen.regen.maxRegenned;
-	    int healthPerDeath = DyingConfigGen.general.healthPerDeath;
-	    
-		int oldMaxHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
-
-		if(regained)
-		{
-			int healthPlusKill = oldMaxHealth + healthGained;
-			int newMaxHealth = healthPlusKill >= maxRegained ? maxRegained : healthPlusKill;
-
-			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
-			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-			setMaxHealth(player, newMaxHealth);
-
-			if(DyingConfigGen.regen.regennedHealthMessage)
-			{
-				ITextComponent text = new TextComponentTranslation("unhealthydying:regennedHealth.message", new Object[] {newMaxHealth});
-				text.getStyle().setColor(TextFormatting.DARK_GREEN);
-				player.sendStatusMessage(text, true);
-			}
+	public static int safetyCheck(int health) {
+		int newHealth = health;
+		if(DyingConfigGen.regen.regenHealth && newHealth > DyingConfigGen.regen.maxRegenned) {
+			newHealth = DyingConfigGen.regen.maxRegenned;
 		}
-		else
-		{
-			int healthMinusDeath = oldMaxHealth - healthPerDeath;
-			int newMaxHealth = healthMinusDeath <= DyingConfigGen.general.minimumHealth ? DyingConfigGen.general.minimumHealth : healthMinusDeath;
-
-			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)newMaxHealth);
-			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-			setMaxHealth(player, newMaxHealth);
-			
-			if(DyingConfigGen.general.reducedHealthMessage)
-			{
-				ITextComponent text = new TextComponentTranslation("unhealthydying:reducedHealth.message", new Object[] {newMaxHealth});
-				text.getStyle().setColor(TextFormatting.DARK_RED);
-				player.sendStatusMessage(text, true);
-			}
+		
+		if(newHealth < DyingConfigGen.general.minimumHealth) {
+			newHealth = DyingConfigGen.general.minimumHealth;
 		}
-	}
-	
-	public static void SyncHealth(EntityPlayer player)
-	{
-		NBTTagCompound playerData = player.getEntityData();
-		NBTTagCompound data = getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
-	    
-		int oldMaxHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
-
-		data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)oldMaxHealth);
-		playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-		setMaxHealth(player, oldMaxHealth);
+		
+		return newHealth;
 	}
 }
