@@ -21,6 +21,7 @@ configgui.unhealthydying.default.defaultHealth.tooltip=The default amount of hea
 unhealthydying:reducedHealth.message=§cYour max health has been reduced to §r%s.§c§r
 unhealthydying:regennedHealth.message=§aYour max health has been increased back to §r%s§c.§r
 unhealthydying:sethealth.message=§aYour health and max health has set to §r%s§a.§r
+unhealthydying:modifierzero.message=§2Health modifier is at zero. Health is back to default.§r
 unhealthydying:setmaxhealth.message=§aYour max health has set to §r%s§a.§r
 unhealthydying:addhearts.message=§aYour health has been increased by %s§r §aheart(s).
 unhealthydying:removehearts.message=§cYour health has been reduced by %s §cheart(s).

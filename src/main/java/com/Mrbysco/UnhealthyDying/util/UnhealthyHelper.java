@@ -23,6 +23,12 @@ public class UnhealthyHelper {
 		
 		newModified = getSafeModifier(newModified);
 		
+		if(newModified == 0) {
+			ITextComponent text = new TextComponentTranslation("unhealthydying:modifierzero.message", new Object[0]);
+			text.getStyle().setColor(TextFormatting.DARK_GREEN);
+			player.sendMessage(text);
+		}
+		
 		setModifier(player, newModified);
 		
 		return newModified;
@@ -46,18 +52,22 @@ public class UnhealthyHelper {
 	
 	public static int getSafeModifier(int oldAmount) {
 		int newModified = oldAmount;
-		if(newModified > 0 && DyingConfigGen.regen.regenHealth) {
-			int maxPositive = DyingConfigGen.regen.maxRegenned - DyingConfigGen.defaultSettings.defaultHealth;
-			if(newModified > maxPositive)
-				newModified = maxPositive;
-		} 
-		
-		if(newModified < 0) {
-			int maxNegative = DyingConfigGen.general.minimumHealth - DyingConfigGen.defaultSettings.defaultHealth;
-			if(newModified < maxNegative)
-				newModified = maxNegative;
+
+		if(newModified > 0) {
+			if(DyingConfigGen.regen.regenHealth) {
+				int maxPositive = DyingConfigGen.regen.maxRegenned;
+				if(newModified > maxPositive)
+					newModified = maxPositive - DyingConfigGen.defaultSettings.defaultHealth;
+			} else {
+				return 0;
+			}
 		}
 		
+		if(newModified < 0) {
+			int maxNegative = DyingConfigGen.general.minimumHealth;
+			if(newModified < maxNegative)
+				newModified = maxNegative - DyingConfigGen.defaultSettings.defaultHealth;
+		}
 		return newModified;
 	}
 	
