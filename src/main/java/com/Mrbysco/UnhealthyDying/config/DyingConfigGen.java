@@ -13,32 +13,39 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class DyingConfigGen {
 	
 	@Config.Comment({"General settings"})
+	@Config.Name("General Settings")
 	public static General general = new General();
 
 	@Config.Comment({"Regen settings"})
+	@Config.Name("Regen Settings")
 	public static Regen regen = new Regen();
 	
 	@Config.Comment({"Default settings"})
+	@Config.Name("Default Settings")
 	public static Default defaultSettings = new Default();
 	
 	public static class General{
 		@Config.LangKey("configgui.unhealthydying.general.minimumHealth")
 		@Config.Comment("Minimum amount of health the player can end up with (2 = 1 heart) [default: 2]")
+		@Config.Name("Minimum Health")
 		@Config.RangeInt(min = 1, max = 20)
 		public int minimumHealth = 2;
 
 		@Config.LangKey("configgui.unhealthydying.general.healthPerDeath")
 		@Config.Comment("The amount of health taken from the player upon death (2 = 1 heart) [default: 2]")
+		@Config.Name("Health Per Death")
 		@Config.RangeInt(min = 1, max = 20)
 		public int healthPerDeath = 2;
 
 		@Config.LangKey("configgui.unhealthydying.general.reducedHealthMessage")
 		@Config.Comment("When set to true it notifies the player about their new max health when they respawn [default: true]")
+		@Config.Name("Reduced Health Message")
 		public boolean reducedHealthMessage = true;
 
 		@Config.LangKey("configgui.unhealthydying.general.HealthSetting")
 		@Config.Comment({"Decides if the reduced health is per player, for everybody, per team",
 			"or per FTB Team (Only works when FTBUtils is installed) [default: true]"})
+		@Config.Name("Health Setting")
 		public EnumHealthSetting HealthSetting = EnumHealthSetting.SEPERATE;
 	}
 	
@@ -52,15 +59,18 @@ public class DyingConfigGen {
 	public static class Regen{
 		@Config.LangKey("configgui.unhealthydying.regen.regenHealth")
 		@Config.Comment("When set to true allows you to gain back health upon killing set target(s) [default: false]")
+		@Config.Name("Regen Health")
 		public boolean regenHealth = false;
 
 		@Config.LangKey("configgui.unhealthydying.regen.maxRegen")
 		@Config.Comment("The amount of max health the player can get from killing the target(s) (20 = 10 hearts) [default: 20]")
+		@Config.Name("Max Regenerated")
 		@Config.RangeInt(min = 1)
 		public int maxRegenned = 20;
 
 		@Config.LangKey("configgui.unhealthydying.regen.regennedHealthMessage")
 		@Config.Comment("When set to true it notifies the player about their new max health when they respawn [default: true]")
+		@Config.Name("Regen Health Message")
 		public boolean regennedHealthMessage = true;
 
 		@Config.LangKey("configgui.unhealthydying.regen.regenTargets")
@@ -68,6 +78,7 @@ public class DyingConfigGen {
 				"Syntax: modid:mobname,healthRegenned,amount",
 				"For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart",
 				"While [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart"})
+		@Config.Name("Regen Targets")
 		public String[] regenTargets = new String[]
 		{
 				"minecraft:ender_dragon,4,1",
@@ -78,6 +89,7 @@ public class DyingConfigGen {
 	public static class Default{
 		@Config.LangKey("configgui.unhealthydying.default.defaultHealth")
 		@Config.Comment("The default amount of health a player starts with (Only change this if another mod changes starting health) [default: 20]")
+		@Config.Name("Default Health")
 		public int defaultHealth = 20;
 	}
 	
