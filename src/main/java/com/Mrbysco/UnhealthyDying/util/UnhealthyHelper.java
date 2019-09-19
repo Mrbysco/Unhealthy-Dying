@@ -230,13 +230,12 @@ public class UnhealthyHelper {
 		int newModified = healthModifier;
 		if(recalculate) {
 			newModified = getNewModifiedAmount(player, healthModifier);
-		} else {
-			setModifier(player, healthModifier);
 		}
 	    int modifiedHealth = safetyCheck(getNewHealth(newModified));
 		
 	    sendHealthMessage(player, modifiedHealth, healthModifier);
-	    
+
+		setModifier(player, newModified);
 		setHealth(player, modifiedHealth);
 	}
 
@@ -244,9 +243,7 @@ public class UnhealthyHelper {
 		int newHealth = health;
 		if(DyingConfigGen.regen.regenHealth && newHealth > DyingConfigGen.regen.maxRegenned) {
 			newHealth = DyingConfigGen.regen.maxRegenned;
-		}
-		
-		if(newHealth < DyingConfigGen.general.minimumHealth) {
+		} else if(newHealth < DyingConfigGen.general.minimumHealth) {
 			newHealth = DyingConfigGen.general.minimumHealth;
 		}
 		

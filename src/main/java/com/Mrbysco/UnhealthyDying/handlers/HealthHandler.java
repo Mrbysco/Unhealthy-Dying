@@ -2,7 +2,6 @@ package com.mrbysco.unhealthydying.handlers;
 
 import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
-import com.mrbysco.unhealthydying.config.DyingConfigGen.EnumHealthSetting;
 import com.mrbysco.unhealthydying.util.TeamHelper;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 import com.mrbysco.unhealthydying.util.compat.FTBTeamHelper;
@@ -10,10 +9,7 @@ import com.mrbysco.unhealthydying.util.compat.FTBTeamHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -66,9 +62,8 @@ public class HealthHandler {
 			if(!data.hasKey(Reference.MODIFIED_HEALTH_TAG)) {
 
 				if(!player.world.isRemote) {
-					data.setInteger(Reference.MODIFIED_HEALTH_TAG, healthPerDeath);
-					playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
 					UnhealthyHelper.setHealth(player, UnhealthyHelper.getOldHealth(player), healthPerDeath);
+					UnhealthyHelper.setModifier(player, healthPerDeath);
 				}
 			} else {
 				switch (DyingConfigGen.general.HealthSetting) {
