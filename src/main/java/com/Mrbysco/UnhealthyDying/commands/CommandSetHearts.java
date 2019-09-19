@@ -2,7 +2,7 @@ package com.mrbysco.unhealthydying.commands;
 
 import java.util.List;
 
-import com.mrbysco.unhealthydying.Reference;
+import com.mrbysco.unhealthydying.config.DyingConfigGen;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 
 import net.minecraft.command.CommandBase;
@@ -10,9 +10,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -54,10 +52,6 @@ public class CommandSetHearts extends CommandBase{
             boolean flag = health != 0;
             if(flag)
             {
-            	NBTTagCompound playerData = entityplayer.getEntityData();
-    			NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
-    			data.setInteger(Reference.REDUCED_HEALTH_TAG, (int)health);
-				playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
             	setHealth(entityplayer, health);
             }
             else
@@ -71,12 +65,18 @@ public class CommandSetHearts extends CommandBase{
 	
 	public static void setHealth(EntityPlayer player, int amount)
 	{
-		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)amount);
-		player.setHealth(amount);
+		UnhealthyHelper.SetThatHealth(player, getModifier(amount), false);
 		
 		ITextComponent text = new TextComponentTranslation("unhealthydying:sethealth.message", new Object[] {amount});
 		text.getStyle().setColor(TextFormatting.RED);
 		player.sendStatusMessage(text, true);
+	}
+	
+	public static int getModifier(int amount) {
+		int defaultHealth = DyingConfigGen.defaultSettings.defaultHealth;
+		int modifierAmount = amount - defaultHealth;
+		
+		return modifierAmount;
 	}
 
 	@Override

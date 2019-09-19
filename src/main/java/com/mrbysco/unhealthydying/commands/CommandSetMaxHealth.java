@@ -3,6 +3,7 @@ package com.mrbysco.unhealthydying.commands;
 import java.util.List;
 
 import com.mrbysco.unhealthydying.Reference;
+import com.mrbysco.unhealthydying.config.DyingConfigGen;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 
 import net.minecraft.command.CommandBase;
@@ -71,13 +72,20 @@ public class CommandSetMaxHealth extends CommandBase{
 	
 	public static void setHealth(EntityPlayer player, int amount)
 	{
-		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)amount);
-		float currentHealth = player.getHealth();
-		player.setHealth(currentHealth);
+		int modifier = getModifier(amount);
+		UnhealthyHelper.setModifier(player, modifier);
+		UnhealthyHelper.setMaxHealth(player, amount);
 		
 		ITextComponent text = new TextComponentTranslation("unhealthydying:setmaxhealth.message", new Object[] {amount});
 		text.getStyle().setColor(TextFormatting.RED);
 		player.sendStatusMessage(text, true);
+	}
+	
+	public static int getModifier(int amount) {
+		int defaultHealth = DyingConfigGen.defaultSettings.defaultHealth;
+		int modifierAmount = amount - defaultHealth;
+		
+		return modifierAmount;
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package com.mrbysco.unhealthydying.commands;
 
 import java.util.List;
 
-import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 
 import net.minecraft.command.CommandBase;
@@ -10,9 +9,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -54,13 +51,7 @@ public class CommandRemoveHearts extends CommandBase{
             boolean flag = hearts != 0;
             if(flag)
             {
-            	NBTTagCompound playerData = entityplayer.getEntityData();
-    			NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
-    			int currentHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
-    			int newHealth = currentHealth - hearts;
-    			data.setInteger(Reference.REDUCED_HEALTH_TAG, newHealth);
-				playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
-            	setHealth(entityplayer, hearts);
+            	setHealth(entityplayer, -hearts);
             }
             else
             {
@@ -73,13 +64,10 @@ public class CommandRemoveHearts extends CommandBase{
 	
 	public static void setHealth(EntityPlayer player, int amount)
 	{
-		double currentHealth = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue();
-		double newValue = currentHealth - amount;
-		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)newValue);
-		player.setHealth((int)newValue);
+    	UnhealthyHelper.SetThatHealth(player, amount);
 		
 		ITextComponent text = new TextComponentTranslation("unhealthydying:removehearts.message", new Object[] {(double)amount/2});
-		text.getStyle().setColor(TextFormatting.DARK_RED);
+		text.getStyle().setColor(TextFormatting.RED);
 		player.sendStatusMessage(text, true);
 	}
 
