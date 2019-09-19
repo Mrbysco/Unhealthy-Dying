@@ -230,13 +230,14 @@ public class UnhealthyHelper {
 		int newModified = healthModifier;
 		if(recalculate) {
 			newModified = getNewModifiedAmount(player, healthModifier);
+		} else {
+			setModifier(player, healthModifier);
 		}
 	    int modifiedHealth = safetyCheck(getNewHealth(newModified));
 		
 	    sendHealthMessage(player, modifiedHealth, healthModifier);
 	    
 		setHealth(player, modifiedHealth);
-		setModifier(player, healthModifier);
 	}
 
 	public static int safetyCheck(int health) {
