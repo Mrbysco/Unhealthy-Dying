@@ -74,9 +74,9 @@ public class CommandSetHearts extends CommandBase{
 	
 	public static int getModifier(int amount) {
 		int defaultHealth = DyingConfigGen.defaultSettings.defaultHealth;
-		int modifierAmount = amount - defaultHealth;
+		int modifierAmount = amount;
 		
-		return modifierAmount;
+		return (modifierAmount - defaultHealth);
 	}
 
 	@Override

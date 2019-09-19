@@ -52,12 +52,13 @@ public class UnhealthyHelper {
 	
 	public static int getSafeModifier(int oldAmount) {
 		int newModified = oldAmount;
-
+		int maxHealth = DyingConfigGen.defaultSettings.defaultHealth;
+		
 		if(newModified > 0) {
 			if(DyingConfigGen.regen.regenHealth) {
 				int maxPositive = DyingConfigGen.regen.maxRegenned;
-				if(newModified > maxPositive)
-					newModified = maxPositive - DyingConfigGen.defaultSettings.defaultHealth;
+				if((maxHealth + newModified) > maxPositive)
+					newModified = maxPositive;
 			} else {
 				return 0;
 			}
@@ -65,9 +66,10 @@ public class UnhealthyHelper {
 		
 		if(newModified < 0) {
 			int maxNegative = DyingConfigGen.general.minimumHealth;
-			if(newModified < maxNegative)
-				newModified = maxNegative - DyingConfigGen.defaultSettings.defaultHealth;
+			if((maxHealth + newModified) < maxNegative)
+				newModified = maxNegative;
 		}
+		System.out.println(newModified);
 		return newModified;
 	}
 	
@@ -129,6 +131,7 @@ public class UnhealthyHelper {
 	 */	
 	public static int getOldHealth(EntityPlayer player) {
 		int modifier = getModifiedAmount(player);
+		System.out.println("Max Health: " + player.getMaxHealth());
 		int health = DyingConfigGen.defaultSettings.defaultHealth;
 		
 		int newHealth = health + modifier;
@@ -233,6 +236,7 @@ public class UnhealthyHelper {
 	    sendHealthMessage(player, modifiedHealth, healthModifier);
 	    
 		setHealth(player, modifiedHealth);
+		setModifier(player, healthModifier);
 	}
 
 	public static int safetyCheck(int health) {
