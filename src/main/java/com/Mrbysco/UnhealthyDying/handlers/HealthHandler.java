@@ -31,11 +31,11 @@ public class HealthHandler {
 			
 			if(data.hasKey(Reference.REDUCED_HEALTH_TAG)) {
 				int reducedHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
-				int maxHealth = (int)player.getMaxHealth();
-				if(DyingConfigGen.regen.regenHealth) {
+				int maxHealth = DyingConfigGen.defaultSettings.defaultHealth;
+				if(DyingConfigGen.regen.regenHealth && reducedHealth > DyingConfigGen.regen.maxRegenned) {
 					maxHealth = DyingConfigGen.regen.maxRegenned;
 				}
-				data.setInteger(Reference.MODIFIED_HEALTH_TAG, maxHealth - reducedHealth);
+				data.setInteger(Reference.MODIFIED_HEALTH_TAG, reducedHealth - maxHealth);
 				data.removeTag(Reference.REDUCED_HEALTH_TAG);
 			}
 			
