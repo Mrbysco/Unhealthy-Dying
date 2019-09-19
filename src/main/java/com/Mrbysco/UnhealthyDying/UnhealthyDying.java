@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mrbysco.unhealthydying.commands.CommandUDTree;
+import com.mrbysco.unhealthydying.config.DyingConfigGen;
 import com.mrbysco.unhealthydying.handlers.EasterEgg;
 import com.mrbysco.unhealthydying.handlers.HealthHandler;
 import com.mrbysco.unhealthydying.proxy.CommonProxy;
@@ -37,6 +38,7 @@ public class UnhealthyDying {
 	public void PreInit(FMLPreInitializationEvent event)
 	{
 		logger.info("Registering config");
+		MinecraftForge.EVENT_BUS.register(new DyingConfigGen());
 
 		proxy.PreInit();
 	}

@@ -79,7 +79,6 @@ public class DyingConfigGen {
 		@Config.LangKey("configgui.unhealthydying.default.defaultHealth")
 		@Config.Comment("The default amount of health a player starts with (Only change this if another mod changes starting health) [default: 20]")
 		public int defaultHealth = 20;
-		
 	}
 	
 	@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
