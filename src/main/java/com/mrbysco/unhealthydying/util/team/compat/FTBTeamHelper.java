@@ -1,4 +1,4 @@
-package com.mrbysco.unhealthydying.util.compat;
+package com.mrbysco.unhealthydying.util.team.compat;
 
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
 import com.mrbysco.unhealthydying.config.DyingConfigGen.EnumHealthSetting;
@@ -19,7 +19,7 @@ public class FTBTeamHelper {
 			if(!player.world.isRemote) {
 				if(teamModifierExists(player.getTeam())) {
 					int newModifier = getTeamModifier(player.getTeam());
-					UnhealthyHelper.SetThatHealth(player, newModifier, false);
+					UnhealthyHelper.SetHealth(player, newModifier, false);
 				}
 			}
 		}

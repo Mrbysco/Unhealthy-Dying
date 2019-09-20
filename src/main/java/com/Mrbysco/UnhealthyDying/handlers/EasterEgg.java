@@ -3,6 +3,7 @@ package com.mrbysco.unhealthydying.handlers;
 import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.UnhealthyDying;
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
+import com.mrbysco.unhealthydying.util.HealthUtil;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 
 import net.minecraft.entity.EntityList;
@@ -85,7 +86,7 @@ public class EasterEgg {
 			{
 				if(!player.world.isRemote)
 				{
-					UnhealthyHelper.setHealth(player, healthGained);
+					HealthUtil.setHealth(player, healthGained);
 				}
 			}
 		    else
@@ -97,7 +98,7 @@ public class EasterEgg {
 						UnhealthyHelper.setEveryonesHealth(player, healthGained);
 						break;
 					case SEPERATE:
-						UnhealthyHelper.SetThatHealth(player, healthGained);
+						UnhealthyHelper.SetHealth(player, healthGained);
 						break;
 					case SCOREBOARD_TEAM:
 						UnhealthyHelper.setScoreboardHealth(player, healthGained);
@@ -106,7 +107,7 @@ public class EasterEgg {
 						UnhealthyHelper.teamHealth(player, healthGained);
 						break;
 					default:
-						UnhealthyHelper.SetThatHealth(player, healthGained);
+						UnhealthyHelper.SetHealth(player, healthGained);
 						break;
 					}
 		    	}
@@ -220,7 +221,7 @@ public class EasterEgg {
 					UnhealthyHelper.setEveryonesHealth(player, healthGained);
 					break;
 				case SEPERATE:
-					UnhealthyHelper.SetThatHealth(player, healthGained);
+					UnhealthyHelper.SetHealth(player, healthGained);
 					break;
 				case SCOREBOARD_TEAM:
 					UnhealthyHelper.setScoreboardHealth(player, healthGained);
@@ -229,7 +230,7 @@ public class EasterEgg {
 					UnhealthyHelper.teamHealth(player, healthGained);
 					break;
 				default:
-					UnhealthyHelper.SetThatHealth(player, healthGained);
+					UnhealthyHelper.SetHealth(player, healthGained);
 					break;
 				}
 		    	data.removeTag(customTag);

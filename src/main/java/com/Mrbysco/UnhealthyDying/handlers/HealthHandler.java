@@ -2,9 +2,10 @@ package com.mrbysco.unhealthydying.handlers;
 
 import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
-import com.mrbysco.unhealthydying.util.TeamHelper;
+import com.mrbysco.unhealthydying.util.HealthUtil;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
-import com.mrbysco.unhealthydying.util.compat.FTBTeamHelper;
+import com.mrbysco.unhealthydying.util.team.TeamHelper;
+import com.mrbysco.unhealthydying.util.team.compat.FTBTeamHelper;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,7 +63,7 @@ public class HealthHandler {
 			if(!data.hasKey(Reference.MODIFIED_HEALTH_TAG)) {
 
 				if(!player.world.isRemote) {
-					UnhealthyHelper.setHealth(player, UnhealthyHelper.getOldHealth(player), healthPerDeath);
+					HealthUtil.setHealth(player, HealthUtil.getOldHealth(player), healthPerDeath);
 					UnhealthyHelper.setModifier(player, healthPerDeath);
 				}
 			} else {
@@ -71,7 +72,7 @@ public class HealthHandler {
 						UnhealthyHelper.setEveryonesHealth(player, healthPerDeath);
 						break;
 					case SEPERATE:
-						UnhealthyHelper.SetThatHealth(player, healthPerDeath);
+						UnhealthyHelper.SetHealth(player, healthPerDeath);
 						break;
 					case SCOREBOARD_TEAM:
 						UnhealthyHelper.setScoreboardHealth(player, healthPerDeath);
@@ -80,7 +81,7 @@ public class HealthHandler {
 						UnhealthyHelper.teamHealth(player, healthPerDeath);
 						break;
 					default:
-						UnhealthyHelper.SetThatHealth(player, healthPerDeath);
+						UnhealthyHelper.SetHealth(player, healthPerDeath);
 						break;
 				}
 			}
@@ -88,13 +89,13 @@ public class HealthHandler {
 		else
 		{
 			//Sync health
-			UnhealthyHelper.SyncHealth(event.player);
+			HealthUtil.SyncHealth(event.player);
 		}
 	}
 	
 	@SubscribeEvent
 	public void DimensionChange(PlayerChangedDimensionEvent event) {
 		//Sync health
-		UnhealthyHelper.SyncHealth(event.player);
+		HealthUtil.SyncHealth(event.player);
 	}
 }

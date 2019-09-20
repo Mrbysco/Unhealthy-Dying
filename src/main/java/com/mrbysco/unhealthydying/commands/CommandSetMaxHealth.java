@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
+import com.mrbysco.unhealthydying.util.HealthUtil;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 
 import net.minecraft.command.CommandBase;
@@ -11,7 +12,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -74,7 +74,7 @@ public class CommandSetMaxHealth extends CommandBase{
 	{
 		int modifier = getModifier(amount);
 		UnhealthyHelper.setModifier(player, modifier);
-		UnhealthyHelper.setMaxHealth(player, amount);
+		HealthUtil.setMaxHealth(player, amount);
 		
 		ITextComponent text = new TextComponentTranslation("unhealthydying:setmaxhealth.message", new Object[] {amount});
 		text.getStyle().setColor(TextFormatting.RED);

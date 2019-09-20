@@ -1,7 +1,9 @@
-package com.mrbysco.unhealthydying.util;
+package com.mrbysco.unhealthydying.util.team;
 
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
 import com.mrbysco.unhealthydying.config.DyingConfigGen.EnumHealthSetting;
+import com.mrbysco.unhealthydying.util.ModifierWorldData;
+import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,7 +18,7 @@ public class TeamHelper {
 			if(!player.world.isRemote) {
 				if(scoreboardTeamModifierExists(player.getTeam())) {
 					int newModifier = getScoreboardTeamModifier(player.getTeam());
-					UnhealthyHelper.SetThatHealth(player, newModifier, false);
+					UnhealthyHelper.SetHealth(player, newModifier, false);
 				}
 			}
 		}

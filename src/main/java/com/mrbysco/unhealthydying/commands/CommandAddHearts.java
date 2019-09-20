@@ -64,7 +64,7 @@ public class CommandAddHearts extends CommandBase{
 	
 	public static void setHealth(EntityPlayer player, int amount)
 	{
-    	UnhealthyHelper.SetThatHealth(player, amount);
+    	UnhealthyHelper.SetHealth(player, amount);
 		
 		ITextComponent text = new TextComponentTranslation("unhealthydying:addhearts.message", new Object[] {(double)amount/2});
 		text.getStyle().setColor(TextFormatting.RED);

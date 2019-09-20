@@ -3,8 +3,8 @@ package com.mrbysco.unhealthydying.util;
 import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.UnhealthyDying;
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
+import com.mrbysco.unhealthydying.util.team.TeamHelper;
 
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.scoreboard.Team;
@@ -77,66 +77,6 @@ public class UnhealthyHelper {
 	}
 	
 	/**
-	 * Sets the players health and maxHealth.
-	 */
-	public static void setHealth(EntityPlayer player, double oldHealth, int healthModifier) {
-		int newModifier = getNewModifiedAmount(player, healthModifier);
-		int newHealth = (int)oldHealth + newModifier;
-		
-		newHealth = safetyCheck(newHealth);
-		
-		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
-       
-		player.setHealth(newHealth);
-	}	
-	
-	/**
-	 * Sets the players health and maxHealth.
-	 */
-	public static void setHealth(EntityPlayer player, int newHealth) {
-		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
-        player.setHealth(newHealth);
-	}
-	
-	/**
-	 * Sets the players health and maxHealth.
-	 */
-	public static void setMaxHealth(EntityPlayer player, int newHealth) {
-		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
-	}
-	
-	/*
-	 * Sets the players health without updating the modifier
-	 */
-	public static void SyncHealth(EntityPlayer player) {
-		int oldHealth = getOldHealth(player);
-		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(oldHealth);
-        player.setHealth(oldHealth);
-	}
-	
-	/*
-	 * Gets modified health
-	 */
-	public static int getNewHealth(int healthModifier) {
-		int health = DyingConfigGen.defaultSettings.defaultHealth;
-		
-		return (health + healthModifier);
-	}
-	
-	/*
-	 * Get's the players old max health
-	 */	
-	public static int getOldHealth(EntityPlayer player) {
-		int modifier = getModifiedAmount(player);
-		System.out.println("Max Health: " + player.getMaxHealth());
-		int health = DyingConfigGen.defaultSettings.defaultHealth;
-		
-		int newHealth = health + modifier;
-		
-		return safetyCheck(newHealth);
-	}
-	
-	/**
 	 * Returns a proper ResourceLocation for the given String.
 	 */
 	public static ResourceLocation getEntityLocation(String name)
@@ -163,10 +103,10 @@ public class UnhealthyHelper {
 		if(!team.isEmpty()) {
 			for(EntityPlayer players : world.playerEntities) {
 				if(players.equals(player))
-					SetThatHealth(player, healthModifier);
+					SetHealth(player, healthModifier);
 				else {
 					if(com.feed_the_beast.ftblib.lib.data.FTBLibAPI.isPlayerInTeam(player.getOfflineUUID(players.getName()), team)) {
-						SetThatHealth(players, healthModifier);
+						SetMaxHealth(players, healthModifier);
 					}
 				}
 			}
@@ -176,9 +116,9 @@ public class UnhealthyHelper {
 	public static void setEveryonesHealth(EntityPlayer player, int healthModifier) {
 		for(EntityPlayer players : player.world.playerEntities) {
 			if(players.equals(player))
-				SetThatHealth(player, healthModifier);
+				SetHealth(player, healthModifier);
 			else
-				SetThatHealth(players, healthModifier);
+				SetMaxHealth(players, healthModifier);
 		}
 	}
 	
@@ -189,10 +129,10 @@ public class UnhealthyHelper {
 			for(EntityPlayer players : world.playerEntities) {
 				int newModifier = TeamHelper.changeStoredScoreboardModifier(world, team, healthModifier);
 				if(players.equals(player)) {
-					SetThatHealth(player, newModifier, false);
+					SetHealth(player, newModifier, false);
 				} else {
 					if(players.isOnScoreboardTeam(team)) {
-						SetThatHealth(players, healthModifier, false);
+						SetMaxHealth(players, healthModifier, false);
 					}
 				}
 			}
@@ -219,21 +159,38 @@ public class UnhealthyHelper {
 		}
 	}
 	
-	public static void SetThatHealth(EntityPlayer player, int healthModifier) {
-		SetThatHealth(player, healthModifier, true);
+	public static void SetHealth(EntityPlayer player, int healthModifier) {
+		SetHealth(player, healthModifier, true);
 	}
 	
-	public static void SetThatHealth(EntityPlayer player, int healthModifier, boolean recalculate) {
+	public static void SetHealth(EntityPlayer player, int healthModifier, boolean recalculate) {
 		int newModified = healthModifier;
 		if(recalculate) {
 			newModified = getNewModifiedAmount(player, healthModifier);
 		}
-	    int modifiedHealth = safetyCheck(getNewHealth(newModified));
+	    int modifiedHealth = safetyCheck(HealthUtil.getNewHealth(newModified));
 		
 	    sendHealthMessage(player, modifiedHealth, healthModifier);
 
 		setModifier(player, newModified);
-		setHealth(player, modifiedHealth);
+		HealthUtil.setHealth(player, modifiedHealth);
+	}
+	
+	public static void SetMaxHealth(EntityPlayer player, int healthModifier) {
+		SetMaxHealth(player, healthModifier, true);
+	}
+	
+	public static void SetMaxHealth(EntityPlayer player, int healthModifier, boolean recalculate) {
+		int newModified = healthModifier;
+		if(recalculate) {
+			newModified = getNewModifiedAmount(player, healthModifier);
+		}
+		int modifiedHealth = safetyCheck(HealthUtil.getNewHealth(newModified));
+		
+		sendHealthMessage(player, modifiedHealth, healthModifier);
+		
+		setModifier(player, newModified);
+		HealthUtil.setMaxHealth(player, modifiedHealth);
 	}
 
 	public static int safetyCheck(int health) {
