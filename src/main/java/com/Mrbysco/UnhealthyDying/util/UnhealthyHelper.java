@@ -58,18 +58,15 @@ public class UnhealthyHelper {
 			if(DyingConfigGen.regen.regenHealth) {
 				int maxPositive = DyingConfigGen.regen.maxRegenned;
 				if((maxHealth + newModified) > maxPositive)
-					newModified = maxPositive;
+					newModified = maxPositive - maxHealth;
 			} else {
 				return 0;
 			}
-		}
-		
-		if(newModified < 0) {
+		} else if(newModified < 0) {
 			int maxNegative = DyingConfigGen.general.minimumHealth;
 			if((maxHealth + newModified) < maxNegative)
-				newModified = maxNegative;
+				newModified = -(maxHealth - maxNegative);
 		}
-		System.out.println(newModified);
 		return newModified;
 	}
 	
@@ -240,10 +237,12 @@ public class UnhealthyHelper {
 	}
 
 	public static int safetyCheck(int health) {
-		int newHealth = health;
-		if(DyingConfigGen.regen.regenHealth && newHealth > DyingConfigGen.regen.maxRegenned) {
+		int oldHealth = health;
+		int newHealth = oldHealth;
+		if(DyingConfigGen.regen.regenHealth && oldHealth > DyingConfigGen.regen.maxRegenned) {
 			newHealth = DyingConfigGen.regen.maxRegenned;
-		} else if(newHealth < DyingConfigGen.general.minimumHealth) {
+		} 
+		if(oldHealth < DyingConfigGen.general.minimumHealth) {
 			newHealth = DyingConfigGen.general.minimumHealth;
 		}
 		
