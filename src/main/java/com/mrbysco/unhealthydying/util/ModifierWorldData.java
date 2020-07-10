@@ -1,70 +1,71 @@
 package com.mrbysco.unhealthydying.util;
 
 import com.mrbysco.unhealthydying.Reference;
-
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.MapStorage;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
 
 public class ModifierWorldData extends WorldSavedData {
 	private static final String DATA_NAME = Reference.MOD_ID + "_world_data";
 	private static final String MODIFIER_TAG = "stored_modifiers";
 	
-	private NBTTagCompound modifierTag;
+	private CompoundNBT modifierTag;
 
 	public ModifierWorldData(String name) {
 		super(name);
 		
-		this.modifierTag = new NBTTagCompound();
+		this.modifierTag = new CompoundNBT();
 	}
 	
 	public ModifierWorldData() {
 		super(DATA_NAME);
 		
-		this.modifierTag = new NBTTagCompound();
+		this.modifierTag = new CompoundNBT();
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		if(nbt.hasKey(MODIFIER_TAG)) {
-			this.modifierTag = (NBTTagCompound)nbt.getTag(MODIFIER_TAG);
+	public void read(CompoundNBT nbt) {
+		if(nbt.contains(MODIFIER_TAG)) {
+			this.modifierTag = (CompoundNBT)nbt.get(MODIFIER_TAG);
 		}
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		compound.setTag(MODIFIER_TAG, this.modifierTag);
+	public CompoundNBT write(CompoundNBT compound) {
+		compound.put(MODIFIER_TAG, this.modifierTag);
 		return compound;
 	}
 	
-	public NBTTagCompound getModifierTag() {
+	public CompoundNBT getModifierTag() {
 		return modifierTag;
 	}
 	
-	public void setModifierTag(NBTTagCompound modifierTag) {
+	public void setModifierTag(CompoundNBT modifierTag) {
 		this.modifierTag = modifierTag;
 	}
 	
 	public void setScoreboardTeamModifier(String teamName, int healthModifier) {
 		String teamTag = "Scoreboard" + teamName + "Modifier";
-		if(this.modifierTag.hasKey(teamTag)) {
+		if(this.modifierTag.contains(teamTag)) {
 			int modifierAmount = UnhealthyHelper.getSafeModifier(healthModifier);
-			this.modifierTag.setInteger(teamTag, modifierAmount);
+			this.modifierTag.putInt(teamTag, modifierAmount);
 		} else {
-			int storedModifier = this.modifierTag.getInteger(teamTag);
+			int storedModifier = this.modifierTag.getInt(teamTag);
 			storedModifier = UnhealthyHelper.getSafeModifier(storedModifier + healthModifier);
 
-			this.modifierTag.setInteger(teamTag, storedModifier);
+			this.modifierTag.putInt(teamTag, storedModifier);
 		}
 	}
 	
 	public int getScoreboardTeamModifier(String teamName) {
 		String teamTag = "Scoreboard" + teamName + "Modifier";
-		if(this.modifierTag.hasKey(teamTag)) {
-			return this.modifierTag.getInteger(teamTag);
+		if(this.modifierTag.contains(teamTag)) {
+			return this.modifierTag.getInt(teamTag);
 		} else {
-			this.modifierTag.setInteger(teamTag, 0);
+			this.modifierTag.putInt(teamTag, 0);
 			return 0;
 		}
 	}
@@ -72,34 +73,35 @@ public class ModifierWorldData extends WorldSavedData {
 	
 	public void setTeamModifier(String teamName, int healthModifier) {
 		String teamTag = "FTB_team" + teamName + "Modifier";
-		if(this.modifierTag.hasKey(teamTag)) {
+		if(this.modifierTag.contains(teamTag)) {
 			int modifierAmount = UnhealthyHelper.getSafeModifier(healthModifier);
-			this.modifierTag.setInteger(teamTag, modifierAmount);
+			this.modifierTag.putInt(teamTag, modifierAmount);
 		} else {
-			int storedModifier = this.modifierTag.getInteger(teamTag);
+			int storedModifier = this.modifierTag.getInt(teamTag);
 			storedModifier = UnhealthyHelper.getSafeModifier(storedModifier + healthModifier);
 
-			this.modifierTag.setInteger(teamTag, storedModifier);
+			this.modifierTag.putInt(teamTag, storedModifier);
 		}
 	}
 	
 	public int getTeamModifier(String teamName) {
 		String teamTag = "FTB_team" + teamName + "Modifier";
-		if(this.modifierTag.hasKey(teamTag)) {
-			return this.modifierTag.getInteger(teamTag);
+		if(this.modifierTag.contains(teamTag)) {
+			return this.modifierTag.getInt(teamTag);
 		} else {
-			this.modifierTag.setInteger(teamTag, 0);
+			this.modifierTag.putInt(teamTag, 0);
 			return 0;
 		}
 	}
-	
-	public static ModifierWorldData getForWorld(World world) {
-        MapStorage storage = world.getPerWorldStorage();
-        ModifierWorldData data = (ModifierWorldData) storage.getOrLoadData(ModifierWorldData.class, DATA_NAME);
-		if (data == null) {
-			data = new ModifierWorldData();
-			storage.setData(DATA_NAME, data);
+
+	public static ModifierWorldData getForWorld(World world)
+	{
+		if (!(world instanceof ServerWorld)) {
+			throw new RuntimeException("Attempted to get the data from a client world. This is wrong.");
 		}
-		return data;
+		ServerWorld overworld = world.getServer().getWorld(DimensionType.OVERWORLD);
+
+		DimensionSavedDataManager storage = overworld.getSavedData();
+		return storage.getOrCreate(ModifierWorldData::new, DATA_NAME);
 	}
 }

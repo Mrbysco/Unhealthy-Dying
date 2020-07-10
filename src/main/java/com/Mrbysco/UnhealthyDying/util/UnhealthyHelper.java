@@ -4,27 +4,25 @@ import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.UnhealthyDying;
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
 import com.mrbysco.unhealthydying.util.team.TeamHelper;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
 
 public class UnhealthyHelper {
 
-	public static int getNewModifiedAmount(EntityPlayer player, int healthModifier) {		
+	public static int getNewModifiedAmount(PlayerEntity player, int healthModifier) {
 		int oldModified = getOldModifier(player);
 		int newModified = oldModified + healthModifier;
 		
 		newModified = getSafeModifier(newModified);
 		
 		if(newModified == 0) {
-			ITextComponent text = new TextComponentTranslation("unhealthydying:modifierzero.message", new Object[0]);
+			ITextComponent text = new TranslationTextComponent("unhealthydying:modifierzero.message", new Object[0]);
 			text.getStyle().setColor(TextFormatting.DARK_GREEN);
 			player.sendMessage(text);
 		}
@@ -34,46 +32,46 @@ public class UnhealthyHelper {
 		return newModified;
 	}
 	
-	public static void setModifier(EntityPlayer player, int modifier) {
-		NBTTagCompound playerData = player.getEntityData();
-		NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
+	public static void setModifier(PlayerEntity player, int modifier) {
+		CompoundNBT playerData = player.getPersistentData();
+		CompoundNBT data = UnhealthyHelper.getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
 
-		data.setInteger(Reference.MODIFIED_HEALTH_TAG, modifier);
+		data.putInt(Reference.MODIFIED_HEALTH_TAG, modifier);
 		
-		playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+		playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
 	}
 	
-	private static int getOldModifier(EntityPlayer player) {
-		NBTTagCompound playerData = player.getEntityData();
-		NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
+	private static int getOldModifier(PlayerEntity player) {
+		CompoundNBT playerData = player.getPersistentData();
+		CompoundNBT data = UnhealthyHelper.getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
 		
-		return data.getInteger(Reference.MODIFIED_HEALTH_TAG);
+		return data.getInt(Reference.MODIFIED_HEALTH_TAG);
 	}
 	
 	public static int getSafeModifier(int oldAmount) {
 		int newModified = oldAmount;
-		int maxHealth = DyingConfigGen.defaultSettings.defaultHealth;
+		int maxHealth = DyingConfigGen.SERVER.defaultHealth.get();
 		
 		if(newModified > 0) {
-			if(DyingConfigGen.regen.regenHealth) {
-				int maxPositive = DyingConfigGen.regen.maxRegenned;
+			if(DyingConfigGen.SERVER.regenHealth.get()) {
+				int maxPositive = DyingConfigGen.SERVER.maxRegained.get();
 				if((maxHealth + newModified) > maxPositive)
 					newModified = maxPositive - maxHealth;
 			} else {
 				return 0;
 			}
 		} else if(newModified < 0) {
-			int maxNegative = DyingConfigGen.general.minimumHealth;
+			int maxNegative = DyingConfigGen.SERVER.minimumHealth.get();
 			if((maxHealth + newModified) < maxNegative)
 				newModified = -(maxHealth - maxNegative);
 		}
 		return newModified;
 	}
 	
-	public static int getModifiedAmount(EntityPlayer player) {
-		NBTTagCompound playerData = player.getEntityData();
-		NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
-		return data.getInteger(Reference.MODIFIED_HEALTH_TAG);
+	public static int getModifiedAmount(PlayerEntity player) {
+		CompoundNBT playerData = player.getPersistentData();
+		CompoundNBT data = UnhealthyHelper.getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
+		return data.getInt(Reference.MODIFIED_HEALTH_TAG);
 	}
 	
 	/**
@@ -88,33 +86,33 @@ public class UnhealthyHelper {
 			return new ResourceLocation(splitResource[0], splitResource[1]);
 	}
 	
-	public static NBTTagCompound getTag(NBTTagCompound tag, String key) {
-		if(tag == null || !tag.hasKey(key)) {
-			return new NBTTagCompound();
+	public static CompoundNBT getTag(CompoundNBT tag, String key) {
+		if(tag == null || !tag.contains(key)) {
+			return new CompoundNBT();
 		}
-		return tag.getCompoundTag(key);
+		return tag.getCompound(key);
 	}
 	
 	
-	@Optional.Method(modid = "ftblib")
-	public static void teamHealth(EntityPlayer player, int healthModifier) {
-		World world = player.world;
-		String team = com.feed_the_beast.ftblib.lib.data.FTBLibAPI.getTeam(player.getUniqueID());
-		if(!team.isEmpty()) {
-			for(EntityPlayer players : world.playerEntities) {
-				if(players.equals(player))
-					SetHealth(player, healthModifier);
-				else {
-					if(com.feed_the_beast.ftblib.lib.data.FTBLibAPI.isPlayerInTeam(player.getOfflineUUID(players.getName()), team)) {
-						SetMaxHealth(players, healthModifier);
-					}
-				}
-			}
-		}
-	}
+//	@Optional.Method(modid = "ftblib")
+//	public static void teamHealth(PlayerEntity player, int healthModifier) {
+//		World world = player.world;
+//		String team = com.feed_the_beast.ftblib.lib.data.FTBLibAPI.getTeam(player.getUniqueID());
+//		if(!team.isEmpty()) {
+//			for(PlayerEntity players : world.getPlayers()) {
+//				if(players.equals(player))
+//					SetHealth(player, healthModifier);
+//				else {
+//					if(com.feed_the_beast.ftblib.lib.data.FTBLibAPI.isPlayerInTeam(player.getOfflineUUID(players.getName()), team)) {
+//						SetMaxHealth(players, healthModifier);
+//					}
+//				}
+//			}
+//		}
+//	}
 	
-	public static void setEveryonesHealth(EntityPlayer player, int healthModifier) {
-		for(EntityPlayer players : player.world.playerEntities) {
+	public static void setEveryonesHealth(PlayerEntity player, int healthModifier) {
+		for(PlayerEntity players : player.world.getPlayers()) {
 			if(players.equals(player))
 				SetHealth(player, healthModifier);
 			else
@@ -122,11 +120,11 @@ public class UnhealthyHelper {
 		}
 	}
 	
-	public static void setScoreboardHealth(EntityPlayer player, int healthModifier) {
+	public static void setScoreboardHealth(PlayerEntity player, int healthModifier) {
 		World world = player.world;
 		if(player.getTeam() != null) {
 			Team team = player.getTeam();
-			for(EntityPlayer players : world.playerEntities) {
+			for(PlayerEntity players : world.getPlayers()) {
 				int newModifier = TeamHelper.changeStoredScoreboardModifier(world, team, healthModifier);
 				if(players.equals(player)) {
 					SetHealth(player, newModifier, false);
@@ -143,27 +141,27 @@ public class UnhealthyHelper {
 		}
 	}
 	
-	public static void sendHealthMessage(EntityPlayer player, int newHealth, int gained) {
+	public static void sendHealthMessage(PlayerEntity player, int newHealth, int gained) {
 		if(gained > 0) {
-			if(DyingConfigGen.regen.regennedHealthMessage) {
-				ITextComponent text = new TextComponentTranslation("unhealthydying:regennedHealth.message", new Object[] { newHealth });
+			if(DyingConfigGen.SERVER.regenHealthMessage.get()) {
+				ITextComponent text = new TranslationTextComponent("unhealthydying:regennedHealth.message", new Object[] { newHealth });
 				text.getStyle().setColor(TextFormatting.DARK_GREEN);
 				player.sendStatusMessage(text, true);
 			}
 		} else {
-			if(DyingConfigGen.general.reducedHealthMessage) {
-				ITextComponent text = new TextComponentTranslation("unhealthydying:reducedHealth.message", new Object[] { newHealth });
+			if(DyingConfigGen.SERVER.reducedHealthMessage.get()) {
+				ITextComponent text = new TranslationTextComponent("unhealthydying:reducedHealth.message", new Object[] { newHealth });
 				text.getStyle().setColor(TextFormatting.DARK_RED);
 				player.sendStatusMessage(text, true);
 			}
 		}
 	}
 	
-	public static void SetHealth(EntityPlayer player, int healthModifier) {
+	public static void SetHealth(PlayerEntity player, int healthModifier) {
 		SetHealth(player, healthModifier, true);
 	}
 	
-	public static void SetHealth(EntityPlayer player, int healthModifier, boolean recalculate) {
+	public static void SetHealth(PlayerEntity player, int healthModifier, boolean recalculate) {
 		int newModified = healthModifier;
 		if(recalculate) {
 			newModified = getNewModifiedAmount(player, healthModifier);
@@ -176,11 +174,11 @@ public class UnhealthyHelper {
 		HealthUtil.setHealth(player, modifiedHealth);
 	}
 	
-	public static void SetMaxHealth(EntityPlayer player, int healthModifier) {
+	public static void SetMaxHealth(PlayerEntity player, int healthModifier) {
 		SetMaxHealth(player, healthModifier, true);
 	}
 	
-	public static void SetMaxHealth(EntityPlayer player, int healthModifier, boolean recalculate) {
+	public static void SetMaxHealth(PlayerEntity player, int healthModifier, boolean recalculate) {
 		int newModified = healthModifier;
 		if(recalculate) {
 			newModified = getNewModifiedAmount(player, healthModifier);
@@ -196,11 +194,11 @@ public class UnhealthyHelper {
 	public static int safetyCheck(int health) {
 		int oldHealth = health;
 		int newHealth = oldHealth;
-		if(DyingConfigGen.regen.regenHealth && oldHealth > DyingConfigGen.regen.maxRegenned) {
-			newHealth = DyingConfigGen.regen.maxRegenned;
+		if(DyingConfigGen.SERVER.regenHealth.get() && oldHealth > DyingConfigGen.SERVER.maxRegained.get()) {
+			newHealth = DyingConfigGen.SERVER.maxRegained.get();
 		} 
-		if(oldHealth < DyingConfigGen.general.minimumHealth) {
-			newHealth = DyingConfigGen.general.minimumHealth;
+		if(oldHealth < DyingConfigGen.SERVER.minimumHealth.get()) {
+			newHealth = DyingConfigGen.SERVER.minimumHealth.get();
 		}
 		
 		return newHealth;

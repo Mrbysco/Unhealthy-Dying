@@ -5,48 +5,44 @@ import com.mrbysco.unhealthydying.config.DyingConfigGen;
 import com.mrbysco.unhealthydying.util.HealthUtil;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 import com.mrbysco.unhealthydying.util.team.TeamHelper;
-import com.mrbysco.unhealthydying.util.team.compat.FTBTeamHelper;
-
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class HealthHandler {	
 	@SubscribeEvent
 	public void firstJoin(PlayerLoggedInEvent event) {
-		EntityPlayer player = event.player;
+		PlayerEntity player = event.getPlayer();
 		
 		if(!player.world.isRemote) {
-			NBTTagCompound playerData = player.getEntityData();
-			NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
-			double playerHealth = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
+			CompoundNBT playerData = player.getPersistentData();
+			CompoundNBT data = UnhealthyHelper.getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
+//			double playerHealth = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getValue();
 			
-			if(!data.hasKey(Reference.MODIFIED_HEALTH_TAG))
-				data.setInteger(Reference.MODIFIED_HEALTH_TAG, 0);
+			if(!data.contains(Reference.MODIFIED_HEALTH_TAG))
+				data.putInt(Reference.MODIFIED_HEALTH_TAG, 0);
 			
-			if(data.hasKey(Reference.REDUCED_HEALTH_TAG)) {
-				int reducedHealth = data.getInteger(Reference.REDUCED_HEALTH_TAG);
-				int maxHealth = DyingConfigGen.defaultSettings.defaultHealth;
-				if(DyingConfigGen.regen.regenHealth && reducedHealth > DyingConfigGen.regen.maxRegenned) {
-					maxHealth = DyingConfigGen.regen.maxRegenned;
+			if(data.contains(Reference.REDUCED_HEALTH_TAG)) {
+				int reducedHealth = data.getInt(Reference.REDUCED_HEALTH_TAG);
+				int maxHealth = DyingConfigGen.SERVER.defaultHealth.get();
+				if(DyingConfigGen.SERVER.regenHealth.get() && reducedHealth > DyingConfigGen.SERVER.maxRegained.get()) {
+					maxHealth = DyingConfigGen.SERVER.maxRegained.get();
 				}
-				data.setInteger(Reference.MODIFIED_HEALTH_TAG, reducedHealth - maxHealth);
-				data.removeTag(Reference.REDUCED_HEALTH_TAG);
+				data.putInt(Reference.MODIFIED_HEALTH_TAG, reducedHealth - maxHealth);
+				data.remove(Reference.REDUCED_HEALTH_TAG);
 			}
 			
-			playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+			playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
 			
 			//Sync teams
 			TeamHelper.scoreboardSync(player);
 			
-			if(Loader.isModLoaded("ftblib")) {
-				FTBTeamHelper.FTBTeamSync(player);
-			}
+//			if(Loader.isModLoaded("ftblib")) {
+//				FTBTeamHelper.FTBTeamSync(player);
+//			}
 		}
 	}
 	
@@ -55,47 +51,42 @@ public class HealthHandler {
 	@SubscribeEvent
 	public void setHealth(PlayerRespawnEvent event) {
 		if(!event.isEndConquered()) {
-			int healthPerDeath = -DyingConfigGen.general.healthPerDeath;
-			EntityPlayer player = event.player;
-			NBTTagCompound playerData = player.getEntityData();
-			NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
+			int healthPerDeath = -DyingConfigGen.SERVER.healthPerDeath.get();
+			PlayerEntity player = event.getPlayer();
+			CompoundNBT playerData = player.getPersistentData();
+			CompoundNBT data = UnhealthyHelper.getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
 
-			if(!data.hasKey(Reference.MODIFIED_HEALTH_TAG)) {
+			if(!data.contains(Reference.MODIFIED_HEALTH_TAG)) {
 
 				if(!player.world.isRemote) {
 					HealthUtil.setHealth(player, HealthUtil.getOldHealth(player), healthPerDeath);
 					UnhealthyHelper.setModifier(player, healthPerDeath);
 				}
 			} else {
-				switch (DyingConfigGen.general.HealthSetting) {
+				switch (DyingConfigGen.SERVER.healthSetting.get()) {
 					case EVERYBODY:
 						UnhealthyHelper.setEveryonesHealth(player, healthPerDeath);
-						break;
-					case SEPERATE:
-						UnhealthyHelper.SetHealth(player, healthPerDeath);
 						break;
 					case SCOREBOARD_TEAM:
 						UnhealthyHelper.setScoreboardHealth(player, healthPerDeath);
 						break;
-					case FTB_TEAMS:
-						UnhealthyHelper.teamHealth(player, healthPerDeath);
-						break;
+//					case FTB_TEAMS:
+//						UnhealthyHelper.teamHealth(player, healthPerDeath);
+//						break;
 					default:
 						UnhealthyHelper.SetHealth(player, healthPerDeath);
 						break;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			//Sync health
-			HealthUtil.SyncHealth(event.player);
+			HealthUtil.SyncHealth(event.getPlayer());
 		}
 	}
 	
 	@SubscribeEvent
 	public void DimensionChange(PlayerChangedDimensionEvent event) {
 		//Sync health
-		HealthUtil.SyncHealth(event.player);
+		HealthUtil.SyncHealth(event.getPlayer());
 	}
 }
