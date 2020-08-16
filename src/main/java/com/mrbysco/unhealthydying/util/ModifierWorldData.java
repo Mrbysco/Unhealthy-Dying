@@ -28,7 +28,7 @@ public class ModifierWorldData extends WorldSavedData {
 	@Override
 	public void read(CompoundNBT nbt) {
 		if(nbt.contains(MODIFIER_TAG)) {
-			this.modifierTag = (CompoundNBT)nbt.get(MODIFIER_TAG);
+			setModifierTag((CompoundNBT)nbt.get(MODIFIER_TAG));
 		}
 	}
 
