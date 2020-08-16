@@ -36,8 +36,7 @@ public class UnhealthyCommands {
                 UnhealthyHelper.SetHealth(player, health);
 
                 if(!silent) {
-                    ITextComponent text = new TranslationTextComponent("unhealthydying:addhearts.message", (double)health/2);
-                    text.getStyle().setColor(TextFormatting.RED);
+                    ITextComponent text = new TranslationTextComponent("unhealthydying:addhearts.message", (double)health/2).mergeStyle(TextFormatting.RED);
                     ctx.getSource().sendFeedback(text, false);
                 }
             }
@@ -53,8 +52,7 @@ public class UnhealthyCommands {
                 UnhealthyHelper.SetHealth(player, -health);
 
                 if(!silent) {
-                    ITextComponent text = new TranslationTextComponent("unhealthydying:removehearts.message", (double)health/2);
-                    text.getStyle().setColor(TextFormatting.RED);
+                    ITextComponent text = new TranslationTextComponent("unhealthydying:removehearts.message", (double)health/2).mergeStyle(TextFormatting.RED);
                     ctx.getSource().sendFeedback(text, false);
                 }
             }
@@ -70,8 +68,7 @@ public class UnhealthyCommands {
                 UnhealthyHelper.SetHealth(player, getModifier(health), false);
 
                 if(!silent) {
-                    ITextComponent text = new TranslationTextComponent("unhealthydying:sethealth.message", health);
-                    text.getStyle().setColor(TextFormatting.RED);
+                    ITextComponent text = new TranslationTextComponent("unhealthydying:sethealth.message", health).mergeStyle(TextFormatting.RED);
                     ctx.getSource().sendFeedback(text, false);
                 }
             }
@@ -95,8 +92,7 @@ public class UnhealthyCommands {
                 HealthUtil.setMaxHealth(player, health);
 
                 if(!silent) {
-                    ITextComponent text = new TranslationTextComponent("unhealthydying:setmaxhealth.message", health);
-                    text.getStyle().setColor(TextFormatting.RED);
+                    ITextComponent text = new TranslationTextComponent("unhealthydying:setmaxhealth.message", health).mergeStyle(TextFormatting.RED);
                     ctx.getSource().sendFeedback(text, false);
                 }
             }

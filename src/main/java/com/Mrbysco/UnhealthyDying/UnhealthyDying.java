@@ -5,11 +5,11 @@ import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.handlers.EasterEgg;
 import com.mrbysco.unhealthydying.handlers.HealthHandler;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,10 +25,10 @@ public class UnhealthyDying {
 
 		MinecraftForge.EVENT_BUS.register(new HealthHandler());
 		MinecraftForge.EVENT_BUS.register(new EasterEgg());
-		MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
+		MinecraftForge.EVENT_BUS.addListener(this::onCommandRegister);
 	}
 
-	public void onServerStarting(FMLServerStartingEvent event) {
-		UnhealthyCommands.initializeCommands(event.getCommandDispatcher());
+	public void onCommandRegister(RegisterCommandsEvent event) {
+		UnhealthyCommands.initializeCommands(event.getDispatcher());
 	}
 }

@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -22,9 +23,8 @@ public class UnhealthyHelper {
 		newModified = getSafeModifier(newModified);
 		
 		if(newModified == 0) {
-			ITextComponent text = new TranslationTextComponent("unhealthydying:modifierzero.message");
-			text.getStyle().setColor(TextFormatting.DARK_GREEN);
-			player.sendMessage(text);
+			ITextComponent text = new TranslationTextComponent("unhealthydying:modifierzero.message").mergeStyle(TextFormatting.DARK_GREEN);
+			player.sendMessage(text, Util.DUMMY_UUID);
 		}
 		
 		setModifier(player, newModified);
@@ -144,14 +144,12 @@ public class UnhealthyHelper {
 	public static void sendHealthMessage(PlayerEntity player, int newHealth, int gained) {
 		if(gained > 0) {
 			if(UnhealthyConfig.SERVER.regenHealthMessage.get()) {
-				ITextComponent text = new TranslationTextComponent("unhealthydying:regennedHealth.message", newHealth);
-				text.getStyle().setColor(TextFormatting.DARK_GREEN);
+				ITextComponent text = new TranslationTextComponent("unhealthydying:regennedHealth.message", newHealth).mergeStyle(TextFormatting.DARK_GREEN);
 				player.sendStatusMessage(text, true);
 			}
 		} else {
 			if(UnhealthyConfig.SERVER.reducedHealthMessage.get()) {
-				ITextComponent text = new TranslationTextComponent("unhealthydying:reducedHealth.message", newHealth);
-				text.getStyle().setColor(TextFormatting.DARK_RED);
+				ITextComponent text = new TranslationTextComponent("unhealthydying:reducedHealth.message", newHealth).mergeStyle(TextFormatting.DARK_RED);
 				player.sendStatusMessage(text, true);
 			}
 		}

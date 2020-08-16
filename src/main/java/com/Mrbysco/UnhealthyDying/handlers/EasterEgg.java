@@ -80,9 +80,6 @@ public class EasterEgg {
 					case SCOREBOARD_TEAM:
 						UnhealthyHelper.setScoreboardHealth(player, healthGained);
 						break;
-//					case FTB_TEAMS:
-//						UnhealthyHelper.teamHealth(player, healthGained);
-//						break;
 					default:
 						UnhealthyHelper.SetHealth(player, healthGained);
 						break;

@@ -3,7 +3,6 @@ package com.mrbysco.unhealthydying.util;
 import com.mrbysco.unhealthydying.Reference;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
@@ -98,7 +97,7 @@ public class ModifierWorldData extends WorldSavedData {
 		if (!(world instanceof ServerWorld)) {
 			throw new RuntimeException("Attempted to get the data from a client world. This is wrong.");
 		}
-		ServerWorld overworld = world.getServer().getWorld(DimensionType.OVERWORLD);
+		ServerWorld overworld = world.getServer().getWorld(World.OVERWORLD);
 
 		DimensionSavedDataManager storage = overworld.getSavedData();
 		return storage.getOrCreate(ModifierWorldData::new, DATA_NAME);

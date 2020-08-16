@@ -1,6 +1,7 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[32,)"
 issueTrackerURL="https://github.com/Mrbysco/Unhealthy-Dying/issues"
+license="MIT"
 
 [[mods]]
 modId="unhealthydying"

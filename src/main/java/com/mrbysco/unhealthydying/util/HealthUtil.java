@@ -1,7 +1,7 @@
 package com.mrbysco.unhealthydying.util;
 
 import com.mrbysco.unhealthydying.config.UnhealthyConfig;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class HealthUtil {
@@ -14,7 +14,7 @@ public class HealthUtil {
 		
 		newHealth = UnhealthyHelper.safetyCheck(newHealth);
 		
-		player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
+		player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(newHealth);
        
 		player.setHealth(newHealth);
 	}	
@@ -23,7 +23,7 @@ public class HealthUtil {
 	 * Sets the players health and maxHealth.
 	 */
 	public static void setHealth(PlayerEntity player, int newHealth) {
-		player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
+		player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(newHealth);
         player.setHealth(newHealth);
 	}
 	
@@ -31,7 +31,7 @@ public class HealthUtil {
 	 * Sets the players health and maxHealth.
 	 */
 	public static void setMaxHealth(PlayerEntity player, int newHealth) {
-		player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
+		player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(newHealth);
 	}
 	
 	/*
@@ -39,7 +39,7 @@ public class HealthUtil {
 	 */
 	public static void SyncHealth(PlayerEntity player) {
 		int oldHealth = getOldHealth(player);
-		player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(oldHealth);
+		player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(oldHealth);
         player.setHealth(oldHealth);
 	}
 	

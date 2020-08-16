@@ -55,6 +55,12 @@ minecraft {
     }
 }
 
+repositories {
+    maven {
+        url 'https://www.dogforce-games.com/maven/'
+    }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 }
