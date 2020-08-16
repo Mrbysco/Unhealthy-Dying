@@ -13,7 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.Arrays;
 import java.util.List;
 
-public class DyingConfigGen {
+public class UnhealthyConfig {
 	public static class Server{
 		public final IntValue minimumHealth;
 		public final IntValue healthPerDeath;
@@ -44,8 +44,8 @@ public class DyingConfigGen {
 					.define("reducedHealthMessage", true);
 
 			healthSetting = builder
-					.comment("Decides if the reduced health is per player, for everybody or per team [default: SEPERATE]")
-					.defineEnum("healthSetting", EnumHealthSetting.SEPERATE);
+					.comment("Decides if the reduced health is per player, for everybody or per team [default: SEPARATE]")
+					.defineEnum("healthSetting", EnumHealthSetting.SEPARATE);
 
 			builder.pop();
 			builder.comment("Regen settings")

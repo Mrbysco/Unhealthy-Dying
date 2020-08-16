@@ -2,7 +2,7 @@ package com.mrbysco.unhealthydying.handlers;
 
 import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.UnhealthyDying;
-import com.mrbysco.unhealthydying.config.DyingConfigGen;
+import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.util.HealthUtil;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,53 +13,41 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.List;
 
 public class EasterEgg {
 	@SubscribeEvent
 	public void killedEntityEvent(LivingDeathEvent event) {
-		if(DyingConfigGen.SERVER.regenHealth.get())
-		{
-			List<? extends String> targets = DyingConfigGen.SERVER.regenTargets.get();
-			if(!targets.isEmpty())
-			{
-				for(int i = 0; i < targets.size(); i++)
-				{
+		if(UnhealthyConfig.SERVER.regenHealth.get()) {
+			List<? extends String> targets = UnhealthyConfig.SERVER.regenTargets.get();
+			if(!targets.isEmpty()) {
+				for (String target : targets) {
 					if (event.getSource().getTrueSource() instanceof PlayerEntity && !(event.getSource().getTrueSource() instanceof FakePlayer)) {
-						PlayerEntity player = (PlayerEntity)event.getSource().getTrueSource();
+						PlayerEntity player = (PlayerEntity) event.getSource().getTrueSource();
 
-						String[] targetInfo = targets.get(i).split(",");
-						if(targetInfo.length > 2)
-						{
+						String[] targetInfo = target.split(",");
+						if (targetInfo.length > 2) {
 							ResourceLocation EntityLocation = event.getEntityLiving().getType().getRegistryName();
-							if(event.getEntityLiving() instanceof PlayerEntity)
-							{
+							if (event.getEntityLiving() instanceof PlayerEntity) {
 								EntityLocation = new ResourceLocation("minecraft", "player");
 							}
-							
+
 							ResourceLocation targetEntity = UnhealthyHelper.getEntityLocation(targetInfo[0]);
-							int healthFromKill = Integer.valueOf(targetInfo[1]);
-							int targetAmount = Integer.valueOf(targetInfo[2]);
-							
-							if(targetInfo[0].equals("*:*")) {
-								{
-									ProcessKill(player, targetEntity, healthFromKill, targetAmount);
-								}
-							}
-							else
-							{
-								if(targetEntity.getNamespace().equals("*"))
-								{
-									if(EntityLocation.getNamespace().equals(targetEntity.getNamespace()))
-									{
+
+							int healthFromKill = NumberUtils.toInt(targetInfo[1], 0);
+							int targetAmount = NumberUtils.toInt(targetInfo[2], 0);
+
+							if (targetInfo[0].equals("*:*")) {
+								ProcessKill(player, targetEntity, healthFromKill, targetAmount);
+							} else {
+								if (targetEntity != null && targetEntity.getNamespace().equals("*")) {
+									if (EntityLocation != null && EntityLocation.getNamespace().equals(targetEntity.getNamespace())) {
 										ProcessKill(player, targetEntity, healthFromKill, targetAmount);
 									}
-								}
-								else
-								{
-									if(isMatchingName(EntityLocation, targetEntity))
-									{
+								} else {
+									if (isMatchingName(EntityLocation, targetEntity)) {
 										ProcessKill(player, targetEntity, healthFromKill, targetAmount);
 									}
 								}
@@ -71,28 +59,21 @@ public class EasterEgg {
 		}
 	}
 	
-	public void ProcessKill(PlayerEntity player, ResourceLocation target, int healthGained, int targetAmount)
-	{
+	public void ProcessKill(PlayerEntity player, ResourceLocation target, int healthGained, int targetAmount) {
 		CompoundNBT playerData = player.getPersistentData();
 		CompoundNBT data = UnhealthyHelper.getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
 		
 	    int playerHealth = (int)player.getMaxHealth();
-	    int maxRegained = DyingConfigGen.SERVER.maxRegained.get();
+	    int maxRegained = UnhealthyConfig.SERVER.maxRegained.get();
 	    
-	    if(playerHealth < maxRegained)
-	    {
-		    if(!data.contains(Reference.MODIFIED_HEALTH_TAG))
-			{
-				if(!player.world.isRemote)
-				{
+	    if(playerHealth < maxRegained) {
+		    if(!data.contains(Reference.HEALTH_MODIFIER_TAG)) {
+				if(!player.world.isRemote) {
 					HealthUtil.setHealth(player, healthGained);
 				}
-			}
-		    else
-		    {
-		    	if(targetAmount == 1)
-		    	{
-		    		switch (DyingConfigGen.SERVER.healthSetting.get()) {
+			} else {
+		    	if(targetAmount == 1) {
+		    		switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 					case EVERYBODY:
 						UnhealthyHelper.setEveryonesHealth(player, healthGained);
 						break;
@@ -106,20 +87,15 @@ public class EasterEgg {
 						UnhealthyHelper.SetHealth(player, healthGained);
 						break;
 					}
-		    	}
-		    	else
-		    	{
+		    	} else {
 			    	String customTag = Reference.MOD_PREFIX + target.toString() + ":" + targetAmount;
-			    	switch (DyingConfigGen.SERVER.healthSetting.get()) {
+			    	switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 					case EVERYBODY:
 						setEveryonesKillCount(player, customTag, healthGained, targetAmount);
 						break;
 					case SCOREBOARD_TEAM:
 						setScoreboardKillCount(player, customTag, targetAmount, healthGained);
 						break;
-//					case FTB_TEAMS:
-//						teamKillCount(player, customTag, targetAmount, healthGained);
-//						break;
 					default:
 						setAmountData(player, customTag, targetAmount, healthGained);
 						break;
@@ -131,42 +107,15 @@ public class EasterEgg {
 	
 	public static boolean isMatchingName(ResourceLocation originalEntity, ResourceLocation targetEntity)
     {
-        if (originalEntity != null)
-        {
+        if (originalEntity != null) {
             return originalEntity.equals(targetEntity);
-        }
-        else
-        {
+        } else {
         	return false;
         }
     }
-
-//	@Optional.Method(modid = "ftblib")
-//	public static void teamKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount)
-//	{
-//		World world = player.world;
-//		String team = com.feed_the_beast.ftblib.lib.data.FTBLibAPI.getTeam(player.getUniqueID());
-//		if(!team.isEmpty())
-//		{
-//			for(PlayerEntity players : world.playerEntities)
-//			{
-//				if(players.equals(player))
-//					setAmountData(player, customTag, healthGained, targetAmount);
-//				else
-//				{
-//					if(com.feed_the_beast.ftblib.lib.data.FTBLibAPI.isPlayerInTeam(player.getOfflineUUID(players.getName()), team))
-//					{
-//						setAmountData(players, customTag, healthGained, targetAmount);
-//					}
-//				}
-//			}
-//		}
-//	}
 	
-	public static void setEveryonesKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount)
-	{
-		for(PlayerEntity players : player.world.getPlayers())
-		{
+	public static void setEveryonesKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount) {
+		for(PlayerEntity players : player.world.getPlayers()) {
 			if(players.equals(player))
 				setAmountData(player, customTag, healthGained, targetAmount);
 			else
@@ -174,69 +123,49 @@ public class EasterEgg {
 		}
 	}
 	
-	public static void setScoreboardKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount)
-	{
+	public static void setScoreboardKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount) {
 		World world = player.world;
-		if(player.getTeam() != null)
-		{
+		if(player.getTeam() != null) {
 			Team team = player.getTeam();
-			for(PlayerEntity players : world.getPlayers())
-			{
-				if(players.equals(player))
+			for(PlayerEntity players : world.getPlayers()) {
+				if(players.equals(player)) {
 					setAmountData(player, customTag, healthGained, targetAmount);
-				else
-				{
-					if(players.isOnScoreboardTeam(team))
-					{
+				} else {
+					if(players.isOnScoreboardTeam(team)) {
 						setAmountData(players, customTag, healthGained, targetAmount);
 					}
 				}
 			}
-		}
-		else
-		{
+		} else {
 			UnhealthyDying.logger.error(player.getName() + " is not in a team");
 		}
 	}
 	
-	public static void setAmountData(PlayerEntity player, String customTag, int targetAmount, int healthGained)
-	{
+	public static void setAmountData(PlayerEntity player, String customTag, int targetAmount, int healthGained) {
 		CompoundNBT playerData = player.getPersistentData();
 		CompoundNBT data = UnhealthyHelper.getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
 
-		if(data.contains(customTag))
-    	{
+		if(data.contains(customTag)) {
     		int currentAmount = data.getInt(customTag);
-    		if((currentAmount + 1) >= targetAmount)
-    		{
-		    	switch (DyingConfigGen.SERVER.healthSetting.get()) {
+    		if((currentAmount + 1) >= targetAmount) {
+		    	switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 				case EVERYBODY:
 					UnhealthyHelper.setEveryonesHealth(player, healthGained);
 					break;
 				case SCOREBOARD_TEAM:
 					UnhealthyHelper.setScoreboardHealth(player, healthGained);
 					break;
-//				case FTB_TEAMS:
-//					UnhealthyHelper.teamHealth(player, healthGained);
-//					break;
 				default:
 					UnhealthyHelper.SetHealth(player, healthGained);
 					break;
 				}
 		    	data.remove(customTag);
-				playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
-		    	
-    		}
-    		else
-    		{
+			} else {
     			data.putInt(customTag, currentAmount + 1);
-				playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
-    		}
-    	}
-    	else
-    	{
+			}
+		} else {
     		data.putInt(customTag, 1);
-			playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
-    	}
+		}
+		playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
 	}
 }

@@ -7,7 +7,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mrbysco.unhealthydying.config.DyingConfigGen;
+import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.util.HealthUtil;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 import net.minecraft.command.CommandSource;
@@ -81,7 +81,7 @@ public class UnhealthyCommands {
     }
 
     public static int getModifier(int amount) {
-        int defaultHealth = DyingConfigGen.SERVER.defaultHealth.get();
+        int defaultHealth = UnhealthyConfig.SERVER.defaultHealth.get();
 
         return (amount - defaultHealth);
     }

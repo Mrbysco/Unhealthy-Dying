@@ -2,7 +2,7 @@ package com.mrbysco.unhealthydying.util;
 
 import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.UnhealthyDying;
-import com.mrbysco.unhealthydying.config.DyingConfigGen;
+import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.util.team.TeamHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -22,7 +22,7 @@ public class UnhealthyHelper {
 		newModified = getSafeModifier(newModified);
 		
 		if(newModified == 0) {
-			ITextComponent text = new TranslationTextComponent("unhealthydying:modifierzero.message", new Object[0]);
+			ITextComponent text = new TranslationTextComponent("unhealthydying:modifierzero.message");
 			text.getStyle().setColor(TextFormatting.DARK_GREEN);
 			player.sendMessage(text);
 		}
@@ -36,7 +36,7 @@ public class UnhealthyHelper {
 		CompoundNBT playerData = player.getPersistentData();
 		CompoundNBT data = UnhealthyHelper.getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
 
-		data.putInt(Reference.MODIFIED_HEALTH_TAG, modifier);
+		data.putInt(Reference.HEALTH_MODIFIER_TAG, modifier);
 		
 		playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
 	}
@@ -45,23 +45,23 @@ public class UnhealthyHelper {
 		CompoundNBT playerData = player.getPersistentData();
 		CompoundNBT data = UnhealthyHelper.getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
 		
-		return data.getInt(Reference.MODIFIED_HEALTH_TAG);
+		return data.getInt(Reference.HEALTH_MODIFIER_TAG);
 	}
 	
 	public static int getSafeModifier(int oldAmount) {
 		int newModified = oldAmount;
-		int maxHealth = DyingConfigGen.SERVER.defaultHealth.get();
+		int maxHealth = UnhealthyConfig.SERVER.defaultHealth.get();
 		
 		if(newModified > 0) {
-			if(DyingConfigGen.SERVER.regenHealth.get()) {
-				int maxPositive = DyingConfigGen.SERVER.maxRegained.get();
+			if(UnhealthyConfig.SERVER.regenHealth.get()) {
+				int maxPositive = UnhealthyConfig.SERVER.maxRegained.get();
 				if((maxHealth + newModified) > maxPositive)
 					newModified = maxPositive - maxHealth;
 			} else {
 				return 0;
 			}
 		} else if(newModified < 0) {
-			int maxNegative = DyingConfigGen.SERVER.minimumHealth.get();
+			int maxNegative = UnhealthyConfig.SERVER.minimumHealth.get();
 			if((maxHealth + newModified) < maxNegative)
 				newModified = -(maxHealth - maxNegative);
 		}
@@ -71,7 +71,7 @@ public class UnhealthyHelper {
 	public static int getModifiedAmount(PlayerEntity player) {
 		CompoundNBT playerData = player.getPersistentData();
 		CompoundNBT data = UnhealthyHelper.getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
-		return data.getInt(Reference.MODIFIED_HEALTH_TAG);
+		return data.getInt(Reference.HEALTH_MODIFIER_TAG);
 	}
 	
 	/**
@@ -143,14 +143,14 @@ public class UnhealthyHelper {
 	
 	public static void sendHealthMessage(PlayerEntity player, int newHealth, int gained) {
 		if(gained > 0) {
-			if(DyingConfigGen.SERVER.regenHealthMessage.get()) {
-				ITextComponent text = new TranslationTextComponent("unhealthydying:regennedHealth.message", new Object[] { newHealth });
+			if(UnhealthyConfig.SERVER.regenHealthMessage.get()) {
+				ITextComponent text = new TranslationTextComponent("unhealthydying:regennedHealth.message", newHealth);
 				text.getStyle().setColor(TextFormatting.DARK_GREEN);
 				player.sendStatusMessage(text, true);
 			}
 		} else {
-			if(DyingConfigGen.SERVER.reducedHealthMessage.get()) {
-				ITextComponent text = new TranslationTextComponent("unhealthydying:reducedHealth.message", new Object[] { newHealth });
+			if(UnhealthyConfig.SERVER.reducedHealthMessage.get()) {
+				ITextComponent text = new TranslationTextComponent("unhealthydying:reducedHealth.message", newHealth);
 				text.getStyle().setColor(TextFormatting.DARK_RED);
 				player.sendStatusMessage(text, true);
 			}
@@ -192,13 +192,12 @@ public class UnhealthyHelper {
 	}
 
 	public static int safetyCheck(int health) {
-		int oldHealth = health;
-		int newHealth = oldHealth;
-		if(DyingConfigGen.SERVER.regenHealth.get() && oldHealth > DyingConfigGen.SERVER.maxRegained.get()) {
-			newHealth = DyingConfigGen.SERVER.maxRegained.get();
+		int newHealth = health;
+		if(UnhealthyConfig.SERVER.regenHealth.get() && health > UnhealthyConfig.SERVER.maxRegained.get()) {
+			newHealth = UnhealthyConfig.SERVER.maxRegained.get();
 		} 
-		if(oldHealth < DyingConfigGen.SERVER.minimumHealth.get()) {
-			newHealth = DyingConfigGen.SERVER.minimumHealth.get();
+		if(health < UnhealthyConfig.SERVER.minimumHealth.get()) {
+			newHealth = UnhealthyConfig.SERVER.minimumHealth.get();
 		}
 		
 		return newHealth;

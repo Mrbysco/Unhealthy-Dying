@@ -1,6 +1,6 @@
 package com.mrbysco.unhealthydying.util;
 
-import com.mrbysco.unhealthydying.config.DyingConfigGen;
+import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -47,7 +47,7 @@ public class HealthUtil {
 	 * Gets modified health
 	 */
 	public static int getNewHealth(int healthModifier) {
-		int health = DyingConfigGen.SERVER.defaultHealth.get();
+		int health = UnhealthyConfig.SERVER.defaultHealth.get();
 		
 		return (health + healthModifier);
 	}
@@ -58,7 +58,7 @@ public class HealthUtil {
 	public static int getOldHealth(PlayerEntity player) {
 		int modifier = UnhealthyHelper.getModifiedAmount(player);
 		System.out.println("Max Health: " + player.getMaxHealth());
-		int health = DyingConfigGen.SERVER.defaultHealth.get();
+		int health = UnhealthyConfig.SERVER.defaultHealth.get();
 		
 		int newHealth = health + modifier;
 		

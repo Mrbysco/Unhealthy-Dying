@@ -1,6 +1,6 @@
 package com.mrbysco.unhealthydying.util.team;
 
-import com.mrbysco.unhealthydying.config.DyingConfigGen;
+import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.config.EnumHealthSetting;
 import com.mrbysco.unhealthydying.util.ModifierWorldData;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 public class TeamHelper {
 	
 	public static void scoreboardSync(PlayerEntity player) {
-		if(DyingConfigGen.SERVER.healthSetting.get().equals(EnumHealthSetting.SCOREBOARD_TEAM) && player.getTeam() != null) {
+		if(UnhealthyConfig.SERVER.healthSetting.get().equals(EnumHealthSetting.SCOREBOARD_TEAM) && player.getTeam() != null) {
 			if(!player.world.isRemote) {
 				World world = player.getEntityWorld();
 				if(scoreboardTeamModifierExists(world, player.getTeam())) {
@@ -28,8 +28,8 @@ public class TeamHelper {
 		String teamTag = "Scoreboard" + teamName + "Modifier";
 		ModifierWorldData modifierStorage = ModifierWorldData.getForWorld(worldIn);
 		
-		modifierStorage.setScoreboardTeamModifier(teamName, healthModifier);
-		return modifierStorage.getScoreboardTeamModifier(teamName);
+		modifierStorage.setScoreboardTeamModifier(teamTag, healthModifier);
+		return modifierStorage.getScoreboardTeamModifier(teamTag);
 	}
 	
 	public static boolean scoreboardTeamModifierExists(World worldIn, Team team) {

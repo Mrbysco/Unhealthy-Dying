@@ -1,7 +1,7 @@
 package com.mrbysco.unhealthydying.config;
 
 public enum EnumHealthSetting {
-    SEPERATE,
+    SEPARATE,
     SCOREBOARD_TEAM,
     EVERYBODY
 }

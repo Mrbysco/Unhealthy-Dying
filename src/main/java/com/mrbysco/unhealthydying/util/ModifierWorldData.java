@@ -94,8 +94,7 @@ public class ModifierWorldData extends WorldSavedData {
 		}
 	}
 
-	public static ModifierWorldData getForWorld(World world)
-	{
+	public static ModifierWorldData getForWorld(World world) {
 		if (!(world instanceof ServerWorld)) {
 			throw new RuntimeException("Attempted to get the data from a client world. This is wrong.");
 		}
