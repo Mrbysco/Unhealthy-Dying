@@ -27,8 +27,9 @@ public class UnhealthyHelper {
             ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
             AttributeModifier modifier = getModifier(modifierValue);
             if(attributeInstance != null) {
-                if(attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID) != null) {
-                    if(attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID).getAmount() != modifierValue)
+                AttributeModifier oldAttribute = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
+                if(oldAttribute != null) {
+                    if(oldAttribute.getAmount() != modifierValue)
                         HealthUtil.sendHealthMessage(player, (int)attributeInstance.getValue(), (int)modifierValue);
 
                     attributeInstance.removePersistentModifier(Reference.HEALTH_MODIFIER_ID);
