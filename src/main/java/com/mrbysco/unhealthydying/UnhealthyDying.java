@@ -1,5 +1,6 @@
 package com.mrbysco.unhealthydying;
 
+import com.mrbysco.unhealthydying.commands.UnhealthyCommands;
 import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.handlers.EasterEgg;
 import com.mrbysco.unhealthydying.handlers.HealthHandler;
@@ -29,6 +30,6 @@ public class UnhealthyDying {
 	}
 
 	public void onCommandRegister(RegisterCommandsEvent event) {
-//		UnhealthyCommands.initializeCommands(event.getDispatcher());
+		UnhealthyCommands.initializeCommands(event.getDispatcher());
 	}
 }

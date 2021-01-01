@@ -133,6 +133,29 @@ public class UnhealthyHelper {
         }
     }
 
+    public static double getModifierForAmount(PlayerEntity player, double healthWanted) {
+        ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
+        if(attributeInstance != null) {
+            AttributeModifier currentModifier = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
+            double health = attributeInstance.getValue();
+            if(currentModifier != null)
+                health -= currentModifier.getAmount();
+
+            double modifierRequired = healthWanted - health;
+
+            if(UnhealthyConfig.SERVER.regenHealth.get() && healthWanted > (double)UnhealthyConfig.SERVER.maxRegained.get())
+                modifierRequired = health - (double)UnhealthyConfig.SERVER.maxRegained.get();
+
+            if(healthWanted < (double)UnhealthyConfig.SERVER.minimumHealth.get())
+                modifierRequired = (double)UnhealthyConfig.SERVER.minimumHealth.get() - health;
+
+            return modifierRequired;
+        }
+        //This should never be reached
+        UnhealthyDying.LOGGER.error("Something went wrong. Somehow the player has no max_health attribute applied");
+        return 0.0D;
+    }
+
 	public static double safetyCheck(PlayerEntity player, double modifierValue) {
         ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
         if(attributeInstance != null) {
