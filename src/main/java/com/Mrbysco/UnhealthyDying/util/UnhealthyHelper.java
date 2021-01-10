@@ -4,7 +4,6 @@ import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.UnhealthyDying;
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
 import com.mrbysco.unhealthydying.util.team.TeamHelper;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.scoreboard.Team;

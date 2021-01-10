@@ -1,14 +1,10 @@
 package com.mrbysco.unhealthydying;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.mrbysco.unhealthydying.commands.CommandUDTree;
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
 import com.mrbysco.unhealthydying.handlers.EasterEgg;
 import com.mrbysco.unhealthydying.handlers.HealthHandler;
 import com.mrbysco.unhealthydying.proxy.CommonProxy;
-
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -18,6 +14,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Reference.MOD_ID, 
 	name = Reference.MOD_NAME, 

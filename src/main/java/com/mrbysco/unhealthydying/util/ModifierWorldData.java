@@ -1,7 +1,6 @@
 package com.mrbysco.unhealthydying.util;
 
 import com.mrbysco.unhealthydying.Reference;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;

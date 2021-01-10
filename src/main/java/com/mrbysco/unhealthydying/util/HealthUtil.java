@@ -1,7 +1,6 @@
 package com.mrbysco.unhealthydying.util;
 
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 

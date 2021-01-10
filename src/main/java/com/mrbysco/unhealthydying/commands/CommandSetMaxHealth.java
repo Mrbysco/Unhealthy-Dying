@@ -1,12 +1,9 @@
 package com.mrbysco.unhealthydying.commands;
 
-import java.util.List;
-
 import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
 import com.mrbysco.unhealthydying.util.HealthUtil;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -19,6 +16,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+
+import java.util.List;
 
 public class CommandSetMaxHealth extends CommandBase{
 

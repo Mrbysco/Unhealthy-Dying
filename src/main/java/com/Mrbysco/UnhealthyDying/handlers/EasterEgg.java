@@ -5,7 +5,6 @@ import com.mrbysco.unhealthydying.UnhealthyDying;
 import com.mrbysco.unhealthydying.config.DyingConfigGen;
 import com.mrbysco.unhealthydying.util.HealthUtil;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
-
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,52 +15,45 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class EasterEgg {
 	@SubscribeEvent
 	public void killedEntityEvent(LivingDeathEvent event) {
-		if(DyingConfigGen.regen.regenHealth)
-		{
+		if(DyingConfigGen.regen.regenHealth) {
 			String[] targets = DyingConfigGen.regen.regenTargets;
-			if(targets.length > 0)
-			{
+			if(targets.length > 0) {
 				for(int i = 0; i < targets.length; i++)
 				{
-					if (event.getSource().getTrueSource() instanceof EntityPlayer && !(event.getSource().getTrueSource() instanceof FakePlayer)) {
+					if (event.getSource().getTrueSource() instanceof EntityPlayer && !(event.getSource().getTrueSource() instanceof FakePlayer))
+					{
 						EntityPlayer player = (EntityPlayer)event.getSource().getTrueSource();
 
 						String[] targetInfo = targets[i].split(",");
-						if(targetInfo.length > 2)
+						if (targetInfo.length > 2)
 						{
-							ResourceLocation EntityLocation = EntityList.getKey(event.getEntityLiving());
-							if(event.getEntityLiving() instanceof EntityPlayer)
+							ResourceLocation entityLocation = EntityList.getKey(event.getEntityLiving());
+							int healthFromKill = NumberUtils.toInt(targetInfo[1], 0);
+							int targetAmount = NumberUtils.toInt(targetInfo[2], 0);
+							if(targetInfo[0].contains(":") && entityLocation != null)
 							{
-								EntityLocation = new ResourceLocation("minecraft", "player");
-							}
-							
-							ResourceLocation targetEntity = UnhealthyHelper.getEntityLocation(targetInfo[0]);
-							int healthFromKill = Integer.valueOf(targetInfo[1]);
-							int targetAmount = Integer.valueOf(targetInfo[2]);
-							
-							if(targetInfo[0].equals("*:*")) {
+								String[] splitResource = targetInfo[0].split(":");
+								if (targetInfo[0].equals("*:*"))
 								{
-									ProcessKill(player, targetEntity, healthFromKill, targetAmount);
-								}
-							}
-							else
-							{
-								if(targetEntity.getNamespace().equals("*"))
-								{
-									if(EntityLocation.getNamespace().equals(targetEntity.getNamespace()))
+									processKill(player, targetInfo[0], healthFromKill, targetAmount);
+								} else {
+									if(splitResource[0].equals("*") && entityLocation.getPath().equals(splitResource[1]))
 									{
-										ProcessKill(player, targetEntity, healthFromKill, targetAmount);
+										processKill(player, targetInfo[0], healthFromKill, targetAmount);
 									}
-								}
-								else
-								{
-									if(isMatchingName(EntityLocation, targetEntity))
+									else if(splitResource[1].equals("*") && entityLocation.getNamespace().equals(splitResource[0]))
 									{
-										ProcessKill(player, targetEntity, healthFromKill, targetAmount);
+										processKill(player, targetInfo[0], healthFromKill, targetAmount);
+									} else {
+										if(new ResourceLocation(targetInfo[0]).equals(entityLocation))
+										{
+											processKill(player, targetInfo[0], healthFromKill, targetAmount);
+										}
 									}
 								}
 							}
@@ -72,8 +64,7 @@ public class EasterEgg {
 		}
 	}
 	
-	public void ProcessKill(EntityPlayer player, ResourceLocation target, int healthGained, int targetAmount)
-	{
+	public void processKill(EntityPlayer player, String target, int healthGained, int targetAmount) {
 		NBTTagCompound playerData = player.getEntityData();
 		NBTTagCompound data = UnhealthyHelper.getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
 		
@@ -135,18 +126,6 @@ public class EasterEgg {
 		    }
 	    }
 	}
-	
-	public static boolean isMatchingName(ResourceLocation originalEntity, ResourceLocation targetEntity)
-    {
-        if (originalEntity != null)
-        {
-            return originalEntity.equals(targetEntity);
-        }
-        else
-        {
-        	return false;
-        }
-    }
 	
 	@Optional.Method(modid = "ftblib")
 	public static void teamKillCount(EntityPlayer player, String customTag, int healthGained, int targetAmount)

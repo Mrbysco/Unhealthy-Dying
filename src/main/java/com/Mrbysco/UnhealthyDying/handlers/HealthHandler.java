@@ -6,7 +6,6 @@ import com.mrbysco.unhealthydying.util.HealthUtil;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 import com.mrbysco.unhealthydying.util.team.TeamHelper;
 import com.mrbysco.unhealthydying.util.team.compat.FTBTeamHelper;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
