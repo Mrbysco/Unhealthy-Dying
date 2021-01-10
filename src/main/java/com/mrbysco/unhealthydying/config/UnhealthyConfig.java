@@ -72,7 +72,7 @@ public class UnhealthyConfig {
 							"Syntax: modid:mobname,healthRegenned,amount",
 							"For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart",
 							"While [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart")
-					.defineList("info_messages", Arrays.asList(targetArray), o -> (o instanceof String));
+					.defineList("regenTargets", Arrays.asList(targetArray), o -> (o instanceof String));
 
 			builder.pop();
 		}
