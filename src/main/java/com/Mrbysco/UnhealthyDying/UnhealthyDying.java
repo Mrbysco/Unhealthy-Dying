@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(Reference.MOD_ID)
 public class UnhealthyDying {
-	public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
+	public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
 
 	public UnhealthyDying() {
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -25,10 +25,11 @@ public class UnhealthyDying {
 
 		MinecraftForge.EVENT_BUS.register(new HealthHandler());
 		MinecraftForge.EVENT_BUS.register(new EasterEgg());
-		MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
+
+		MinecraftForge.EVENT_BUS.addListener(this::onCommandRegister);
 	}
 
-	public void onServerStarting(FMLServerStartingEvent event) {
+	public void onCommandRegister(FMLServerStartingEvent event) {
 		UnhealthyCommands.initializeCommands(event.getCommandDispatcher());
 	}
 }

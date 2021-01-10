@@ -25,8 +25,6 @@ public class UnhealthyConfig {
 		public final BooleanValue regenHealthMessage;
 		public final ConfigValue<List<? extends String>> regenTargets;
 
-		public final IntValue defaultHealth;
-
 		Server(ForgeConfigSpec.Builder builder) {
 			builder.comment("General settings")
 					.push("General");
@@ -74,15 +72,7 @@ public class UnhealthyConfig {
 							"Syntax: modid:mobname,healthRegenned,amount",
 							"For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart",
 							"While [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart")
-					.defineList("info_messages", Arrays.asList(targetArray), o -> (o instanceof String));
-
-			builder.pop();
-			builder.comment("Default settings")
-					.push("Default");
-
-			defaultHealth = builder
-					.comment("The amount of max health the player can get from killing the target(s) (20 = 10 hearts) [default: 20]")
-					.defineInRange("defaultHealth", 20, 1, Integer.MAX_VALUE);
+					.defineList("regenTargets", Arrays.asList(targetArray), o -> (o instanceof String));
 
 			builder.pop();
 		}
@@ -98,11 +88,11 @@ public class UnhealthyConfig {
 	
 	@SubscribeEvent
 	public static void onLoad(final ModConfig.Loading configEvent) {
-		UnhealthyDying.logger.debug("Loaded Unhealthy Dying's config file {}", configEvent.getConfig().getFileName());
+		UnhealthyDying.LOGGER.debug("Loaded Unhealthy Dying's config file {}", configEvent.getConfig().getFileName());
 	}
 
 	@SubscribeEvent
 	public static void onFileChange(final ModConfig.Reloading configEvent) {
-		UnhealthyDying.logger.debug("Unhealthy Dying's config just got changed on the file system!");
+		UnhealthyDying.LOGGER.debug("Unhealthy Dying's config just got changed on the file system!");
 	}
 }
