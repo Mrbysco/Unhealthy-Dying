@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[32,)"
+loaderVersion="[33,)"
 issueTrackerURL="https://github.com/Mrbysco/Unhealthy-Dying/issues"
 license="MIT"
 
@@ -12,3 +12,10 @@ authors="Mrbysco"
 credits="rubisnosetti for the mod idea"
 logoFile="logo.png"
 description='''Losing health from dying'''
+
+[[dependencies.unhealthydying]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16.2,1.17)"
+ordering="NONE"
+side="BOTH"

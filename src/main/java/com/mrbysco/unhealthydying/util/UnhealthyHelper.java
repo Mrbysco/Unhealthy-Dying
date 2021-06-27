@@ -137,11 +137,7 @@ public class UnhealthyHelper {
     public static double getModifierForAmount(PlayerEntity player, double healthWanted) {
         ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
         if(attributeInstance != null) {
-            AttributeModifier currentModifier = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
-            double health = attributeInstance.getValue();
-            if(currentModifier != null)
-                health -= currentModifier.getAmount();
-
+            double health = attributeInstance.getBaseValue();
             double modifierRequired = healthWanted - health;
 
             if(UnhealthyConfig.SERVER.regenHealth.get() && healthWanted > (double)UnhealthyConfig.SERVER.maxRegained.get())
@@ -161,7 +157,7 @@ public class UnhealthyHelper {
         ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
         if(attributeInstance != null) {
             AttributeModifier currentModifier = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
-            double health = attributeInstance.getValue();
+            double health = attributeInstance.getBaseValue();
             if(currentModifier != null)
                 health -= currentModifier.getAmount();
 
