@@ -138,9 +138,7 @@ public class UnhealthyHelper {
         ModifiableAttributeInstance attributeInstance = (ModifiableAttributeInstance)player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
         if(attributeInstance != null) {
             AttributeModifier currentModifier = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
-            double health = attributeInstance.getValue();
-            if(currentModifier != null)
-                health -= currentModifier.getAmount();
+            double health = attributeInstance.getBaseValue();
 
             double modifierRequired = healthWanted - health;
 
@@ -161,7 +159,7 @@ public class UnhealthyHelper {
         ModifiableAttributeInstance attributeInstance = (ModifiableAttributeInstance)player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
         if(attributeInstance != null) {
             AttributeModifier currentModifier = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
-            double health = attributeInstance.getValue();
+            double health = attributeInstance.getBaseValue();
             if(currentModifier != null)
                 health -= currentModifier.getAmount();
 
