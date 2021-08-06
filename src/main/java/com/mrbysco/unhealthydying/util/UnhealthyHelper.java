@@ -9,21 +9,22 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
 public class UnhealthyHelper {
 
     public static void initializeModifier(PlayerEntity player, double modifier) {
-        if(!player.world.isRemote) {
+        if(!player.level.isClientSide) {
             ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
             if(attributeInstance != null && attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID) == null)
-                attributeInstance.applyPersistentModifier(getModifier(modifier));
+                attributeInstance.addPermanentModifier(getModifier(modifier));
         }
     }
 
     public static void changeModifier(PlayerEntity player, double modifierValue) {
-        if(!player.world.isRemote) {
+        if(!player.level.isClientSide) {
             ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
             AttributeModifier modifier = getModifier(modifierValue);
             if(attributeInstance != null) {
@@ -32,10 +33,10 @@ public class UnhealthyHelper {
                     if(oldAttribute.getAmount() != modifierValue)
                         HealthUtil.sendHealthMessage(player, (int)attributeInstance.getValue(), (int)modifierValue);
 
-                    attributeInstance.removePersistentModifier(Reference.HEALTH_MODIFIER_ID);
+                    attributeInstance.removePermanentModifier(Reference.HEALTH_MODIFIER_ID);
                 }
 
-                attributeInstance.applyPersistentModifier(modifier);
+                attributeInstance.addPermanentModifier(modifier);
             }
         }
     }
@@ -46,7 +47,7 @@ public class UnhealthyHelper {
 
     @Nullable
     public static ModifierWorldData getSavedData(PlayerEntity player) {
-        return !player.world.isRemote ? ModifierWorldData.get(player.world) : null;
+        return !player.level.isClientSide ? ModifierWorldData.get(player.getServer().getLevel(World.OVERWORLD)) : null;
     }
 
     public static void setEveryonesHealth(PlayerEntity player, int changeModifier) {
@@ -63,8 +64,8 @@ public class UnhealthyHelper {
             }
 
             worldData.setEverybodyModifier(savedModifier);
-            worldData.markDirty();
-            for(PlayerEntity players : player.world.getPlayers()) {
+            worldData.setDirty();
+            for(PlayerEntity players : player.level.players()) {
                 changeModifier(players, savedModifier);
             }
         }
@@ -86,8 +87,8 @@ public class UnhealthyHelper {
                 }
 
                 worldData.setScoreboardTeamModifier(team.getName(), savedModifier);
-                worldData.markDirty();
-                for(PlayerEntity players : player.world.getPlayers()) {
+                worldData.setDirty();
+                for(PlayerEntity players : player.level.players()) {
                     changeModifier(players, savedModifier);
                 }
             }
@@ -110,7 +111,7 @@ public class UnhealthyHelper {
             }
 
             worldData.setPlayerModifier(player.getGameProfile().getId(), savedModifier);
-            worldData.markDirty();
+            worldData.setDirty();
             changeModifier(player, savedModifier);
         }
     }

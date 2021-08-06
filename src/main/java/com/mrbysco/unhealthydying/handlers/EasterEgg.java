@@ -23,8 +23,8 @@ public class EasterEgg {
 			List<? extends String> targets = UnhealthyConfig.SERVER.regenTargets.get();
 			if(!targets.isEmpty()) {
 				for (String target : targets) {
-					if (event.getSource().getTrueSource() instanceof PlayerEntity && !(event.getSource().getTrueSource() instanceof FakePlayer)) {
-						PlayerEntity player = (PlayerEntity) event.getSource().getTrueSource();
+					if (event.getSource().getEntity() instanceof PlayerEntity && !(event.getSource().getEntity() instanceof FakePlayer)) {
+						PlayerEntity player = (PlayerEntity) event.getSource().getEntity();
 						String[] targetInfo = target.split(",");
 						if (targetInfo.length > 2) {
 							ResourceLocation entityLocation = event.getEntityLiving().getType().getRegistryName();
@@ -88,7 +88,7 @@ public class EasterEgg {
 	}
 	
 	public static void setEveryonesKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount) {
-		for(PlayerEntity players : player.world.getPlayers()) {
+		for(PlayerEntity players : player.level.players()) {
 			if(players.equals(player))
 				setAmountData(player, customTag, healthGained, targetAmount);
 			else
@@ -97,14 +97,14 @@ public class EasterEgg {
 	}
 	
 	public static void setScoreboardKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount) {
-		World world = player.world;
+		World world = player.level;
 		if(player.getTeam() != null) {
 			Team team = player.getTeam();
-			for(PlayerEntity players : world.getPlayers()) {
+			for(PlayerEntity players : world.players()) {
 				if(players.equals(player)) {
 					setAmountData(player, customTag, healthGained, targetAmount);
 				} else {
-					if(players.isOnScoreboardTeam(team)) {
+					if(players.isAlliedTo(team)) {
 						setAmountData(players, customTag, healthGained, targetAmount);
 					}
 				}

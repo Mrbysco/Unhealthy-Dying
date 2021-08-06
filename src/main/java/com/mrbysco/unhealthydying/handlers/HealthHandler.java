@@ -13,7 +13,7 @@ public class HealthHandler {
 	public void onJoin(PlayerLoggedInEvent event) {
 		PlayerEntity player = event.getPlayer();
 
-		if(!player.world.isRemote) {
+		if(!player.level.isClientSide) {
 			UnhealthyHelper.initializeModifier(player, 0.0D);
 
 			//Sync teams

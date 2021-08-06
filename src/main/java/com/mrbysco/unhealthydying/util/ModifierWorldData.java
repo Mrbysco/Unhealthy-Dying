@@ -24,14 +24,14 @@ public class ModifierWorldData extends WorldSavedData {
 	}
 
 	@Override
-	public void read(CompoundNBT nbt) {
+	public void load(CompoundNBT nbt) {
 		if(nbt.contains(MODIFIER_TAG)) {
 			setModifierTag((CompoundNBT)nbt.get(MODIFIER_TAG));
 		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public CompoundNBT save(CompoundNBT compound) {
 		compound.put(MODIFIER_TAG, this.modifierTag);
 		return compound;
 	}
@@ -105,9 +105,9 @@ public class ModifierWorldData extends WorldSavedData {
 		if (!(world instanceof ServerWorld)) {
 			throw new RuntimeException("Attempted to get the data from a client world. This is wrong.");
 		}
-		ServerWorld overworld = world.getServer().getWorld(World.OVERWORLD);
+		ServerWorld overworld = world.getServer().getLevel(World.OVERWORLD);
 
-		DimensionSavedDataManager storage = overworld.getSavedData();
-		return storage.getOrCreate(ModifierWorldData::new, DATA_NAME);
+		DimensionSavedDataManager storage = overworld.getDataStorage();
+		return storage.computeIfAbsent(ModifierWorldData::new, DATA_NAME);
 	}
 }
