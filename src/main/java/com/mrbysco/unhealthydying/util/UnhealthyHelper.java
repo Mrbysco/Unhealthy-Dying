@@ -3,13 +3,13 @@ package com.mrbysco.unhealthydying.util;
 import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.UnhealthyDying;
 import com.mrbysco.unhealthydying.config.UnhealthyConfig;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.scores.Team;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.scores.Team;
 
 import javax.annotation.Nullable;
 
@@ -28,14 +28,12 @@ public class UnhealthyHelper {
             AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
             AttributeModifier modifier = getModifier(modifierValue);
             if(attributeInstance != null) {
-                AttributeModifier oldAttribute = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
-                if(oldAttribute != null) {
-                    if(oldAttribute.getAmount() != modifierValue)
-                        HealthUtil.sendHealthMessage(player, (int)attributeInstance.getValue(), (int)modifierValue);
 
+                if (attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID) != null) {
                     attributeInstance.removePermanentModifier(Reference.HEALTH_MODIFIER_ID);
                 }
 
+                HealthUtil.sendHealthMessage(player, (int)attributeInstance.getValue(), (int)modifierValue);
                 attributeInstance.addPermanentModifier(modifier);
             }
         }
