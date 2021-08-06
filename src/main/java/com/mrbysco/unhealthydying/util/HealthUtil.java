@@ -1,19 +1,19 @@
 package com.mrbysco.unhealthydying.util;
 
 import com.mrbysco.unhealthydying.config.UnhealthyConfig;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class HealthUtil {
-    public static void sendHealthMessage(PlayerEntity player, int newHealth, int gained) {
+    public static void sendHealthMessage(Player player, int newHealth, int gained) {
         if(gained > 0 && UnhealthyConfig.SERVER.regenHealthMessage.get()) {
-            ITextComponent text = new TranslationTextComponent("unhealthydying:regennedHealth.message", newHealth).withStyle(TextFormatting.DARK_GREEN);
+            Component text = new TranslatableComponent("unhealthydying:regennedHealth.message", newHealth).withStyle(ChatFormatting.DARK_GREEN);
             player.displayClientMessage(text, true);
         } else {
             if(UnhealthyConfig.SERVER.reducedHealthMessage.get()) {
-                ITextComponent text = new TranslationTextComponent("unhealthydying:reducedHealth.message", newHealth).withStyle(TextFormatting.DARK_RED);
+                Component text = new TranslatableComponent("unhealthydying:reducedHealth.message", newHealth).withStyle(ChatFormatting.DARK_RED);
                 player.displayClientMessage(text, true);
             }
         }

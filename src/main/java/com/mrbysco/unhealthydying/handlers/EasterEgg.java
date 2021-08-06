@@ -4,11 +4,11 @@ import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.UnhealthyDying;
 import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.scoreboard.Team;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.scores.Team;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,8 +23,7 @@ public class EasterEgg {
 			List<? extends String> targets = UnhealthyConfig.SERVER.regenTargets.get();
 			if(!targets.isEmpty()) {
 				for (String target : targets) {
-					if (event.getSource().getEntity() instanceof PlayerEntity && !(event.getSource().getEntity() instanceof FakePlayer)) {
-						PlayerEntity player = (PlayerEntity) event.getSource().getEntity();
+					if (event.getSource().getEntity() instanceof Player player && !(event.getSource().getEntity() instanceof FakePlayer)) {
 						String[] targetInfo = target.split(",");
 						if (targetInfo.length > 2) {
 							ResourceLocation entityLocation = event.getEntityLiving().getType().getRegistryName();
@@ -53,42 +52,30 @@ public class EasterEgg {
 		}
 	}
 	
-	public void processKill(PlayerEntity player, String target, int healthGained, int targetAmount) {
+	public void processKill(Player player, String target, int healthGained, int targetAmount) {
 	    float playerHealth = player.getMaxHealth();
 		float maxRegained = (float)UnhealthyConfig.SERVER.maxRegained.get();
 	    
 	    if(playerHealth < maxRegained) {
 			if(targetAmount == 1) {
 				switch (UnhealthyConfig.SERVER.healthSetting.get()) {
-					case EVERYBODY:
-						UnhealthyHelper.setEveryonesHealth(player, healthGained);
-						break;
-					case SCOREBOARD_TEAM:
-						UnhealthyHelper.setScoreboardHealth(player, healthGained);
-						break;
-					default:
-						UnhealthyHelper.setHealth(player, healthGained);
-						break;
+					case EVERYBODY -> UnhealthyHelper.setEveryonesHealth(player, healthGained);
+					case SCOREBOARD_TEAM -> UnhealthyHelper.setScoreboardHealth(player, healthGained);
+					default -> UnhealthyHelper.setHealth(player, healthGained);
 				}
 			} else {
 				String customTag = Reference.MOD_PREFIX + target + ":" + targetAmount;
 				switch (UnhealthyConfig.SERVER.healthSetting.get()) {
-					case EVERYBODY:
-						setEveryonesKillCount(player, customTag, healthGained, targetAmount);
-						break;
-					case SCOREBOARD_TEAM:
-						setScoreboardKillCount(player, customTag, targetAmount, healthGained);
-						break;
-					default:
-						setAmountData(player, customTag, targetAmount, healthGained);
-						break;
+					case EVERYBODY -> setEveryonesKillCount(player, customTag, healthGained, targetAmount);
+					case SCOREBOARD_TEAM -> setScoreboardKillCount(player, customTag, targetAmount, healthGained);
+					default -> setAmountData(player, customTag, targetAmount, healthGained);
 				}
 			}
 	    }
 	}
 	
-	public static void setEveryonesKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount) {
-		for(PlayerEntity players : player.level.players()) {
+	public static void setEveryonesKillCount(Player player, String customTag, int healthGained, int targetAmount) {
+		for(Player players : player.level.players()) {
 			if(players.equals(player))
 				setAmountData(player, customTag, healthGained, targetAmount);
 			else
@@ -96,11 +83,11 @@ public class EasterEgg {
 		}
 	}
 	
-	public static void setScoreboardKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount) {
-		World world = player.level;
+	public static void setScoreboardKillCount(Player player, String customTag, int healthGained, int targetAmount) {
+		Level level = player.level;
 		if(player.getTeam() != null) {
 			Team team = player.getTeam();
-			for(PlayerEntity players : world.players()) {
+			for(Player players : level.players()) {
 				if(players.equals(player)) {
 					setAmountData(player, customTag, healthGained, targetAmount);
 				} else {
@@ -114,22 +101,16 @@ public class EasterEgg {
 		}
 	}
 	
-	public static void setAmountData(PlayerEntity player, String customTag, int targetAmount, int healthGained) {
-		CompoundNBT playerData = player.getPersistentData();
+	public static void setAmountData(Player player, String customTag, int targetAmount, int healthGained) {
+		CompoundTag playerData = player.getPersistentData();
 
 		if(playerData.contains(customTag)) {
     		int currentAmount = playerData.getInt(customTag);
     		if((currentAmount + 1) >= targetAmount) {
-		    	switch (UnhealthyConfig.SERVER.healthSetting.get()) {
-				case EVERYBODY:
-					UnhealthyHelper.setEveryonesHealth(player, healthGained);
-					break;
-				case SCOREBOARD_TEAM:
-					UnhealthyHelper.setScoreboardHealth(player, healthGained);
-					break;
-				default:
-					UnhealthyHelper.setHealth(player, healthGained);
-					break;
+				switch (UnhealthyConfig.SERVER.healthSetting.get()) {
+					case EVERYBODY -> UnhealthyHelper.setEveryonesHealth(player, healthGained);
+					case SCOREBOARD_TEAM -> UnhealthyHelper.setScoreboardHealth(player, healthGained);
+					default -> UnhealthyHelper.setHealth(player, healthGained);
 				}
 				playerData.remove(customTag);
 			} else {

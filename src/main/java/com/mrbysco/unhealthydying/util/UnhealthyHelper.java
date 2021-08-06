@@ -3,29 +3,29 @@ package com.mrbysco.unhealthydying.util;
 import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.UnhealthyDying;
 import com.mrbysco.unhealthydying.config.UnhealthyConfig;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.scoreboard.Team;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.scores.Team;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
 public class UnhealthyHelper {
 
-    public static void initializeModifier(PlayerEntity player, double modifier) {
+    public static void initializeModifier(Player player, double modifier) {
         if(!player.level.isClientSide) {
-            ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
+            AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
             if(attributeInstance != null && attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID) == null)
                 attributeInstance.addPermanentModifier(getModifier(modifier));
         }
     }
 
-    public static void changeModifier(PlayerEntity player, double modifierValue) {
+    public static void changeModifier(Player player, double modifierValue) {
         if(!player.level.isClientSide) {
-            ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
+            AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
             AttributeModifier modifier = getModifier(modifierValue);
             if(attributeInstance != null) {
                 AttributeModifier oldAttribute = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
@@ -42,19 +42,19 @@ public class UnhealthyHelper {
     }
 
     public static AttributeModifier getModifier(double modifier) {
-        return new AttributeModifier(Reference.HEALTH_MODIFIER_ID, "UnhealthyHealthModifier", modifier, Operation.ADDITION);
+        return new AttributeModifier(Reference.HEALTH_MODIFIER_ID, () -> "UnhealthyHealthModifier", modifier, Operation.ADDITION);
     }
 
     @Nullable
-    public static ModifierWorldData getSavedData(PlayerEntity player) {
-        return !player.level.isClientSide ? ModifierWorldData.get(player.getServer().getLevel(World.OVERWORLD)) : null;
+    public static ModifierWorldData getSavedData(Player player) {
+        return !player.level.isClientSide ? ModifierWorldData.get(player.getServer().getLevel(Level.OVERWORLD)) : null;
     }
 
-    public static void setEveryonesHealth(PlayerEntity player, int changeModifier) {
+    public static void setEveryonesHealth(Player player, int changeModifier) {
         setEveryonesHealth(player, changeModifier, true);
     }
 
-	public static void setEveryonesHealth(PlayerEntity player, int changeModifier, boolean recalculate) {
+	public static void setEveryonesHealth(Player player, int changeModifier, boolean recalculate) {
         ModifierWorldData worldData = getSavedData(player);
         if(worldData != null) {
             int savedModifier = recalculate ? worldData.getEverybodyModifier() : changeModifier;
@@ -65,17 +65,17 @@ public class UnhealthyHelper {
 
             worldData.setEverybodyModifier(savedModifier);
             worldData.setDirty();
-            for(PlayerEntity players : player.level.players()) {
+            for(Player players : player.level.players()) {
                 changeModifier(players, savedModifier);
             }
         }
 	}
 
-    public static void setScoreboardHealth(PlayerEntity player, int changeModifier) {
+    public static void setScoreboardHealth(Player player, int changeModifier) {
         setScoreboardHealth(player, changeModifier, true);
     }
 
-    public static void setScoreboardHealth(PlayerEntity player, int changeModifier, boolean recalculate) {
+    public static void setScoreboardHealth(Player player, int changeModifier, boolean recalculate) {
         if(player.getTeam() != null) {
             Team team = player.getTeam();
             ModifierWorldData worldData = getSavedData(player);
@@ -88,7 +88,7 @@ public class UnhealthyHelper {
 
                 worldData.setScoreboardTeamModifier(team.getName(), savedModifier);
                 worldData.setDirty();
-                for(PlayerEntity players : player.level.players()) {
+                for(Player players : player.level.players()) {
                     changeModifier(players, savedModifier);
                 }
             }
@@ -97,11 +97,11 @@ public class UnhealthyHelper {
         }
     }
 
-    public static void setHealth(PlayerEntity player, int changeModifier) {
+    public static void setHealth(Player player, int changeModifier) {
         setHealth(player, changeModifier, true);
     }
 
-    public static void setHealth(PlayerEntity player, int changeModifier, boolean recalculate) {
+    public static void setHealth(Player player, int changeModifier, boolean recalculate) {
         ModifierWorldData worldData = getSavedData(player);
         if(worldData != null) {
             int savedModifier = recalculate ? worldData.getPlayerModifier(player.getGameProfile().getId()) : changeModifier;
@@ -116,7 +116,7 @@ public class UnhealthyHelper {
         }
     }
 
-    public static void syncHealth(PlayerEntity player) {
+    public static void syncHealth(Player player) {
         ModifierWorldData worldData = getSavedData(player);
         if(worldData != null) {
             switch (UnhealthyConfig.SERVER.healthSetting.get()) {
@@ -135,8 +135,8 @@ public class UnhealthyHelper {
         }
     }
 
-    public static double getModifierForAmount(PlayerEntity player, double healthWanted) {
-        ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
+    public static double getModifierForAmount(Player player, double healthWanted) {
+        AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
         if(attributeInstance != null) {
             double health = attributeInstance.getBaseValue();
             double modifierRequired = healthWanted - health;
@@ -154,8 +154,8 @@ public class UnhealthyHelper {
         return 0.0D;
     }
 
-	public static double safetyCheck(PlayerEntity player, double modifierValue) {
-        ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
+	public static double safetyCheck(Player player, double modifierValue) {
+        AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
         if(attributeInstance != null) {
             AttributeModifier currentModifier = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
             double health = attributeInstance.getBaseValue();

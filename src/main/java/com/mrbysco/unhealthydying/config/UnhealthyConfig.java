@@ -8,6 +8,7 @@ import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
@@ -87,12 +88,12 @@ public class UnhealthyConfig {
 	}
 	
 	@SubscribeEvent
-	public static void onLoad(final ModConfig.Loading configEvent) {
+	public static void onLoad(final ModConfigEvent.Loading configEvent) {
 		UnhealthyDying.LOGGER.debug("Loaded Unhealthy Dying's config file {}", configEvent.getConfig().getFileName());
 	}
 
 	@SubscribeEvent
-	public static void onFileChange(final ModConfig.Reloading configEvent) {
+	public static void onFileChange(final ModConfigEvent.Reloading configEvent) {
 		UnhealthyDying.LOGGER.debug("Unhealthy Dying's config just got changed on the file system!");
 	}
 }

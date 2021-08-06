@@ -16,7 +16,7 @@ group = 'com.mrbysco.unhealthydying' // http://maven.apache.org/guides/mini/guid
 archivesBaseName = "Unhealthy-Dying-${mc_version}"
 
 // Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
@@ -58,21 +58,21 @@ minecraft {
 }
 
 repositories {
-    maven {
-        url = "https://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        url = "https://maven.theillusivec4.top/"
-    }
-    maven { url = 'https://www.cursemaven.com'  }
+//    maven {
+//        url = "https://dvs1.progwml6.com/files/maven"
+//    }
+//    maven {
+//        url = "https://maven.theillusivec4.top/"
+//    }
+//    maven { url = 'https://www.cursemaven.com'  }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
-    runtimeOnly fg.deobf("slimeknights.mantle:Mantle:${mc_version}-${mantle_version}")
-    runtimeOnly fg.deobf("curse.maven:baubley-282947:3186313")
+//    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+//    runtimeOnly fg.deobf("slimeknights.mantle:Mantle:${mc_version}-${mantle_version}")
+//    runtimeOnly fg.deobf("curse.maven:baubley-282947:3186313")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

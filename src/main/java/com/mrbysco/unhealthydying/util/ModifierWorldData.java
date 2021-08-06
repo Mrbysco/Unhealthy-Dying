@@ -1,46 +1,48 @@
 package com.mrbysco.unhealthydying.util;
 
 import com.mrbysco.unhealthydying.Reference;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.DimensionSavedDataManager;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.UUID;
 
-public class ModifierWorldData extends WorldSavedData {
+public class ModifierWorldData extends SavedData {
 	private static final String DATA_NAME = Reference.MOD_ID + "_world_data";
 	private static final String MODIFIER_TAG = "stored_modifiers";
 
 	private static final String EVERYBODY_TAG = "EverybodyModifier";
 	
-	private CompoundNBT modifierTag;
+	private CompoundTag modifierTag;
+
+	public ModifierWorldData(CompoundTag tag) {
+		setModifierTag(tag);
+	}
 
 	public ModifierWorldData() {
-		super(DATA_NAME);
-		
-		this.modifierTag = new CompoundNBT();
+		this(new CompoundTag());
 	}
 
-	@Override
-	public void load(CompoundNBT nbt) {
+	public static ModifierWorldData load(CompoundTag nbt) {
 		if(nbt.contains(MODIFIER_TAG)) {
-			setModifierTag((CompoundNBT)nbt.get(MODIFIER_TAG));
+			return new ModifierWorldData((CompoundTag)nbt.get(MODIFIER_TAG));
 		}
+		return new ModifierWorldData();
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT compound) {
+	public CompoundTag save(CompoundTag compound) {
 		compound.put(MODIFIER_TAG, this.modifierTag);
 		return compound;
 	}
 	
-	public CompoundNBT getModifierTag() {
+	public CompoundTag getModifierTag() {
 		return this.modifierTag;
 	}
 	
-	public void setModifierTag(CompoundNBT modifierTag) {
+	public void setModifierTag(CompoundTag modifierTag) {
 		this.modifierTag = modifierTag;
 	}
 	
@@ -101,13 +103,13 @@ public class ModifierWorldData extends WorldSavedData {
 		}
 	}
 
-	public static ModifierWorldData get(World world) {
-		if (!(world instanceof ServerWorld)) {
+	public static ModifierWorldData get(Level level) {
+		if (!(level instanceof ServerLevel)) {
 			throw new RuntimeException("Attempted to get the data from a client world. This is wrong.");
 		}
-		ServerWorld overworld = world.getServer().getLevel(World.OVERWORLD);
+		ServerLevel overworld = level.getServer().getLevel(Level.OVERWORLD);
 
-		DimensionSavedDataManager storage = overworld.getDataStorage();
-		return storage.computeIfAbsent(ModifierWorldData::new, DATA_NAME);
+		DimensionDataStorage storage = overworld.getDataStorage();
+		return storage.computeIfAbsent(ModifierWorldData::load, ModifierWorldData::new, DATA_NAME);
 	}
 }
