@@ -35,10 +35,12 @@ public class EasterEgg {
 								if (targetInfo[0].equals("*:*")) {
 									processKill(player, targetInfo[0], healthFromKill, targetAmount);
 								} else {
-									if(splitResource[0].equals("*") && entityLocation.getPath().equals(splitResource[1])) {
-										processKill(player, targetInfo[0], healthFromKill, targetAmount);
-									} else if(splitResource[1].equals("*") && entityLocation.getNamespace().equals(splitResource[0])) {
-										processKill(player, targetInfo[0], healthFromKill, targetAmount);
+									if(splitResource[0].equals("*") || splitResource[1].equals("*")) {
+										if(splitResource[0].equals("*") && entityLocation.getPath().equals(splitResource[1])) {
+											processKill(player, targetInfo[0], healthFromKill, targetAmount);
+										} else if(splitResource[1].equals("*") && entityLocation.getNamespace().equals(splitResource[0])) {
+											processKill(player, targetInfo[0], healthFromKill, targetAmount);
+										}
 									} else {
 										if(new ResourceLocation(targetInfo[0]).equals(entityLocation)) {
 											processKill(player, targetInfo[0], healthFromKill, targetAmount);
