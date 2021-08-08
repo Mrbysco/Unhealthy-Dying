@@ -11,6 +11,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class UnhealthyConfig {
@@ -72,7 +73,7 @@ public class UnhealthyConfig {
 							"Syntax: modid:mobname,healthRegenned,amount",
 							"For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart",
 							"While [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart")
-					.defineList("regenTargets", Arrays.asList(targetArray), o -> (o instanceof String));
+					.defineListAllowEmpty(Collections.singletonList("regenTargets"), () -> Arrays.asList(targetArray), o -> (o instanceof String));
 
 			builder.pop();
 		}
