@@ -26,6 +26,7 @@
     "unhealthydying:setmaxhealth.message": "§aYour max health has set to §r%s§a.§r",
     "unhealthydying:addhearts.message": "§aYour health has been increased by %s§r §aheart(s).",
     "unhealthydying:removehearts.message": "§cYour health has been reduced by %s §cheart(s).",
+    "unhealthydying:killingmobscount.message": "§aYou need yet to kill %s§r §a%s§r§a to receive %s§r §ahalf heart(s).",
 
     "_comment": "Commands",
     "commands.unhealthydying.usage": "/unhealthydying",

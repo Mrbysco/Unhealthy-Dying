@@ -3,6 +3,7 @@ package com.mrbysco.unhealthydying.handlers;
 import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.UnhealthyDying;
 import com.mrbysco.unhealthydying.config.UnhealthyConfig;
+import com.mrbysco.unhealthydying.util.HealthUtil;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -76,38 +77,38 @@ public class EasterEgg {
 				String customTag = Reference.MOD_PREFIX + target + ":" + targetAmount;
 				switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 					case EVERYBODY:
-						setEveryonesKillCount(player, customTag, healthGained, targetAmount);
+						setEveryonesKillCount(player, customTag, healthGained, targetAmount, target);
 						break;
 					case SCOREBOARD_TEAM:
-						setScoreboardKillCount(player, customTag, targetAmount, healthGained);
+						setScoreboardKillCount(player, customTag, targetAmount, healthGained, target);
 						break;
 					default:
-						setAmountData(player, customTag, targetAmount, healthGained);
+						setAmountData(player, customTag, targetAmount, healthGained, target);
 						break;
 				}
 			}
 	    }
 	}
 	
-	public static void setEveryonesKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount) {
+	public static void setEveryonesKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount, String targetName) {
 		for(PlayerEntity players : player.level.players()) {
 			if(players.equals(player))
-				setAmountData(player, customTag, healthGained, targetAmount);
+				setAmountData(player, customTag, healthGained, targetAmount, targetName);
 			else
-				setAmountData(players, customTag, healthGained, targetAmount);
+				setAmountData(players, customTag, healthGained, targetAmount, targetName);
 		}
 	}
 	
-	public static void setScoreboardKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount) {
+	public static void setScoreboardKillCount(PlayerEntity player, String customTag, int healthGained, int targetAmount, String targetName) {
 		World world = player.level;
 		if(player.getTeam() != null) {
 			Team team = player.getTeam();
 			for(PlayerEntity players : world.players()) {
 				if(players.equals(player)) {
-					setAmountData(player, customTag, healthGained, targetAmount);
+					setAmountData(player, customTag, healthGained, targetAmount, targetName);
 				} else {
 					if(players.isAlliedTo(team)) {
-						setAmountData(players, customTag, healthGained, targetAmount);
+						setAmountData(players, customTag, healthGained, targetAmount, targetName);
 					}
 				}
 			}
@@ -116,12 +117,10 @@ public class EasterEgg {
 		}
 	}
 	
-	public static void setAmountData(PlayerEntity player, String customTag, int targetAmount, int healthGained) {
+	public static void setAmountData(PlayerEntity player, String customTag, int targetAmount, int healthGained, String targetName) {
 		CompoundNBT playerData = player.getPersistentData();
-
 		if(playerData.contains(customTag)) {
-    		int currentAmount = playerData.getInt(customTag);
-
+			int currentAmount = playerData.getInt(customTag);
     		if((currentAmount + 1) >= targetAmount) {
 
 				float playerHealth = player.getMaxHealth();
@@ -139,9 +138,18 @@ public class EasterEgg {
 				playerData.remove(customTag);
 			} else {
 				playerData.putInt(customTag, currentAmount + 1);
+				currentAmount = targetAmount - currentAmount - 1;
+				if(targetName.indexOf("_") > 0)
+					targetName.replace("_"," ");
+				HealthUtil.sendKillingMobsMessage(player, currentAmount, targetName.substring(targetName.indexOf(":") + 1), healthGained);
 			}
 		} else {
 			playerData.putInt(customTag, 1);
+			int currentAmount = targetAmount - 1;
+			if(targetName.indexOf("_") > 0)
+				targetName.replace("_"," ");
+			HealthUtil.sendKillingMobsMessage(player, currentAmount, targetName.substring(targetName.indexOf(":") + 1), healthGained);
 		}
+
 	}
 }

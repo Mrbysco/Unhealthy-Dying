@@ -18,4 +18,9 @@ public class HealthUtil {
             }
         }
     }
+    public static void sendKillingMobsMessage(PlayerEntity player, int targed, String name, int heath) {
+            ITextComponent text = new TranslationTextComponent("unhealthydying:killingmobscount.message", targed, name, heath).withStyle(TextFormatting.DARK_RED);
+            player.displayClientMessage(text, true);
+
+    }
 }

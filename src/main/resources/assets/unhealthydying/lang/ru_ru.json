@@ -19,6 +19,7 @@
     "unhealthydying:setmaxhealth.message": "§aВаше макс. здоровье было установлено в §r%s§a.§r",
     "unhealthydying:addhearts.message": "§aВаше здоровье было увеличено на %s§r §aсердца(ец).",
     "unhealthydying:removehearts.message": "§cВаше здоровье было уменьшено на %s §cсердца(ец).",
+    "unhealthydying:killingmobscount.message": "§aВам нужно убить еще %s§r §a%s§r§a чтобы востановить %s§r §aполусердец.",
 
     "_comment": "Commands",
     "commands.unhealthydying.usage": "/unhealthydying",
