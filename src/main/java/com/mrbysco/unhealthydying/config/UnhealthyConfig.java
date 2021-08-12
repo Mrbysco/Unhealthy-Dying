@@ -51,7 +51,7 @@ public class UnhealthyConfig {
 
 			regenHealth = builder
 					.comment("When set to true allows you to gain back health upon killing set target(s) [default: false]")
-					.define("regenHealth", false);
+					.define("regenHealth", true);
 
 			maxRegained = builder
 					.comment("The amount of max health the player can get from killing the target(s) (20 = 10 hearts) [default: 20]")
@@ -59,12 +59,34 @@ public class UnhealthyConfig {
 
 			regenHealthMessage = builder
 					.comment("When set to true it notifies the player about their new max health when they respawn [default: true]")
-					.define("regenHealthMessage", true);
+					.define("regenHealthMessage", false);
 
 			String[] targetArray = new String[]
 					{
-							"minecraft:ender_dragon,4,1",
-							"minecraft:wither,2,1"
+							"minecraft:ender_dragon,20,1",
+							"minecraft:wither,20,1",
+							"minecraft:wither_skeleton,2,1",
+							"minecraft:enderman,2,1",
+							"minecraft:creeper,2,2",
+							"minecraft:spider,2,3",
+							"minecraft:skeleton,2,3",
+							"minecraft:zombie,2,3",
+							"minecraft:drowned,2,3",
+							"minecraft:husk,2,3",
+							"minecraft:witch,2,1",
+							"minecraft:phantom,2,3",
+							"minecraft:ghast,2,1",
+							"minecraft:piglin,2,3",
+							"minecraft:piglin_brute,2,1",
+							"minecraft:zoglin,2,3",
+							"minecraft:hoglin,2,3",
+							"minecraft:zombified_piglin,2,3",
+							"minecraft:cave_spider,2,3",
+							"minecraft:pillager,2,3",
+							"minecraft:ravager,2,1",
+							"minecraft:evoker,6,1",
+							"minecraft:shulker,2,3",
+							"minecraft:slime,2,13"
 					};
 
 			regenTargets = builder

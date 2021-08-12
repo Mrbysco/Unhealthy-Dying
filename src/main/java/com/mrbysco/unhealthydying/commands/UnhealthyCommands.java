@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -28,16 +29,15 @@ public class UnhealthyCommands {
     private static int addHearts(CommandContext<CommandSource> ctx, boolean silent) throws CommandSyntaxException {
         final int health = IntegerArgumentType.getInteger(ctx, "health");
         for(ServerPlayerEntity player : EntityArgument.getPlayers(ctx, "player")) {
-            if(health > 0) {
-                UnhealthyHelper.setHealth(player, health);
-
-                if(!silent) {
-                    ITextComponent text = new TranslationTextComponent("unhealthydying:addhearts.message", (double)health/2).withStyle(TextFormatting.RED);
-                    ctx.getSource().sendSuccess(text, false);
+                if (health > 0 ) {
+                    float playerHealth = player.getMaxHealth();
+                    UnhealthyHelper.setHealth(player, (int)UnhealthyHelper.getModifierForAmount(player,playerHealth + health), false);
+                    if (!silent) {
+                        ITextComponent text = new TranslationTextComponent("unhealthydying:addhearts.message", (double) health / 2).withStyle(TextFormatting.RED);
+                        ctx.getSource().sendSuccess(text, false);
+                    }
                 }
             }
-        }
-
         return 0;
     }
 
@@ -45,8 +45,9 @@ public class UnhealthyCommands {
         final int health = IntegerArgumentType.getInteger(ctx, "health");
         for(ServerPlayerEntity player : EntityArgument.getPlayers(ctx, "player")) {
             if(health > 0) {
-                UnhealthyHelper.setHealth(player, -health);
 
+                float playerHealth = player.getMaxHealth();
+                UnhealthyHelper.setHealth(player, (int)UnhealthyHelper.getModifierForAmount(player,playerHealth - health), false);
                 if(!silent) {
                     ITextComponent text = new TranslationTextComponent("unhealthydying:removehearts.message", (double)health/2).withStyle(TextFormatting.RED);
                     ctx.getSource().sendSuccess(text, false);
