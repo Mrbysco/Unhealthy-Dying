@@ -31,7 +31,7 @@ public class UnhealthyHelper {
                 AttributeModifier oldAttribute = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
                 if(oldAttribute != null) {
                     if(oldAttribute.getAmount() != modifierValue) {
-                        int newModifier = -(20 + (int) modifierValue);
+                        int newModifier = -((int)attributeInstance.getBaseValue() + (int) modifierValue);
                         if (oldAttribute.getAmount() < modifierValue)
                             HealthUtil.sendHealthMessage(player, newModifier, 1);
                         else
@@ -41,7 +41,7 @@ public class UnhealthyHelper {
                 }
                 else
                 {
-                    int newModifier = -(20 + (int) modifierValue);
+                    int newModifier = -((int)attributeInstance.getBaseValue() + (int) modifierValue);
                     HealthUtil.sendHealthMessage(player, newModifier, -1);
                 }
 

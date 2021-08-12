@@ -31,7 +31,7 @@ public class UnhealthyConfig {
 
 			minimumHealth = builder
 					.comment("Minimum amount of health the player can end up with (2 = 1 heart) [default: 2]")
-					.defineInRange("minimumHealth", 6, 1, Integer.MAX_VALUE);
+					.defineInRange("minimumHealth", 2, 1, Integer.MAX_VALUE);
 
 			healthPerDeath = builder
 					.comment("The amount of health taken from the player upon death (2 = 1 heart) [default: 2]")
@@ -59,7 +59,7 @@ public class UnhealthyConfig {
 
 			regenHealthMessage = builder
 					.comment("When set to true it notifies the player about their new max health when they respawn [default: true]")
-					.define("regenHealthMessage", true);
+					.define("regenHealthMessage", false);
 
 			String[] targetArray = new String[]
 					{
