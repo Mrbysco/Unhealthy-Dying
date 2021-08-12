@@ -121,16 +121,19 @@ public class EasterEgg {
 
 		if(playerData.contains(customTag)) {
     		int currentAmount = playerData.getInt(customTag);
+
     		if((currentAmount + 1) >= targetAmount) {
+
+				float playerHealth = player.getMaxHealth();
 		    	switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 				case EVERYBODY:
-					UnhealthyHelper.setEveryonesHealth(player, healthGained);
+					UnhealthyHelper.setEveryonesHealth(player, (int)UnhealthyHelper.getModifierForAmount(player,playerHealth + healthGained), false);
 					break;
 				case SCOREBOARD_TEAM:
-					UnhealthyHelper.setScoreboardHealth(player, healthGained);
+					UnhealthyHelper.setScoreboardHealth(player, (int)UnhealthyHelper.getModifierForAmount(player,playerHealth + healthGained), false);
 					break;
 				default:
-					UnhealthyHelper.setHealth(player, healthGained);
+					UnhealthyHelper.setHealth(player, (int)UnhealthyHelper.getModifierForAmount(player,playerHealth + healthGained), false);
 					break;
 				}
 				playerData.remove(customTag);

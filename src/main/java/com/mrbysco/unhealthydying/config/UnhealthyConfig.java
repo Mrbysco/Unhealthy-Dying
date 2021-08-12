@@ -31,7 +31,7 @@ public class UnhealthyConfig {
 
 			minimumHealth = builder
 					.comment("Minimum amount of health the player can end up with (2 = 1 heart) [default: 2]")
-					.defineInRange("minimumHealth", 2, 1, Integer.MAX_VALUE);
+					.defineInRange("minimumHealth", 6, 1, Integer.MAX_VALUE);
 
 			healthPerDeath = builder
 					.comment("The amount of health taken from the player upon death (2 = 1 heart) [default: 2]")
@@ -51,7 +51,7 @@ public class UnhealthyConfig {
 
 			regenHealth = builder
 					.comment("When set to true allows you to gain back health upon killing set target(s) [default: false]")
-					.define("regenHealth", false);
+					.define("regenHealth", true);
 
 			maxRegained = builder
 					.comment("The amount of max health the player can get from killing the target(s) (20 = 10 hearts) [default: 20]")
@@ -63,8 +63,28 @@ public class UnhealthyConfig {
 
 			String[] targetArray = new String[]
 					{
-							"minecraft:ender_dragon,4,1",
-							"minecraft:wither,2,1"
+							"minecraft:ender_dragon,20,1",
+							"minecraft:wither,20,1",
+							"minecraft:enderman,2,1",
+							"minecraft:creeper,2,2",
+							"minecraft:spider,2,3",
+							"minecraft:cave_spider,2,3",
+							"minecraft:zombie,2,3",
+							"minecraft:skeleton,2,3",
+							"minecraft:ghast,2,1",
+							"minecraft:piglin,2,3",
+							"minecraft:Pillager,2,3",
+							"minecraft:Pillager,2,1",
+							"minecraft:Ravager,2,1",
+							"minecraft:shulker,2,3",
+							"minecraft:Hoglin,2,3",
+							"minecraft:husk,2,3",
+							"minecraft:Witch,2,1",
+							"minecraft:wither_skeleton,2,1",
+							"minecraft:phantom,2,3",
+							"minecraft:drowned,2,3",
+							"minecraft:slime,2,13"
+
 					};
 
 			regenTargets = builder

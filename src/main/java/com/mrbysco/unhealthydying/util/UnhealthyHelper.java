@@ -30,10 +30,19 @@ public class UnhealthyHelper {
             if(attributeInstance != null) {
                 AttributeModifier oldAttribute = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
                 if(oldAttribute != null) {
-                    if(oldAttribute.getAmount() != modifierValue)
-                        HealthUtil.sendHealthMessage(player, (int)attributeInstance.getValue(), (int)modifierValue);
-
+                    if(oldAttribute.getAmount() != modifierValue) {
+                        int newModifier = -(20 + (int) modifierValue);
+                        if (oldAttribute.getAmount() < modifierValue)
+                            HealthUtil.sendHealthMessage(player, newModifier, 1);
+                        else
+                            HealthUtil.sendHealthMessage(player, newModifier, -1);
+                    }
                     attributeInstance.removePermanentModifier(Reference.HEALTH_MODIFIER_ID);
+                }
+                else
+                {
+                    int newModifier = -(20 + (int) modifierValue);
+                    HealthUtil.sendHealthMessage(player, newModifier, -1);
                 }
 
                 attributeInstance.addPermanentModifier(modifier);
