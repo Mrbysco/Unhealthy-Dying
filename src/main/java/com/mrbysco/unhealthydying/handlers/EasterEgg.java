@@ -64,13 +64,13 @@ public class EasterEgg {
 			if(targetAmount == 1) {
 				switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 					case EVERYBODY:
-						UnhealthyHelper.setEveryonesHealth(player, healthGained);
+						UnhealthyHelper.setEveryonesHealth(player, (int)UnhealthyHelper.getModifierForAmount(player, playerHealth +healthGained), false);
 						break;
 					case SCOREBOARD_TEAM:
-						UnhealthyHelper.setScoreboardHealth(player, healthGained);
+						UnhealthyHelper.setScoreboardHealth(player, (int)UnhealthyHelper.getModifierForAmount(player, playerHealth +healthGained), false);
 						break;
 					default:
-						UnhealthyHelper.setHealth(player, healthGained);
+						UnhealthyHelper.setHealth(player, (int)UnhealthyHelper.getModifierForAmount(player, playerHealth + healthGained), false);
 						break;
 				}
 			} else {
