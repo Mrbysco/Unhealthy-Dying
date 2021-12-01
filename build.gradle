@@ -10,6 +10,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'maven-publish'
 
 version = "${version}"
 group = 'com.mrbysco.unhealthydying' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -60,11 +61,22 @@ minecraft {
 repositories {
     maven {
         url = "https://dvs1.progwml6.com/files/maven"
+        content {
+            includeGroup "slimeknights.mantle"
+        }
     }
     maven {
         url = "https://maven.theillusivec4.top/"
+        content {
+            includeGroup "top.theillusivec4.curios"
+        }
     }
-    maven { url = 'https://www.cursemaven.com'  }
+    maven {
+        url = "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -72,7 +84,7 @@ dependencies {
 
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
     runtimeOnly fg.deobf("slimeknights.mantle:Mantle:${mc_version}-${mantle_version}")
-    runtimeOnly fg.deobf("curse.maven:baubley-282947:3186313")
+    runtimeOnly fg.deobf("curse.maven:baubley-282947:3464467")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
@@ -90,4 +102,30 @@ jar {
     }
 }
 
-jar.finalizedBy('reobfJar')
+def reobfFile = file("$buildDir/reobfJar/output.jar")
+def reobfArtifact = artifacts.add('default', reobfFile) {
+    type 'jar'
+    builtBy 'reobfJar'
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact(reobfArtifact) {
+                builtBy reobfArtifact
+                artifactId = archivesBaseName
+                classifier null
+            }
+        }
+    }
+    repositories {
+        if (System.getenv().SAP_SECRET) {
+            maven {
+                url "https://maven.saps.dev/minecraft"
+                credentials {
+                    username = "mrbysco"
+                    password = "${System.getenv().SAP_SECRET}"
+                }
+            }
+        }
+    }
+}
