@@ -1,5 +1,6 @@
 package com.mrbysco.unhealthydying;
 
+import com.mojang.logging.LogUtils;
 import com.mrbysco.unhealthydying.commands.UnhealthyCommands;
 import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.handlers.EasterEgg;
@@ -12,11 +13,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 @Mod(Reference.MOD_ID)
 public class UnhealthyDying {
-	public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
+	public static final Logger LOGGER = LogUtils.getLogger();
 
 	public UnhealthyDying() {
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
