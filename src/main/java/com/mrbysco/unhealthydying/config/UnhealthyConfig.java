@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class UnhealthyConfig {
-	public static class Server{
+	public static class Server {
 		public final IntValue minimumHealth;
 		public final IntValue healthPerDeath;
 		public final BooleanValue reducedHealthMessage;
@@ -81,12 +81,13 @@ public class UnhealthyConfig {
 
 	public static final ForgeConfigSpec serverSpec;
 	public static final Server SERVER;
+
 	static {
 		final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Server::new);
 		serverSpec = specPair.getRight();
 		SERVER = specPair.getLeft();
 	}
-	
+
 	@SubscribeEvent
 	public static void onLoad(final ModConfigEvent.Loading configEvent) {
 		UnhealthyDying.LOGGER.debug("Loaded Unhealthy Dying's config file {}", configEvent.getConfig().getFileName());

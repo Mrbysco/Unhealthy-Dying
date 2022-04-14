@@ -19,9 +19,9 @@ import java.util.List;
 public class EasterEgg {
 	@SubscribeEvent
 	public void killedEntityEvent(LivingDeathEvent event) {
-		if(UnhealthyConfig.SERVER.regenHealth.get()) {
+		if (UnhealthyConfig.SERVER.regenHealth.get()) {
 			List<? extends String> targets = UnhealthyConfig.SERVER.regenTargets.get();
-			if(!targets.isEmpty()) {
+			if (!targets.isEmpty()) {
 				for (String target : targets) {
 					if (event.getSource().getEntity() instanceof Player player && !(event.getSource().getEntity() instanceof FakePlayer)) {
 						String[] targetInfo = target.split(",");
@@ -29,19 +29,19 @@ public class EasterEgg {
 							ResourceLocation entityLocation = event.getEntityLiving().getType().getRegistryName();
 							int healthFromKill = NumberUtils.toInt(targetInfo[1], 0);
 							int targetAmount = NumberUtils.toInt(targetInfo[2], 0);
-							if(targetInfo[0].contains(":") && entityLocation != null) {
+							if (targetInfo[0].contains(":") && entityLocation != null) {
 								String[] splitResource = targetInfo[0].split(":");
 								if (targetInfo[0].equals("*:*")) {
 									processKill(player, targetInfo[0], healthFromKill, targetAmount);
 								} else {
-									if(splitResource[0].equals("*") || splitResource[1].equals("*")) {
-										if(splitResource[0].equals("*") && entityLocation.getPath().equals(splitResource[1])) {
+									if (splitResource[0].equals("*") || splitResource[1].equals("*")) {
+										if (splitResource[0].equals("*") && entityLocation.getPath().equals(splitResource[1])) {
 											processKill(player, targetInfo[0], healthFromKill, targetAmount);
-										} else if(splitResource[1].equals("*") && entityLocation.getNamespace().equals(splitResource[0])) {
+										} else if (splitResource[1].equals("*") && entityLocation.getNamespace().equals(splitResource[0])) {
 											processKill(player, targetInfo[0], healthFromKill, targetAmount);
 										}
 									} else {
-										if(new ResourceLocation(targetInfo[0]).equals(entityLocation)) {
+										if (new ResourceLocation(targetInfo[0]).equals(entityLocation)) {
 											processKill(player, targetInfo[0], healthFromKill, targetAmount);
 										}
 									}
@@ -53,13 +53,13 @@ public class EasterEgg {
 			}
 		}
 	}
-	
+
 	public void processKill(Player player, String target, int healthGained, int targetAmount) {
-	    float playerHealth = player.getMaxHealth();
-		float maxRegained = (float)UnhealthyConfig.SERVER.maxRegained.get();
-	    
-	    if(playerHealth < maxRegained) {
-			if(targetAmount == 1) {
+		float playerHealth = player.getMaxHealth();
+		float maxRegained = (float) UnhealthyConfig.SERVER.maxRegained.get();
+
+		if (playerHealth < maxRegained) {
+			if (targetAmount == 1) {
 				switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 					case EVERYBODY -> UnhealthyHelper.setEveryonesHealth(player, healthGained);
 					case SCOREBOARD_TEAM -> UnhealthyHelper.setScoreboardHealth(player, healthGained);
@@ -73,27 +73,27 @@ public class EasterEgg {
 					default -> setAmountData(player, customTag, targetAmount, healthGained);
 				}
 			}
-	    }
+		}
 	}
-	
+
 	public static void setEveryonesKillCount(Player player, String customTag, int healthGained, int targetAmount) {
-		for(Player players : player.level.players()) {
-			if(players.equals(player))
+		for (Player players : player.level.players()) {
+			if (players.equals(player))
 				setAmountData(player, customTag, healthGained, targetAmount);
 			else
 				setAmountData(players, customTag, healthGained, targetAmount);
 		}
 	}
-	
+
 	public static void setScoreboardKillCount(Player player, String customTag, int healthGained, int targetAmount) {
 		Level level = player.level;
-		if(player.getTeam() != null) {
+		if (player.getTeam() != null) {
 			Team team = player.getTeam();
-			for(Player players : level.players()) {
-				if(players.equals(player)) {
+			for (Player players : level.players()) {
+				if (players.equals(player)) {
 					setAmountData(player, customTag, healthGained, targetAmount);
 				} else {
-					if(players.isAlliedTo(team)) {
+					if (players.isAlliedTo(team)) {
 						setAmountData(players, customTag, healthGained, targetAmount);
 					}
 				}
@@ -102,13 +102,13 @@ public class EasterEgg {
 			UnhealthyDying.LOGGER.error(player.getName() + " is not in a team");
 		}
 	}
-	
+
 	public static void setAmountData(Player player, String customTag, int targetAmount, int healthGained) {
 		CompoundTag playerData = player.getPersistentData();
 
-		if(playerData.contains(customTag)) {
-    		int currentAmount = playerData.getInt(customTag);
-    		if((currentAmount + 1) >= targetAmount) {
+		if (playerData.contains(customTag)) {
+			int currentAmount = playerData.getInt(customTag);
+			if ((currentAmount + 1) >= targetAmount) {
 				switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 					case EVERYBODY -> UnhealthyHelper.setEveryonesHealth(player, healthGained);
 					case SCOREBOARD_TEAM -> UnhealthyHelper.setScoreboardHealth(player, healthGained);
