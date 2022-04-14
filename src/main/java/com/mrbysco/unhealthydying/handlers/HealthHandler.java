@@ -8,12 +8,12 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class HealthHandler {	
+public class HealthHandler {
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onJoin(PlayerLoggedInEvent event) {
 		Player player = event.getPlayer();
 
-		if(!player.level.isClientSide) {
+		if (!player.level.isClientSide) {
 			UnhealthyHelper.initializeModifier(player, 0.0D);
 
 			//Sync teams
@@ -24,7 +24,7 @@ public class HealthHandler {
 	@SubscribeEvent
 	public void setHealth(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
-		if(!event.isEndConquered()) {
+		if (!event.isEndConquered()) {
 			int healthPerDeath = -UnhealthyConfig.SERVER.healthPerDeath.get();
 
 			switch (UnhealthyConfig.SERVER.healthSetting.get()) {

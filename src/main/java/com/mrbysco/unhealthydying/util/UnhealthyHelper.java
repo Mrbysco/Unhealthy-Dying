@@ -16,24 +16,24 @@ import javax.annotation.Nullable;
 public class UnhealthyHelper {
 
 	public static void initializeModifier(Player player, double modifier) {
-		if(!player.level.isClientSide) {
+		if (!player.level.isClientSide) {
 			AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
-			if(attributeInstance != null && attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID) == null)
+			if (attributeInstance != null && attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID) == null)
 				attributeInstance.addPermanentModifier(getModifier(modifier));
 		}
 	}
 
 	public static void changeModifier(Player player, double modifierValue) {
-		if(!player.level.isClientSide) {
+		if (!player.level.isClientSide) {
 			AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
 			AttributeModifier modifier = getModifier(modifierValue);
-			if(attributeInstance != null) {
+			if (attributeInstance != null) {
 
 				if (attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID) != null) {
 					attributeInstance.removePermanentModifier(Reference.HEALTH_MODIFIER_ID);
 				}
 
-				HealthUtil.sendHealthMessage(player, (int)attributeInstance.getValue(), (int)modifierValue);
+				HealthUtil.sendHealthMessage(player, (int) attributeInstance.getValue(), (int) modifierValue);
 				attributeInstance.addPermanentModifier(modifier);
 			}
 		}
@@ -54,16 +54,16 @@ public class UnhealthyHelper {
 
 	public static void setEveryonesHealth(Player player, int changeModifier, boolean recalculate) {
 		ModifierWorldData worldData = getSavedData(player);
-		if(worldData != null) {
+		if (worldData != null) {
 			int savedModifier = recalculate ? worldData.getEverybodyModifier() : changeModifier;
-			if(recalculate) {
+			if (recalculate) {
 				savedModifier += changeModifier;
-				savedModifier = (int)safetyCheck(player, savedModifier);
+				savedModifier = (int) safetyCheck(player, savedModifier);
 			}
 
 			worldData.setEverybodyModifier(savedModifier);
 			worldData.setDirty();
-			for(Player players : player.level.players()) {
+			for (Player players : player.level.players()) {
 				changeModifier(players, savedModifier);
 			}
 		}
@@ -74,20 +74,22 @@ public class UnhealthyHelper {
 	}
 
 	public static void setScoreboardHealth(Player player, int changeModifier, boolean recalculate) {
-		if(player.getTeam() != null) {
+		if (player.getTeam() != null) {
 			Team team = player.getTeam();
 			ModifierWorldData worldData = getSavedData(player);
-			if(worldData != null) {
+			if (worldData != null) {
 				int savedModifier = recalculate ? worldData.getScoreboardTeamModifier(team.getName()) : changeModifier;
-				if(recalculate) {
+				if (recalculate) {
 					savedModifier += changeModifier;
-					savedModifier = (int)safetyCheck(player, savedModifier);
+					savedModifier = (int) safetyCheck(player, savedModifier);
 				}
 
 				worldData.setScoreboardTeamModifier(team.getName(), savedModifier);
 				worldData.setDirty();
-				for(Player players : player.level.players()) {
-					changeModifier(players, savedModifier);
+				for (Player players : player.level.players()) {
+					if (players.getTeam() != null && players.getTeam().getName().equals(team.getName())) {
+						changeModifier(players, savedModifier);
+					}
 				}
 			}
 		} else {
@@ -101,11 +103,11 @@ public class UnhealthyHelper {
 
 	public static void setHealth(Player player, int changeModifier, boolean recalculate) {
 		ModifierWorldData worldData = getSavedData(player);
-		if(worldData != null) {
+		if (worldData != null) {
 			int savedModifier = recalculate ? worldData.getPlayerModifier(player.getGameProfile().getId()) : changeModifier;
-			if(recalculate) {
+			if (recalculate) {
 				savedModifier += changeModifier;
-				savedModifier = (int)safetyCheck(player, savedModifier);
+				savedModifier = (int) safetyCheck(player, savedModifier);
 			}
 
 			worldData.setPlayerModifier(player.getGameProfile().getId(), savedModifier);
@@ -116,13 +118,13 @@ public class UnhealthyHelper {
 
 	public static void syncHealth(Player player) {
 		ModifierWorldData worldData = getSavedData(player);
-		if(worldData != null) {
+		if (worldData != null) {
 			switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 				case EVERYBODY:
 					UnhealthyHelper.setEveryonesHealth(player, worldData.getEverybodyModifier(), false);
 					break;
 				case SCOREBOARD_TEAM:
-					if(player.getTeam() != null) {
+					if (player.getTeam() != null) {
 						UnhealthyHelper.setScoreboardHealth(player, worldData.getScoreboardTeamModifier(player.getTeam().getName()), false);
 					}
 					break;
@@ -135,15 +137,15 @@ public class UnhealthyHelper {
 
 	public static double getModifierForAmount(Player player, double healthWanted) {
 		AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
-		if(attributeInstance != null) {
+		if (attributeInstance != null) {
 			double health = attributeInstance.getBaseValue();
 			double modifierRequired = healthWanted - health;
 
-			if(UnhealthyConfig.SERVER.regenHealth.get() && healthWanted > (double)UnhealthyConfig.SERVER.maxRegained.get())
-				modifierRequired = health - (double)UnhealthyConfig.SERVER.maxRegained.get();
+			if (UnhealthyConfig.SERVER.regenHealth.get() && healthWanted > (double) UnhealthyConfig.SERVER.maxRegained.get())
+				modifierRequired = health - (double) UnhealthyConfig.SERVER.maxRegained.get();
 
-			if(healthWanted < (double)UnhealthyConfig.SERVER.minimumHealth.get())
-				modifierRequired = (double)UnhealthyConfig.SERVER.minimumHealth.get() - health;
+			if (healthWanted < (double) UnhealthyConfig.SERVER.minimumHealth.get())
+				modifierRequired = (double) UnhealthyConfig.SERVER.minimumHealth.get() - health;
 
 			return modifierRequired;
 		}
@@ -154,20 +156,20 @@ public class UnhealthyHelper {
 
 	public static double safetyCheck(Player player, double modifierValue) {
 		AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
-		if(attributeInstance != null) {
+		if (attributeInstance != null) {
 			AttributeModifier currentModifier = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
 			double health = attributeInstance.getBaseValue();
-			if(currentModifier != null)
+			if (currentModifier != null)
 				health -= currentModifier.getAmount();
 
 			double modifiedHealth = health + modifierValue;
 			double usedModifier = modifierValue;
 
-			if(UnhealthyConfig.SERVER.regenHealth.get() && modifiedHealth > (double)UnhealthyConfig.SERVER.maxRegained.get())
-				usedModifier = modifiedHealth - (double)UnhealthyConfig.SERVER.maxRegained.get();
+			if (UnhealthyConfig.SERVER.regenHealth.get() && modifiedHealth > (double) UnhealthyConfig.SERVER.maxRegained.get())
+				usedModifier = modifiedHealth - (double) UnhealthyConfig.SERVER.maxRegained.get();
 
-			if(modifiedHealth < (double)UnhealthyConfig.SERVER.minimumHealth.get())
-				usedModifier = (double)UnhealthyConfig.SERVER.minimumHealth.get() - health;
+			if (modifiedHealth < (double) UnhealthyConfig.SERVER.minimumHealth.get())
+				usedModifier = (double) UnhealthyConfig.SERVER.minimumHealth.get() - health;
 
 			return usedModifier;
 		}
