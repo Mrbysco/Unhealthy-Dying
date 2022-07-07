@@ -12,7 +12,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
 public class UnhealthyCommands {
@@ -32,7 +32,7 @@ public class UnhealthyCommands {
 				UnhealthyHelper.setHealth(player, health);
 
 				if (!silent) {
-					Component text = new TranslatableComponent("unhealthydying:addhearts.message", (double) health / 2).withStyle(ChatFormatting.RED);
+					MutableComponent text = Component.translatable("unhealthydying:addhearts.message", (double) health / 2).withStyle(ChatFormatting.RED);
 					ctx.getSource().sendSuccess(text, false);
 				}
 			}
@@ -48,7 +48,7 @@ public class UnhealthyCommands {
 				UnhealthyHelper.setHealth(player, -health);
 
 				if (!silent) {
-					Component text = new TranslatableComponent("unhealthydying:removehearts.message", (double) health / 2).withStyle(ChatFormatting.RED);
+					MutableComponent text = Component.translatable("unhealthydying:removehearts.message", (double) health / 2).withStyle(ChatFormatting.RED);
 					ctx.getSource().sendSuccess(text, false);
 				}
 			}
@@ -64,7 +64,7 @@ public class UnhealthyCommands {
 				UnhealthyHelper.setHealth(player, (int) UnhealthyHelper.getModifierForAmount(player, health), false);
 
 				if (!silent) {
-					Component text = new TranslatableComponent("unhealthydying:sethealth.message", health).withStyle(ChatFormatting.RED);
+					MutableComponent text = Component.translatable("unhealthydying:sethealth.message", health).withStyle(ChatFormatting.RED);
 					ctx.getSource().sendSuccess(text, false);
 				}
 			}

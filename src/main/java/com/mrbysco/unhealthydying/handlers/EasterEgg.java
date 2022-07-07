@@ -12,6 +12,7 @@ import net.minecraft.world.scores.Team;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class EasterEgg {
 					if (event.getSource().getEntity() instanceof Player player && !(event.getSource().getEntity() instanceof FakePlayer)) {
 						String[] targetInfo = target.split(",");
 						if (targetInfo.length > 2) {
-							ResourceLocation entityLocation = event.getEntityLiving().getType().getRegistryName();
+							ResourceLocation entityLocation = ForgeRegistries.ENTITIES.getKey(event.getEntityLiving().getType());
 							int healthFromKill = NumberUtils.toInt(targetInfo[1], 0);
 							int targetAmount = NumberUtils.toInt(targetInfo[2], 0);
 							if (targetInfo[0].contains(":") && entityLocation != null) {
