@@ -31,7 +31,7 @@ public class UnhealthyHelper {
 				AttributeModifier oldAttribute = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
 				if (oldAttribute != null) {
 					if (oldAttribute.getAmount() != modifierValue)
-						HealthUtil.sendHealthMessage(player, (int) attributeInstance.getValue(), (int) modifierValue);
+						HealthUtil.sendHealthMessage(player, (int) (attributeInstance.getBaseValue() + modifier.getAmount()), (int) modifierValue);
 
 					attributeInstance.removePermanentModifier(Reference.HEALTH_MODIFIER_ID);
 				}
@@ -160,11 +160,12 @@ public class UnhealthyHelper {
 		ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
 		if (attributeInstance != null) {
 			AttributeModifier currentModifier = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
-			double health = attributeInstance.getBaseValue();
+			double baseHealth = attributeInstance.getBaseValue();
+			double health = baseHealth;
 			if (currentModifier != null)
-				health -= currentModifier.getAmount();
+				health += currentModifier.getAmount();
 
-			double modifiedHealth = health + modifierValue;
+			double modifiedHealth = baseHealth + modifierValue;
 			double usedModifier = modifierValue;
 
 			if (UnhealthyConfig.SERVER.regenHealth.get() && modifiedHealth > (double) UnhealthyConfig.SERVER.maxRegained.get())
