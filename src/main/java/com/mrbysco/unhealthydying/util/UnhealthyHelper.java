@@ -33,7 +33,7 @@ public class UnhealthyHelper {
 					attributeInstance.removePermanentModifier(Reference.HEALTH_MODIFIER_ID);
 				}
 
-				HealthUtil.sendHealthMessage(player, (int) attributeInstance.getValue(), (int) modifierValue);
+				HealthUtil.sendHealthMessage(player, (int) (attributeInstance.getBaseValue() + modifier.getAmount()), (int) modifierValue);
 				attributeInstance.addPermanentModifier(modifier);
 			}
 		}
