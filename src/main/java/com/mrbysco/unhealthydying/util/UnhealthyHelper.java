@@ -178,4 +178,5 @@ public class UnhealthyHelper {
 		UnhealthyDying.LOGGER.error("Something went wrong. Somehow the player has no max_health attribute applied");
 		return 0.0D;
 	}
+	
 }
