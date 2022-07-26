@@ -27,7 +27,7 @@ public class EasterEgg {
 					if (event.getSource().getEntity() instanceof Player player && !(event.getSource().getEntity() instanceof FakePlayer)) {
 						String[] targetInfo = target.split(",");
 						if (targetInfo.length > 2) {
-							ResourceLocation entityLocation = ForgeRegistries.ENTITIES.getKey(event.getEntityLiving().getType());
+							ResourceLocation entityLocation = ForgeRegistries.ENTITY_TYPES.getKey(event.getEntity().getType());
 							int healthFromKill = NumberUtils.toInt(targetInfo[1], 0);
 							int targetAmount = NumberUtils.toInt(targetInfo[2], 0);
 							if (targetInfo[0].contains(":") && entityLocation != null) {

@@ -62,6 +62,7 @@ public class UnhealthyCommands {
 		for (ServerPlayer player : EntityArgument.getPlayers(ctx, "player")) {
 			if (health > 0) {
 				UnhealthyHelper.setHealth(player, (int) UnhealthyHelper.getModifierForAmount(player, health), false);
+				UnhealthyHelper.syncHealth(player);
 
 				if (!silent) {
 					MutableComponent text = Component.translatable("unhealthydying:sethealth.message", health).withStyle(ChatFormatting.RED);
