@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[41,)"
+loaderVersion="[45,)"
 issueTrackerURL="https://github.com/Mrbysco/Unhealthy-Dying/issues"
 license="MIT"
 
@@ -16,12 +16,6 @@ description='''Losing health from dying'''
 [[dependencies.unhealthydying]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.19,1.20)"
-ordering="NONE"
-side="BOTH"
-[[dependencies.unhealthydying]]
-modId="forge"
-mandatory=true
-versionRange="[41.0.94,)"
+versionRange="[1.19.4,1.20)"
 ordering="NONE"
 side="BOTH"
