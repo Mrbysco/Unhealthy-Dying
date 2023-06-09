@@ -78,16 +78,17 @@ public class EasterEgg {
 	}
 
 	public static void setEveryonesKillCount(Player player, String customTag, int healthGained, int targetAmount) {
-		for (Player players : player.level.players()) {
-			if (players.equals(player))
-				setAmountData(player, customTag, healthGained, targetAmount);
+		var playerList = player.level().players();
+		for (Player player1 : playerList) {
+			if (player1.equals(player1))
+				setAmountData(player1, customTag, healthGained, targetAmount);
 			else
-				setAmountData(players, customTag, healthGained, targetAmount);
+				setAmountData(player1, customTag, healthGained, targetAmount);
 		}
 	}
 
 	public static void setScoreboardKillCount(Player player, String customTag, int healthGained, int targetAmount) {
-		Level level = player.level;
+		Level level = player.level();
 		if (player.getTeam() != null) {
 			Team team = player.getTeam();
 			for (Player players : level.players()) {

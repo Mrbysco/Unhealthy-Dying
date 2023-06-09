@@ -13,7 +13,7 @@ public class HealthHandler {
 	public void onJoin(PlayerLoggedInEvent event) {
 		Player player = event.getEntity();
 
-		if (!player.level.isClientSide) {
+		if (!player.level().isClientSide) {
 			UnhealthyHelper.initializeModifier(player, 0.0D);
 
 			//Sync teams

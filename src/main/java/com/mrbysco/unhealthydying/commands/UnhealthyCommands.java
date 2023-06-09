@@ -33,7 +33,7 @@ public class UnhealthyCommands {
 
 				if (!silent) {
 					MutableComponent text = Component.translatable("unhealthydying:addhearts.message", (double) health / 2).withStyle(ChatFormatting.RED);
-					ctx.getSource().sendSuccess(text, false);
+					ctx.getSource().sendSuccess(() -> text, false);
 				}
 			}
 		}
@@ -49,7 +49,7 @@ public class UnhealthyCommands {
 
 				if (!silent) {
 					MutableComponent text = Component.translatable("unhealthydying:removehearts.message", (double) health / 2).withStyle(ChatFormatting.RED);
-					ctx.getSource().sendSuccess(text, false);
+					ctx.getSource().sendSuccess(() -> text, false);
 				}
 			}
 		}
@@ -66,7 +66,7 @@ public class UnhealthyCommands {
 
 				if (!silent) {
 					MutableComponent text = Component.translatable("unhealthydying:sethealth.message", health).withStyle(ChatFormatting.RED);
-					ctx.getSource().sendSuccess(text, false);
+					ctx.getSource().sendSuccess(() -> text, false);
 				}
 			}
 		}

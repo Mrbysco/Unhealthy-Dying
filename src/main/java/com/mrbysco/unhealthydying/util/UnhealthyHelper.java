@@ -10,13 +10,12 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Team;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class UnhealthyHelper {
 
 	public static void initializeModifier(Player player, double modifier) {
-		if (!player.level.isClientSide) {
+		if (!player.level().isClientSide) {
 			AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
 			if (attributeInstance != null && attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID) == null)
 				attributeInstance.addPermanentModifier(getModifier(modifier));
@@ -24,7 +23,7 @@ public class UnhealthyHelper {
 	}
 
 	public static void changeModifier(Player player, double modifierValue) {
-		if (!player.level.isClientSide) {
+		if (!player.level().isClientSide) {
 			AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
 			AttributeModifier modifier = getModifier(modifierValue);
 			if (attributeInstance != null) {
@@ -46,7 +45,7 @@ public class UnhealthyHelper {
 
 	@Nullable
 	public static ModifierWorldData getSavedData(Player player) {
-		return !player.level.isClientSide ? ModifierWorldData.get(player.getServer().getLevel(Level.OVERWORLD)) : null;
+		return !player.level().isClientSide ? ModifierWorldData.get(player.getServer().getLevel(Level.OVERWORLD)) : null;
 	}
 
 	public static void setEveryonesHealth(Player player, int changeModifier) {
@@ -64,8 +63,9 @@ public class UnhealthyHelper {
 
 			worldData.setEverybodyModifier(savedModifier);
 			worldData.setDirty();
-			for (Player players : player.level.players()) {
-				changeModifier(players, savedModifier);
+			var playerList = player.level().players();
+			for (Player player1 : playerList) {
+				changeModifier(player1, savedModifier);
 			}
 		}
 	}
@@ -87,9 +87,10 @@ public class UnhealthyHelper {
 
 				worldData.setScoreboardTeamModifier(team.getName(), savedModifier);
 				worldData.setDirty();
-				for (Player players : player.level.players()) {
-					if (players.getTeam() != null && players.getTeam().getName().equals(team.getName())) {
-						changeModifier(players, savedModifier);
+				var playerList = player.level().players();
+				for (Player player1 : playerList) {
+					if (player1.getTeam() != null && player1.getTeam().getName().equals(team.getName())) {
+						changeModifier(player1, savedModifier);
 					}
 				}
 			}
