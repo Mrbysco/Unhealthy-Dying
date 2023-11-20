@@ -110,6 +110,6 @@ public class ModifierWorldData extends SavedData {
 		ServerLevel overworld = level.getServer().getLevel(Level.OVERWORLD);
 
 		DimensionDataStorage storage = overworld.getDataStorage();
-		return storage.computeIfAbsent(ModifierWorldData::load, ModifierWorldData::new, DATA_NAME);
+		return storage.computeIfAbsent(new SavedData.Factory<>(ModifierWorldData::new, ModifierWorldData::load), DATA_NAME);
 	}
 }

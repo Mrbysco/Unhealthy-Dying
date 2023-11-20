@@ -4,15 +4,15 @@ import com.mrbysco.unhealthydying.Reference;
 import com.mrbysco.unhealthydying.UnhealthyDying;
 import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Team;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class EasterEgg {
 					if (event.getSource().getEntity() instanceof Player player && !(event.getSource().getEntity() instanceof FakePlayer)) {
 						String[] targetInfo = target.split(",");
 						if (targetInfo.length > 2) {
-							ResourceLocation entityLocation = ForgeRegistries.ENTITY_TYPES.getKey(event.getEntity().getType());
+							ResourceLocation entityLocation = BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType());
 							int healthFromKill = NumberUtils.toInt(targetInfo[1], 0);
 							int targetAmount = NumberUtils.toInt(targetInfo[2], 0);
 							if (targetInfo[0].contains(":") && entityLocation != null) {
@@ -80,8 +80,8 @@ public class EasterEgg {
 	public static void setEveryonesKillCount(Player player, String customTag, int healthGained, int targetAmount) {
 		var playerList = player.level().players();
 		for (Player player1 : playerList) {
-			if (player1.equals(player1))
-				setAmountData(player1, customTag, healthGained, targetAmount);
+			if (player1.equals(player))
+				setAmountData(player, customTag, healthGained, targetAmount);
 			else
 				setAmountData(player1, customTag, healthGained, targetAmount);
 		}

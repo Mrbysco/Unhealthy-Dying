@@ -3,10 +3,10 @@ package com.mrbysco.unhealthydying.handlers;
 import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class HealthHandler {
 	@SubscribeEvent(priority = EventPriority.LOW)
@@ -21,7 +21,7 @@ public class HealthHandler {
 		}
 	}
 
-	@SubscribeEvent
+	@net.neoforged.bus.api.SubscribeEvent
 	public void setHealth(PlayerRespawnEvent event) {
 		Player player = event.getEntity();
 		if (!event.isEndConquered()) {

@@ -1,13 +1,14 @@
 package com.mrbysco.unhealthydying.config;
 
 import com.mrbysco.unhealthydying.UnhealthyDying;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
+import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
+import net.neoforged.neoforge.common.ModConfigSpec.EnumValue;
+import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.config.ModConfigEvent.Loading;
+import net.neoforged.fml.event.config.ModConfigEvent.Reloading;
+import net.neoforged.neoforge.common.ModConfigSpec.Builder;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public class UnhealthyConfig {
 		public final BooleanValue regenHealthMessage;
 		public final ConfigValue<List<? extends String>> regenTargets;
 
-		Server(ForgeConfigSpec.Builder builder) {
+		Server(Builder builder) {
 			builder.comment("General settings")
 					.push("General");
 
@@ -79,22 +80,22 @@ public class UnhealthyConfig {
 		}
 	}
 
-	public static final ForgeConfigSpec serverSpec;
+	public static final net.neoforged.neoforge.common.ModConfigSpec serverSpec;
 	public static final Server SERVER;
 
 	static {
-		final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Server::new);
+		final Pair<Server, net.neoforged.neoforge.common.ModConfigSpec> specPair = new Builder().configure(Server::new);
 		serverSpec = specPair.getRight();
 		SERVER = specPair.getLeft();
 	}
 
 	@SubscribeEvent
-	public static void onLoad(final ModConfigEvent.Loading configEvent) {
+	public static void onLoad(final Loading configEvent) {
 		UnhealthyDying.LOGGER.debug("Loaded Unhealthy Dying's config file {}", configEvent.getConfig().getFileName());
 	}
 
 	@SubscribeEvent
-	public static void onFileChange(final ModConfigEvent.Reloading configEvent) {
+	public static void onFileChange(final Reloading configEvent) {
 		UnhealthyDying.LOGGER.debug("Unhealthy Dying's config just got changed on the file system!");
 	}
 }
