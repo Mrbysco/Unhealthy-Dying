@@ -40,7 +40,7 @@ public class UnhealthyHelper {
 	}
 
 	public static AttributeModifier getModifier(double modifier) {
-		return new AttributeModifier(Reference.HEALTH_MODIFIER_ID, () -> "UnhealthyHealthModifier", modifier, Operation.ADDITION);
+		return new AttributeModifier(Reference.HEALTH_MODIFIER_ID, "UnhealthyHealthModifier", modifier, Operation.ADDITION);
 	}
 
 	@Nullable
