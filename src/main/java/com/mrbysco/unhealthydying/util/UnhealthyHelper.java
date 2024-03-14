@@ -12,8 +12,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Team;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Helper class for the health modifier
+ */
 public class UnhealthyHelper {
 
+	/**
+	 * Initializes the modifier
+	 *
+	 * @param player   The player to initialize
+	 * @param modifier The modifier value
+	 */
 	public static void initializeModifier(Player player, double modifier) {
 		if (!player.level().isClientSide) {
 			AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
@@ -22,36 +31,66 @@ public class UnhealthyHelper {
 		}
 	}
 
+	/**
+	 * Changes the modifier value
+	 *
+	 * @param player        The player to change
+	 * @param modifierValue The amount to change the modifier with
+	 */
 	public static void changeModifier(Player player, double modifierValue) {
 		if (!player.level().isClientSide) {
 			AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
 			AttributeModifier modifier = getModifier(modifierValue);
 			if (attributeInstance != null) {
-
 				if (attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID) != null) {
 					attributeInstance.removePermanentModifier(Reference.HEALTH_MODIFIER_ID);
 				}
 
-				HealthUtil.sendHealthMessage(player, (int) (attributeInstance.getBaseValue() + modifier.getAmount()), (int) modifierValue);
+				HealthUtil.sendHealthMessage(player, (int) (attributeInstance.getValue() + modifier.getAmount()), (int) modifierValue);
 				attributeInstance.addPermanentModifier(modifier);
 			}
 			player.setHealth(player.getHealth());
 		}
 	}
 
+	/**
+	 * Gets the modifier
+	 *
+	 * @param modifier The modifier value
+	 * @return The modifier
+	 */
 	public static AttributeModifier getModifier(double modifier) {
 		return new AttributeModifier(Reference.HEALTH_MODIFIER_ID, () -> "UnhealthyHealthModifier", modifier, Operation.ADDITION);
 	}
 
+	/**
+	 * Gets the saved data
+	 *
+	 * @param player The player who's world to get the data from
+	 * @return The saved data
+	 */
 	@Nullable
 	public static ModifierWorldData getSavedData(Player player) {
 		return !player.level().isClientSide ? ModifierWorldData.get(player.getServer().getLevel(Level.OVERWORLD)) : null;
 	}
 
+	/**
+	 * Recalculate and set the health of everyone
+	 *
+	 * @param player         The player to change
+	 * @param changeModifier The amount to change the modifier with
+	 */
 	public static void setEveryonesHealth(Player player, int changeModifier) {
 		setEveryonesHealth(player, changeModifier, true);
 	}
 
+	/**
+	 * Sets the health of everyone
+	 *
+	 * @param player         The player to change
+	 * @param changeModifier The amount to change the modifier with
+	 * @param recalculate    If the health modifier should be recalculated
+	 */
 	public static void setEveryonesHealth(Player player, int changeModifier, boolean recalculate) {
 		ModifierWorldData worldData = getSavedData(player);
 		if (worldData != null) {
@@ -70,10 +109,23 @@ public class UnhealthyHelper {
 		}
 	}
 
+	/**
+	 * Recalculate and set the health of the player based on the scoreboard team
+	 *
+	 * @param player         The player to change
+	 * @param changeModifier The amount to change the modifier with
+	 */
 	public static void setScoreboardHealth(Player player, int changeModifier) {
 		setScoreboardHealth(player, changeModifier, true);
 	}
 
+	/**
+	 * Sets the health of the player based on the scoreboard team
+	 *
+	 * @param player         The player to change
+	 * @param changeModifier The amount to change the modifier with
+	 * @param recalculate    If the health modifier should be recalculated
+	 */
 	public static void setScoreboardHealth(Player player, int changeModifier, boolean recalculate) {
 		if (player.getTeam() != null) {
 			Team team = player.getTeam();
@@ -99,10 +151,23 @@ public class UnhealthyHelper {
 		}
 	}
 
+	/**
+	 * Recalculate and set the health of the player
+	 *
+	 * @param player         The player to change
+	 * @param changeModifier The amount to change the modifier with
+	 */
 	public static void setHealth(Player player, int changeModifier) {
 		setHealth(player, changeModifier, true);
 	}
 
+	/**
+	 * Sets the health of the plater
+	 *
+	 * @param player         The player to change
+	 * @param changeModifier The amount to change the modifier with
+	 * @param recalculate    If the health modifier should be recalculated
+	 */
 	public static void setHealth(Player player, int changeModifier, boolean recalculate) {
 		ModifierWorldData worldData = getSavedData(player);
 		if (worldData != null) {
@@ -118,6 +183,11 @@ public class UnhealthyHelper {
 		}
 	}
 
+	/**
+	 * Syncs the health of the player with the saved data
+	 *
+	 * @param player The player to sync
+	 */
 	public static void syncHealth(Player player) {
 		ModifierWorldData worldData = getSavedData(player);
 		if (worldData != null) {
@@ -137,10 +207,17 @@ public class UnhealthyHelper {
 		}
 	}
 
+	/**
+	 * Gets the modifier value required to reach the wanted health
+	 *
+	 * @param player       The player to check
+	 * @param healthWanted The health the player wants
+	 * @return The modifier value required to reach the wanted health
+	 */
 	public static double getModifierForAmount(Player player, double healthWanted) {
 		AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
 		if (attributeInstance != null) {
-			double health = attributeInstance.getBaseValue();
+			double health = attributeInstance.getValue();
 			double modifierRequired = healthWanted - health;
 
 			if (UnhealthyConfig.SERVER.regenHealth.get() && healthWanted > (double) UnhealthyConfig.SERVER.maxRegained.get())
@@ -156,16 +233,29 @@ public class UnhealthyHelper {
 		return 0.0D;
 	}
 
+	/**
+	 * Checks if the modifier value is safe to apply
+	 *
+	 * @param player        The player to check
+	 * @param modifierValue The modifier value to check
+	 * @return The modifier value that is safe to apply
+	 */
 	public static double safetyCheck(Player player, double modifierValue) {
 		AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
 		if (attributeInstance != null) {
 			AttributeModifier currentModifier = attributeInstance.getModifier(Reference.HEALTH_MODIFIER_ID);
-			double baseHealth = attributeInstance.getBaseValue();
-			double health = baseHealth;
-			if (currentModifier != null)
-				health += currentModifier.getAmount();
+			//The current modifier value, 0 if there is none applied
+			double curValue = currentModifier != null ? currentModifier.getAmount() : 0.0D;
 
+			//Remove the current modifier so we can calculate the health
+			attributeInstance.removePermanentModifier(Reference.HEALTH_MODIFIER_ID);
+			//Get the health without the modifier
+			double baseHealth = attributeInstance.getValue();
+			//Generate the health with the old modifier value
+			double health = baseHealth + curValue;
+			//Get the health with the new modifier value
 			double modifiedHealth = baseHealth + modifierValue;
+			//The used modifier value (modifierValue if it's safe, otherwise the safe modifier value is calculated below)
 			double usedModifier = modifierValue;
 
 			if (UnhealthyConfig.SERVER.regenHealth.get() && modifiedHealth > (double) UnhealthyConfig.SERVER.maxRegained.get())

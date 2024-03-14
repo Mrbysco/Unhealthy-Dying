@@ -105,6 +105,14 @@ public class EasterEgg {
 		}
 	}
 
+	/**
+	 * Sets the amount of kills for the player
+	 *
+	 * @param player       The player to set the data for
+	 * @param customTag    The custom tag to use
+	 * @param targetAmount The amount of kills needed
+	 * @param healthGained The amount of health gained
+	 */
 	public static void setAmountData(Player player, String customTag, int targetAmount, int healthGained) {
 		CompoundTag playerData = player.getPersistentData();
 
