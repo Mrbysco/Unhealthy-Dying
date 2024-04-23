@@ -32,7 +32,7 @@ public class UnhealthyHelper {
 					attributeInstance.removePermanentModifier(Reference.HEALTH_MODIFIER_ID);
 				}
 
-				HealthUtil.sendHealthMessage(player, (int) (attributeInstance.getBaseValue() + modifier.getAmount()), (int) modifierValue);
+				HealthUtil.sendHealthMessage(player, (int) (attributeInstance.getBaseValue() + modifier.amount()), (int) modifierValue);
 				attributeInstance.addPermanentModifier(modifier);
 			}
 			player.setHealth(player.getHealth());
@@ -40,7 +40,7 @@ public class UnhealthyHelper {
 	}
 
 	public static AttributeModifier getModifier(double modifier) {
-		return new AttributeModifier(Reference.HEALTH_MODIFIER_ID, "UnhealthyHealthModifier", modifier, Operation.ADDITION);
+		return new AttributeModifier(Reference.HEALTH_MODIFIER_ID, "UnhealthyHealthModifier", modifier, Operation.ADD_VALUE);
 	}
 
 	@Nullable
@@ -163,7 +163,7 @@ public class UnhealthyHelper {
 			double baseHealth = attributeInstance.getBaseValue();
 			double health = baseHealth;
 			if (currentModifier != null)
-				health += currentModifier.getAmount();
+				health += currentModifier.amount();
 
 			double modifiedHealth = baseHealth + modifierValue;
 			double usedModifier = modifierValue;

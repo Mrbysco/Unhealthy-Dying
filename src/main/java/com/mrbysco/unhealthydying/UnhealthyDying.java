@@ -5,8 +5,9 @@ import com.mrbysco.unhealthydying.commands.UnhealthyCommands;
 import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.handlers.EasterEgg;
 import com.mrbysco.unhealthydying.handlers.HealthHandler;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig.Type;
 import net.neoforged.neoforge.common.NeoForge;
@@ -17,8 +18,8 @@ import org.slf4j.Logger;
 public class UnhealthyDying {
 	public static final Logger LOGGER = LogUtils.getLogger();
 
-	public UnhealthyDying(IEventBus eventBus) {
-		ModLoadingContext.get().registerConfig(Type.SERVER, UnhealthyConfig.serverSpec);
+	public UnhealthyDying(IEventBus eventBus, Dist dist, ModContainer container) {
+		container.registerConfig(Type.SERVER, UnhealthyConfig.serverSpec);
 		eventBus.register(UnhealthyConfig.class);
 
 		NeoForge.EVENT_BUS.register(new HealthHandler());

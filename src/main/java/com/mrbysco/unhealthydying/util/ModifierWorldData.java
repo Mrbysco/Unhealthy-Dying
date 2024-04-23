@@ -1,6 +1,7 @@
 package com.mrbysco.unhealthydying.util;
 
 import com.mrbysco.unhealthydying.Reference;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -25,7 +26,7 @@ public class ModifierWorldData extends SavedData {
 		this(new CompoundTag());
 	}
 
-	public static ModifierWorldData load(CompoundTag nbt) {
+	public static ModifierWorldData load(CompoundTag nbt, HolderLookup.Provider provider) {
 		if (nbt.contains(MODIFIER_TAG)) {
 			return new ModifierWorldData((CompoundTag) nbt.get(MODIFIER_TAG));
 		}
@@ -33,7 +34,7 @@ public class ModifierWorldData extends SavedData {
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag compound) {
+	public CompoundTag save(CompoundTag compound, HolderLookup.Provider provider) {
 		compound.put(MODIFIER_TAG, this.modifierTag);
 		return compound;
 	}
