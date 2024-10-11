@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+issueTrackerURL="https://github.com/Mrbysco/Unhealthy-Dying/issues"
+license="MIT"
+
+[[mods]]
+modId="unhealthydying"
+version="${file.jarVersion}"
+displayName="Unhealthy Dying"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/unhealthy-dying"
+authors="Mrbysco"
+credits="rubisnosetti for the mod idea"
+logoFile="logo.png"
+description='''Losing health from dying'''
+
+[[dependencies.unhealthydying]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20,1.21)"
+ordering="NONE"
+side="BOTH"
