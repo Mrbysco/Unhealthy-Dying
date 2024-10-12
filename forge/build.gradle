@@ -119,7 +119,7 @@ if (System.getenv().CURSEFORGE_KEY) {
         mainFile.releaseType = 'release'
         mainFile.addModLoader("Forge")
         mainFile.addModLoader("NeoForge")
-        mainFile.addGameVersion("${mc_version}")
+        mainFile.addGameVersion("${minecraft_version}")
         mainFile.addJavaVersion("Java 17")
 
         mainFile.changelog = file("$project.rootDir/changelog.md")

@@ -103,7 +103,7 @@ if (System.getenv().CURSEFORGE_KEY) {
         def mainFile = upload(project.curseforge_id, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
         mainFile.releaseType = 'beta'
         mainFile.addModLoader("Fabric")
-        mainFile.addGameVersion("${mc_version}")
+        mainFile.addGameVersion("${minecraft_version}")
         mainFile.addJavaVersion("Java 17")
 
         mainFile.changelog = file("$project.rootDir/changelog.md")
