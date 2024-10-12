@@ -15,11 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PlayerListMixin {
 	@Inject(method = "placeNewPlayer", at = @At("RETURN"))
 	private void unhealthydying$placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci) {
-		HealthHandler.onJoin(serverPlayer);
+		HealthHandler.onPlayerJoin(serverPlayer);
 	}
 
 	@Inject(method = "respawn", at = @At("RETURN"))
 	private void unhealthydying$respawn(ServerPlayer serverPlayer, boolean endConquered, CallbackInfoReturnable<ServerPlayer> cir) {
-		HealthHandler.setHealth(serverPlayer, endConquered);
+		HealthHandler.onRespawn(cir.getReturnValue(), endConquered);
 	}
 }
