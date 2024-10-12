@@ -5,7 +5,7 @@ import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 import net.minecraft.world.entity.player.Player;
 
 public class HealthHandler {
-	public static void onJoin(Player player) {
+	public static void onPlayerJoin(Player player) {
 		if (!player.level().isClientSide) {
 			UnhealthyHelper.initializeModifier(player, 0.0D);
 
@@ -14,7 +14,7 @@ public class HealthHandler {
 		}
 	}
 
-	public static void setHealth(Player player, boolean endConquered) {
+	public static void onRespawn(Player player, boolean endConquered) {
 		if (!endConquered) {
 			int healthPerDeath = -Services.PLATFORM.getHealthPerDeath();
 

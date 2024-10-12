@@ -36,12 +36,12 @@ public class UnhealthyDyingForge {
 
 	private void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
 		Player player = event.getEntity();
-		HealthHandler.onJoin(player);
+		HealthHandler.onPlayerJoin(player);
 	}
 
 	private void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
 		Player player = event.getEntity();
-		HealthHandler.setHealth(player, event.isEndConquered());
+		HealthHandler.onRespawn(player, event.isEndConquered());
 	}
 
 	public void onCommandRegister(RegisterCommandsEvent event) {
