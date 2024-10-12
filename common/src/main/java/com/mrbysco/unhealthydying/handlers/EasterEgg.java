@@ -39,7 +39,7 @@ public class EasterEgg {
 											processKill(player, targetInfo[0], healthFromKill, targetAmount);
 										}
 									} else {
-										if (new ResourceLocation(targetInfo[0]).equals(entityLocation)) {
+										if (ResourceLocation.parse(targetInfo[0]).equals(entityLocation)) {
 											processKill(player, targetInfo[0], healthFromKill, targetAmount);
 										}
 									}

@@ -40,6 +40,7 @@ loom {
     if (project(":common").file("src/main/resources/${mod_id}.accesswidener").exists()) {
         accessWidenerPath.set(project(":common").file("src/main/resources/${mod_id}.accesswidener"))
     }
+
     mixin {
         defaultRefmapName.set("${mod_id}.refmap.json")
     }
@@ -100,18 +101,20 @@ if (System.getenv().CURSEFORGE_KEY) {
     task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
         apiToken = System.getenv().CURSEFORGE_KEY
 
-        def mainFile = upload(project.curseforge_id, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+        def mainFile = upload(project.curseforge_id, remapJar)
         mainFile.releaseType = 'beta'
-        mainFile.addModLoader("Fabric")
-        mainFile.addGameVersion("${minecraft_version}")
-        mainFile.addJavaVersion("Java 17")
+        mainFile.addGameVersion "Fabric"
+        mainFile.addGameVersion "${minecraft_version}"
+        mainFile.addGameVersion "Java 21"
+        mainFile.addGameVersion('Server', 'Client')
 
         mainFile.changelog = file("$project.rootDir/changelog.md")
         mainFile.changelogType = 'markdown'
 
-        mainFile.addRequirement("fabric-api")
+        mainFile.addRequirement("fabric-api", "cloth-config")
     }
 }
+
 
 if (System.getenv().MODRINTH_KEY) {
     String fileContents = file("$project.rootDir/changelog.md").text
@@ -128,6 +131,7 @@ if (System.getenv().MODRINTH_KEY) {
 
         dependencies {
             required.project "fabric-api"
+            required.project "cloth-config"
         }
     }
 }

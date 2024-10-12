@@ -43,10 +43,10 @@ public class UnhealthyHelper {
 			AttributeModifier modifier = getModifier(modifierValue);
 			if (attributeInstance != null) {
 				if (attributeInstance.getModifier(Constants.HEALTH_MODIFIER_ID) != null) {
-					attributeInstance.removePermanentModifier(Constants.HEALTH_MODIFIER_ID);
+					attributeInstance.removeModifier(Constants.HEALTH_MODIFIER_ID);
 				}
 
-				HealthUtil.sendHealthMessage(player, (int) (attributeInstance.getValue() + modifier.getAmount()), (int) modifierValue);
+				HealthUtil.sendHealthMessage(player, (int) (attributeInstance.getBaseValue() + modifier.amount()), (int) modifierValue);
 				attributeInstance.addPermanentModifier(modifier);
 			}
 			player.setHealth(player.getHealth());
@@ -60,7 +60,7 @@ public class UnhealthyHelper {
 	 * @return The modifier
 	 */
 	public static AttributeModifier getModifier(double modifier) {
-		return new AttributeModifier(Constants.HEALTH_MODIFIER_ID, () -> "UnhealthyHealthModifier", modifier, Operation.ADDITION);
+		return new AttributeModifier(Constants.HEALTH_MODIFIER_ID, modifier, Operation.ADD_VALUE);
 	}
 
 	/**
@@ -246,18 +246,12 @@ public class UnhealthyHelper {
 		AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
 		if (attributeInstance != null) {
 			AttributeModifier currentModifier = attributeInstance.getModifier(Constants.HEALTH_MODIFIER_ID);
-			//The current modifier value, 0 if there is none applied
-			double curValue = currentModifier != null ? currentModifier.getAmount() : 0.0D;
+			double baseHealth = attributeInstance.getBaseValue();
+			double health = baseHealth;
+			if (currentModifier != null)
+				health += currentModifier.amount();
 
-			//Remove the current modifier so we can calculate the health
-			attributeInstance.removePermanentModifier(Constants.HEALTH_MODIFIER_ID);
-			//Get the health without the modifier
-			double baseHealth = attributeInstance.getValue();
-			//Generate the health with the old modifier value
-			double health = baseHealth + curValue;
-			//Get the health with the new modifier value
 			double modifiedHealth = baseHealth + modifierValue;
-			//The used modifier value (modifierValue if it's safe, otherwise the safe modifier value is calculated below)
 			double usedModifier = modifierValue;
 
 			double maxRegained = Services.PLATFORM.getMaxRegained();

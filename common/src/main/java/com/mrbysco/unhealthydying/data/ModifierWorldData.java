@@ -1,6 +1,7 @@
 package com.mrbysco.unhealthydying.data;
 
 import com.mrbysco.unhealthydying.Constants;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -25,17 +26,17 @@ public class ModifierWorldData extends SavedData {
 		this(new CompoundTag());
 	}
 
-	public static ModifierWorldData load(CompoundTag nbt) {
-		if (nbt.contains(MODIFIER_TAG)) {
-			return new ModifierWorldData((CompoundTag) nbt.get(MODIFIER_TAG));
+	public static ModifierWorldData load(CompoundTag tag, HolderLookup.Provider provider) {
+		if (tag.contains(MODIFIER_TAG)) {
+			return new ModifierWorldData((CompoundTag) tag.get(MODIFIER_TAG));
 		}
 		return new ModifierWorldData();
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag compound) {
-		compound.put(MODIFIER_TAG, this.modifierTag);
-		return compound;
+	public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
+		tag.put(MODIFIER_TAG, this.modifierTag);
+		return tag;
 	}
 
 	public CompoundTag getModifierTag() {
@@ -110,6 +111,6 @@ public class ModifierWorldData extends SavedData {
 		ServerLevel overworld = level.getServer().getLevel(Level.OVERWORLD);
 
 		DimensionDataStorage storage = overworld.getDataStorage();
-		return storage.computeIfAbsent(ModifierWorldData::load, ModifierWorldData::new, DATA_NAME);
+		return storage.computeIfAbsent(new SavedData.Factory<>(ModifierWorldData::new, ModifierWorldData::load, null), DATA_NAME);
 	}
 }

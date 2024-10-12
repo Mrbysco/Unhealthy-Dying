@@ -1,0 +1,28 @@
+#General settings
+[general]
+	#Minimum amount of health the player can end up with (2 = 1 heart) [default: 2]
+	#Range: > 1
+	minimumHealth = 2
+	#The amount of health taken from the player upon death (2 = 1 heart) [default: 2]
+	#Range: > 1
+	healthPerDeath = 2
+	#When set to true it notifies the player about their new max health when they respawn [default: true]
+	reducedHealthMessage = true
+	#Decides if the reduced health is per player, for everybody or per team [default: SEPARATE]
+	#Allowed Values: SEPARATE, SCOREBOARD_TEAM, EVERYBODY
+	healthSetting = "SEPARATE"
+
+#Regen settings
+[regen]
+	#When set to true allows you to gain back health upon killing set target(s) [default: false]
+	regenHealth = false
+	#The amount of max health the player can get from killing the target(s) (20 = 10 hearts) [default: 20]
+	#Range: > 1
+	maxRegained = 20
+	#When set to true it notifies the player about their new max health when they respawn [default: true]
+	regenHealthMessage = true
+	#Adding lines / removing lines specifies which mobs will cause the players to regen max health
+	#Syntax: modid:mobname,healthRegenned,amount
+	#For wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart
+	#While [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart
+	regenTargets = ["minecraft:ender_dragon,4,1", "minecraft:wither,2,1"]
