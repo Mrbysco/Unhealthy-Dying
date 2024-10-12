@@ -1,1 +1,1 @@
-* Initial MultiLoader 1.21 build
+* Add missing lang keys to ru_ru lang file (Using the English values)
