@@ -1,1 +1,3 @@
-* Add missing lang keys to ru_ru lang file (Using the English values)
+* Fix config not loading properly on fabric
+* Fix `hearts set` command not working correctly
+* Add config option `healthLossChance` to set the chance of losing health when dying
