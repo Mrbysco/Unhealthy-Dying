@@ -15,6 +15,11 @@ import java.util.List;
 public class FabricPlatformHelper implements IPlatformHelper {
 
 	@Override
+	public double getHealthLossChance() {
+		return UnhealthyDyingFabric.config.get().general.healthLossChance;
+	}
+	
+	@Override
 	public int getMinimumHealth() {
 		return UnhealthyDyingFabric.config.get().general.minimumHealth;
 	}

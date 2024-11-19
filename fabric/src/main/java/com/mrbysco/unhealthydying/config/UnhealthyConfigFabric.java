@@ -1,5 +1,6 @@
 package com.mrbysco.unhealthydying.config;
 
+import com.mrbysco.unhealthydying.Constants;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -8,7 +9,7 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import java.util.Arrays;
 import java.util.List;
 
-@Config(name = com.mrbysco.unhealthydying.Constants.MOD_ID)
+@Config(name = Constants.MOD_ID)
 public class UnhealthyConfigFabric implements ConfigData {
 	@ConfigEntry.Gui.CollapsibleObject
 	public final General general = new General();
@@ -17,6 +18,9 @@ public class UnhealthyConfigFabric implements ConfigData {
 	public final Regen regen = new Regen();
 
 	public static class General {
+		@Comment("The chance of losing health upon death (0.1 = 10%) (Valid range: 0.01 - 1.0) [default: 1.0]")
+		public double healthLossChance = 1.0;
+
 		@Comment("Minimum amount of health the player can end up with (2 = 1 heart) [default: 2]")
 		public int minimumHealth = 2;
 
@@ -49,5 +53,26 @@ public class UnhealthyConfigFabric implements ConfigData {
 				"minecraft:ender_dragon,4,1",
 				"minecraft:wither,2,1"
 		);
+	}
+
+	@Override
+	public void validatePostLoad() throws ValidationException {
+		// Correct invalid values
+		if (general.healthLossChance < 0.01 || general.healthLossChance > 1.0) {
+			Constants.LOGGER.warn("Invalid value for healthLossChance: {}. Resetting to default.", general.healthLossChance);
+			general.healthLossChance = 1.0;
+		}
+		if (general.minimumHealth < 1) {
+			Constants.LOGGER.warn("Invalid value for minimumHealth: {}. Resetting to default.", general.minimumHealth);
+			general.minimumHealth = 1;
+		}
+		if (general.healthPerDeath < 1) {
+			Constants.LOGGER.warn("Invalid value for healthPerDeath: {}. Resetting to default.", general.healthPerDeath);
+			general.healthPerDeath = 1;
+		}
+		if (regen.maxRegained < 1) {
+			Constants.LOGGER.warn("Invalid value for maxRegained: {}. Resetting to default.", regen.maxRegained);
+			regen.maxRegained = 1;
+		}
 	}
 }

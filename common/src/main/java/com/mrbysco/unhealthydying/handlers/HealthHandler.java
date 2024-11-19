@@ -16,6 +16,11 @@ public class HealthHandler {
 
 	public static void onRespawn(Player player, boolean endConquered) {
 		if (!endConquered) {
+			//Check if player should lose health
+			double healthLossChance = Services.PLATFORM.getHealthLossChance();
+			if (healthLossChance < 1.0D && player.getRandom().nextDouble() > healthLossChance) return;
+			//Player should lose health
+
 			int healthPerDeath = -Services.PLATFORM.getHealthPerDeath();
 
 			switch (Services.PLATFORM.getHealthSetting()) {

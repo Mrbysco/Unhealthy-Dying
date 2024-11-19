@@ -2,12 +2,13 @@ package com.mrbysco.unhealthydying.config;
 
 import com.mrbysco.unhealthydying.Constants;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
+import net.neoforged.neoforge.common.ModConfigSpec.DoubleValue;
 import net.neoforged.neoforge.common.ModConfigSpec.EnumValue;
 import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class UnhealthyConfigNeoForge {
 	public static class Server {
+		public final DoubleValue healthLossChance;
 		public final IntValue minimumHealth;
 		public final IntValue healthPerDeath;
 		public final BooleanValue reducedHealthMessage;
@@ -28,6 +30,10 @@ public class UnhealthyConfigNeoForge {
 		Server(ModConfigSpec.Builder builder) {
 			builder.comment("General settings")
 					.push("general");
+
+			healthLossChance = builder
+					.comment("The chance of losing health upon death (0.1 = 10%) [default: 1.0]")
+					.defineInRange("healthLossChance", 1.0, 0.001, 1.0);
 
 			minimumHealth = builder
 					.comment("Minimum amount of health the player can end up with (2 = 1 heart) [default: 2]")

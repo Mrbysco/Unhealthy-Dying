@@ -9,6 +9,13 @@ import java.util.List;
 public interface IPlatformHelper {
 
 	/**
+	 * Get the chance of losing health.
+	 *
+	 * @return The chance of losing health
+	 */
+	double getHealthLossChance();
+
+	/**
 	 * Get the minimum health configured.
 	 *
 	 * @return The minimum health configured

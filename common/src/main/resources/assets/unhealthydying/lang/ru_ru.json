@@ -68,5 +68,9 @@
   "unhealthydying.configuration.regenHealthMessage": "Regen Health Message",
   "unhealthydying.configuration.regenHealthMessage.tooltip": "When set to true it notifies the player about their new max health when they respawn [default: true]",
   "unhealthydying.configuration.regenTargets": "Regen Targets",
-  "unhealthydying.configuration.regenTargets.tooltip": "Adding lines / removing lines specifies which mobs will cause the players to regen max health\nSyntax: modid:mobname,healthRegenned,amount\nFor wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart\nWhile [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart"
+  "unhealthydying.configuration.regenTargets.tooltip": "Adding lines / removing lines specifies which mobs will cause the players to regen max health\nSyntax: modid:mobname,healthRegenned,amount\nFor wildcards use *. For instance [*:*,1,20] would mean every 20 kills regain half a heart\nWhile [minecraft:*,1,10] would mean every 10 kills of vanilla mobs regains half a heart",
+  "text.autoconfig.unhealthydying.option.general.healthLossChance": "Health Loss Chance",
+  "text.autoconfig.unhealthydying.option.general.healthLossChance.@Tooltip": "The chance of losing health upon death (0.1 = 10%) (Valid range: 0.01 - 1.0) [default: 1.0]",
+  "unhealthydying.configuration.healthLossChance": "Health Loss Chance",
+  "unhealthydying.configuration.healthLossChance.tooltip": "The chance of losing health upon death (0.1 = 10%) [default: 1.0]"
 }
