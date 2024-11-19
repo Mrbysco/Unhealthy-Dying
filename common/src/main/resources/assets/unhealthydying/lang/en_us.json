@@ -34,6 +34,8 @@
   "commands.unhealthydying.removehearts.success": "Removed %s heart(s) from %s's health",
   "text.autoconfig.unhealthydying.title": "Unhealthy Dying Config",
   "text.autoconfig.unhealthydying.option.general": "General",
+  "text.autoconfig.unhealthydying.option.general.healthLossChance": "Health Loss Chance",
+  "text.autoconfig.unhealthydying.option.general.healthLossChance.@Tooltip": "The chance of losing health upon death (0.1 = 10%) (Valid range: 0.01 - 1.0) [default: 1.0]",
   "text.autoconfig.unhealthydying.option.general.minimumHealth": "Minimum Health",
   "text.autoconfig.unhealthydying.option.general.minimumHealth.@Tooltip": "Minimum amount of health the player can end up with (2 = 1 heart) [default: 2]",
   "text.autoconfig.unhealthydying.option.general.healthPerDeath": "Health Per Death",

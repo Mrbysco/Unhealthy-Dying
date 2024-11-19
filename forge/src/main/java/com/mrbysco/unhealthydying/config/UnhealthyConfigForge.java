@@ -4,6 +4,7 @@ import com.mrbysco.unhealthydying.Constants;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class UnhealthyConfigForge {
 	public static class Server {
+		public final DoubleValue healthLossChance;
 		public final IntValue minimumHealth;
 		public final IntValue healthPerDeath;
 		public final BooleanValue reducedHealthMessage;
@@ -28,6 +30,10 @@ public class UnhealthyConfigForge {
 		Server(ForgeConfigSpec.Builder builder) {
 			builder.comment("General settings")
 					.push("General");
+
+			healthLossChance = builder
+					.comment("The chance of losing health upon death (0.1 = 10%) [default: 1.0]")
+					.defineInRange("healthLossChance", 1.0, 0.001, 1.0);
 
 			minimumHealth = builder
 					.comment("Minimum amount of health the player can end up with (2 = 1 heart) [default: 2]")

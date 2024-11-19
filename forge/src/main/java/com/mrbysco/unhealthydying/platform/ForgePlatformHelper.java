@@ -12,6 +12,10 @@ import net.minecraftforge.common.util.FakePlayer;
 import java.util.List;
 
 public class ForgePlatformHelper implements IPlatformHelper {
+    @Override
+    public double getHealthLossChance() {
+        return UnhealthyConfigForge.SERVER.healthLossChance.get();
+    }
 
     @Override
     public int getMinimumHealth() {

@@ -13,6 +13,10 @@ import net.minecraft.world.entity.player.Player;
 import java.util.List;
 
 public class FabricPlatformHelper implements IPlatformHelper {
+	@Override
+	public double getHealthLossChance() {
+		return UnhealthyDyingFabric.config.get().general.healthLossChance;
+	}
 
 	@Override
 	public int getMinimumHealth() {
