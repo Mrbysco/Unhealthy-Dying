@@ -34,7 +34,7 @@ public class EntityMixin implements IPersistentData {
 	@Inject(method = "load", at = @At("HEAD"))
 	public void unhealthydying$load(CompoundTag compoundTag, CallbackInfo ci) {
 		if (compoundTag.contains("unhealthydying.entity_data")) {
-			persistentData = compoundTag.getCompound("unhealthydying.entity_data");
+			persistentData = compoundTag.getCompoundOrEmpty("unhealthydying.entity_data");
 		}
 	}
 }

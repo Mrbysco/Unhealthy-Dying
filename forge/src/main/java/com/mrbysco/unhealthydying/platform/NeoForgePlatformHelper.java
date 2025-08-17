@@ -67,7 +67,7 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 		CompoundTag playerData = player.getPersistentData();
 
 		if (playerData.contains(customTag)) {
-			int currentAmount = playerData.getInt(customTag);
+			int currentAmount = playerData.getIntOr(customTag, 0);
 			if ((currentAmount + 1) >= targetAmount) {
 				switch (Services.PLATFORM.getHealthSetting()) {
 					case EVERYBODY -> UnhealthyHelper.setEveryonesHealth(player, healthGained);

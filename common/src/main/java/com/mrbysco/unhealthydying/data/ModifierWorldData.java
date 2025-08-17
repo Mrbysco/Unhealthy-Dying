@@ -1,11 +1,13 @@
 package com.mrbysco.unhealthydying.data;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mrbysco.unhealthydying.Constants;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 
 import java.util.UUID;
@@ -13,6 +15,11 @@ import java.util.UUID;
 public class ModifierWorldData extends SavedData {
 	private static final String DATA_NAME = Constants.MOD_ID + "_world_data";
 	private static final String MODIFIER_TAG = "stored_modifiers";
+
+	public static final Codec<ModifierWorldData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+					CompoundTag.CODEC.fieldOf(MODIFIER_TAG).forGetter(data -> data.modifierTag))
+			.apply(inst, ModifierWorldData::new));
+
 
 	private static final String EVERYBODY_TAG = "EverybodyModifier";
 
@@ -24,19 +31,6 @@ public class ModifierWorldData extends SavedData {
 
 	public ModifierWorldData() {
 		this(new CompoundTag());
-	}
-
-	public static ModifierWorldData load(CompoundTag tag, HolderLookup.Provider provider) {
-		if (tag.contains(MODIFIER_TAG)) {
-			return new ModifierWorldData((CompoundTag) tag.get(MODIFIER_TAG));
-		}
-		return new ModifierWorldData();
-	}
-
-	@Override
-	public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
-		tag.put(MODIFIER_TAG, this.modifierTag);
-		return tag;
 	}
 
 	public CompoundTag getModifierTag() {
@@ -55,7 +49,7 @@ public class ModifierWorldData extends SavedData {
 	public int getScoreboardTeamModifier(String scoreboardName) {
 		String teamTag = "Scoreboard" + scoreboardName + "Modifier";
 		if (getModifierTag().contains(teamTag)) {
-			return getModifierTag().getInt(teamTag);
+			return getModifierTag().getIntOr(teamTag, 0);
 		} else {
 			getModifierTag().putInt(teamTag, 0);
 			return 0;
@@ -84,7 +78,7 @@ public class ModifierWorldData extends SavedData {
 
 	public int getEverybodyModifier() {
 		if (getModifierTag().contains(EVERYBODY_TAG)) {
-			return getModifierTag().getInt(EVERYBODY_TAG);
+			return getModifierTag().getIntOr(EVERYBODY_TAG, 0);
 		} else {
 			getModifierTag().putInt(EVERYBODY_TAG, 0);
 			return 0;
@@ -97,11 +91,15 @@ public class ModifierWorldData extends SavedData {
 
 	public int getPlayerModifier(UUID uuid) {
 		if (getModifierTag().contains(uuid.toString())) {
-			return getModifierTag().getInt(uuid.toString());
+			return getModifierTag().getIntOr(uuid.toString(), 0);
 		} else {
 			getModifierTag().putInt(uuid.toString(), 0);
 			return 0;
 		}
+	}
+
+	public static SavedDataType<ModifierWorldData> type() {
+		return new SavedDataType<>(DATA_NAME, ModifierWorldData::new, CODEC, null);
 	}
 
 	public static ModifierWorldData get(Level level) {
@@ -111,6 +109,6 @@ public class ModifierWorldData extends SavedData {
 		ServerLevel overworld = level.getServer().getLevel(Level.OVERWORLD);
 
 		DimensionDataStorage storage = overworld.getDataStorage();
-		return storage.computeIfAbsent(new SavedData.Factory<>(ModifierWorldData::new, ModifierWorldData::load, null), DATA_NAME);
+		return storage.computeIfAbsent(type());
 	}
 }
