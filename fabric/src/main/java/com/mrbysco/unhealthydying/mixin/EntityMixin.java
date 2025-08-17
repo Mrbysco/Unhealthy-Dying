@@ -3,12 +3,13 @@ package com.mrbysco.unhealthydying.mixin;
 import com.mrbysco.unhealthydying.util.IPersistentData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class EntityMixin implements IPersistentData {
@@ -25,16 +26,16 @@ public class EntityMixin implements IPersistentData {
 	}
 
 	@Inject(method = "saveWithoutId", at = @At("HEAD"))
-	public void unhealthydying$saveWithoutId(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> cir) {
+	public void unhealthydying$saveWithoutId(ValueOutput valueOutput, CallbackInfo ci) {
 		if (persistentData != null) {
-			compoundTag.put("unhealthydying.entity_data", persistentData);
+			valueOutput.store("unhealthydying.entity_data", CompoundTag.CODEC, persistentData);
 		}
 	}
 
 	@Inject(method = "load", at = @At("HEAD"))
-	public void unhealthydying$load(CompoundTag compoundTag, CallbackInfo ci) {
-		if (compoundTag.contains("unhealthydying.entity_data")) {
-			persistentData = compoundTag.getCompoundOrEmpty("unhealthydying.entity_data");
+	public void unhealthydying$load(ValueInput input, CallbackInfo ci) {
+		if (input.contains("unhealthydying.entity_data")) {
+			persistentData = input.read("unhealthydying.entity_data", CompoundTag.CODEC).orElse(new CompoundTag());
 		}
 	}
 }
