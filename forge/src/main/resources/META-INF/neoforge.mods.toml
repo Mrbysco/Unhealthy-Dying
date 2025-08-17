@@ -14,13 +14,7 @@ logoFile="logo.png"
 description='''Losing health from dying'''
 [[dependencies.unhealthydying]]
 modId="minecraft"
-type="REQUIRED"
-versionRange="[1.21,1.22)"
-ordering="NONE"
-side="BOTH"
-[[dependencies.unhealthydying]]
-modId="neoforge"
-type="REQUIRED"
-versionRange="[21.0.143,)"
+type="required"
+versionRange="[1.21.4,1.22)"
 ordering="NONE"
 side="BOTH"
