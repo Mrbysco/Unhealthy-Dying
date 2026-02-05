@@ -18,7 +18,7 @@ import net.minecraft.server.level.ServerPlayer;
 public class UnhealthyCommands {
 	public static void initializeCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
 		final LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("unhealthydying");
-		root.requires((sourceStack) -> sourceStack.hasPermission(2))
+		root.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.then(Commands.literal("hearts").then(Commands.literal("add").then(Commands.argument("player", EntityArgument.players()).then(Commands.argument("health", IntegerArgumentType.integer(1)).executes((ctx) -> UnhealthyCommands.addHearts(ctx, false)).then(Commands.argument("hideMessage", BoolArgumentType.bool()).executes((ctx) -> UnhealthyCommands.addHearts(ctx, !BoolArgumentType.getBool(ctx, "hideMessage"))))))))
 				.then(Commands.literal("hearts").then(Commands.literal("remove").then(Commands.argument("player", EntityArgument.players()).then(Commands.argument("health", IntegerArgumentType.integer(1)).executes((ctx) -> UnhealthyCommands.removeHearts(ctx, false)).then(Commands.argument("hideMessage", BoolArgumentType.bool()).executes((ctx) -> UnhealthyCommands.removeHearts(ctx, !BoolArgumentType.getBool(ctx, "hideMessage"))))))))
 				.then(Commands.literal("hearts").then(Commands.literal("set").then(Commands.argument("player", EntityArgument.players()).then(Commands.argument("health", IntegerArgumentType.integer(1)).executes((ctx) -> UnhealthyCommands.setHearts(ctx, false)).then(Commands.argument("hideMessage", BoolArgumentType.bool()).executes((ctx) -> UnhealthyCommands.setHearts(ctx, !BoolArgumentType.getBool(ctx, "hideMessage"))))))));

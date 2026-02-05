@@ -4,7 +4,7 @@ import com.mrbysco.unhealthydying.Constants;
 import com.mrbysco.unhealthydying.platform.Services;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +24,7 @@ public class EasterEgg {
 					if (source.getEntity() instanceof Player player && Services.PLATFORM.isPlayer(player)) {
 						String[] targetInfo = target.split(",");
 						if (targetInfo.length > 2) {
-							ResourceLocation entityLocation = BuiltInRegistries.ENTITY_TYPE.getKey(livingEntity.getType());
+							Identifier entityLocation = BuiltInRegistries.ENTITY_TYPE.getKey(livingEntity.getType());
 							int healthFromKill = NumberUtils.toInt(targetInfo[1], 0);
 							int targetAmount = NumberUtils.toInt(targetInfo[2], 0);
 							if (targetInfo[0].contains(":") && entityLocation != null) {
@@ -39,7 +39,7 @@ public class EasterEgg {
 											processKill(player, targetInfo[0], healthFromKill, targetAmount);
 										}
 									} else {
-										if (ResourceLocation.parse(targetInfo[0]).equals(entityLocation)) {
+										if (Identifier.parse(targetInfo[0]).equals(entityLocation)) {
 											processKill(player, targetInfo[0], healthFromKill, targetAmount);
 										}
 									}

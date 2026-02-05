@@ -24,7 +24,7 @@ public class UnhealthyHelper {
 	 * @param modifier The modifier value
 	 */
 	public static void initializeModifier(Player player, double modifier) {
-		if (!player.level().isClientSide) {
+		if (!player.level().isClientSide()) {
 			AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
 			if (attributeInstance != null && attributeInstance.getModifier(Constants.HEALTH_MODIFIER_ID) == null)
 				attributeInstance.addPermanentModifier(getModifier(modifier));
@@ -38,7 +38,7 @@ public class UnhealthyHelper {
 	 * @param modifierValue The amount to change the modifier with
 	 */
 	public static void changeModifier(Player player, double modifierValue) {
-		if (!player.level().isClientSide) {
+		if (!player.level().isClientSide()) {
 			AttributeInstance attributeInstance = player.getAttribute(Attributes.MAX_HEALTH);
 			AttributeModifier modifier = getModifier(modifierValue);
 			if (attributeInstance != null) {
@@ -71,7 +71,7 @@ public class UnhealthyHelper {
 	 */
 	@Nullable
 	public static ModifierWorldData getSavedData(Player player) {
-		return !player.level().isClientSide ? ModifierWorldData.get(player.getServer().getLevel(Level.OVERWORLD)) : null;
+		return !player.level().isClientSide() ? ModifierWorldData.get(player.level().getServer().getLevel(Level.OVERWORLD)) : null;
 	}
 
 	/**
@@ -171,13 +171,13 @@ public class UnhealthyHelper {
 	public static void setHealth(Player player, int changeModifier, boolean recalculate) {
 		ModifierWorldData worldData = getSavedData(player);
 		if (worldData != null) {
-			int savedModifier = recalculate ? worldData.getPlayerModifier(player.getGameProfile().getId()) : changeModifier;
+			int savedModifier = recalculate ? worldData.getPlayerModifier(player.getGameProfile().id()) : changeModifier;
 			if (recalculate) {
 				savedModifier += changeModifier;
 				savedModifier = (int) safetyCheck(player, savedModifier);
 			}
 
-			worldData.setPlayerModifier(player.getGameProfile().getId(), savedModifier);
+			worldData.setPlayerModifier(player.getGameProfile().id(), savedModifier);
 			worldData.setDirty();
 			changeModifier(player, savedModifier);
 		}
@@ -201,7 +201,7 @@ public class UnhealthyHelper {
 					}
 					break;
 				default:
-					UnhealthyHelper.setHealth(player, worldData.getPlayerModifier(player.getGameProfile().getId()), false);
+					UnhealthyHelper.setHealth(player, worldData.getPlayerModifier(player.getGameProfile().id()), false);
 					break;
 			}
 		}

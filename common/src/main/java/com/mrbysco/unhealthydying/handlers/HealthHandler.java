@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class HealthHandler {
 	public static void onPlayerJoin(Player player) {
-		if (!player.level().isClientSide) {
+		if (!player.level().isClientSide()) {
 			UnhealthyHelper.initializeModifier(player, 0.0D);
 
 			//Sync teams

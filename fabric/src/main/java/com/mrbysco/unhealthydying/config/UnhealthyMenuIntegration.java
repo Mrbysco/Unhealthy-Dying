@@ -2,11 +2,11 @@ package com.mrbysco.unhealthydying.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfigClient;
 
 public class UnhealthyMenuIntegration implements ModMenuApi {
 	@Override
 	public ConfigScreenFactory<?> getModConfigScreenFactory() {
-		return parent -> AutoConfig.getConfigScreen(UnhealthyConfigFabric.class, parent).get();
+		return parent -> AutoConfigClient.getConfigScreen(UnhealthyConfigFabric.class, parent).get();
 	}
 }
