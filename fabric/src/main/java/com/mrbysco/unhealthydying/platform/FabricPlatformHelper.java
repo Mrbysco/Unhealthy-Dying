@@ -61,7 +61,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
 	@Override
 	public boolean isPlayer(Entity entity) {
-		return entity instanceof FakePlayer;
+		return !(entity instanceof FakePlayer);
 	}
 
 	@Override
