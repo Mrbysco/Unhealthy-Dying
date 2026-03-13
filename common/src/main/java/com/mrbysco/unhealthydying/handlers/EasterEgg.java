@@ -39,7 +39,8 @@ public class EasterEgg {
 											processKill(player, targetInfo[0], healthFromKill, targetAmount);
 										}
 									} else {
-										if (Identifier.parse(targetInfo[0]).equals(entityLocation)) {
+										Identifier targetEntity = Identifier.tryParse(targetInfo[0]);
+										if (targetEntity != null && targetEntity.equals(entityLocation)) {
 											processKill(player, targetInfo[0], healthFromKill, targetAmount);
 										}
 									}
@@ -66,7 +67,7 @@ public class EasterEgg {
 			} else {
 				String customTag = Constants.MOD_PREFIX + target + ":" + targetAmount;
 				switch (Services.PLATFORM.getHealthSetting()) {
-					case EVERYBODY -> setEveryonesKillCount(player, customTag, healthGained, targetAmount);
+					case EVERYBODY -> setEveryonesKillCount(player, customTag, targetAmount, healthGained);
 					case SCOREBOARD_TEAM -> setScoreboardKillCount(player, customTag, targetAmount, healthGained);
 					default -> setAmountData(player, customTag, targetAmount, healthGained);
 				}
@@ -74,26 +75,26 @@ public class EasterEgg {
 		}
 	}
 
-	private static void setEveryonesKillCount(Player player, String customTag, int healthGained, int targetAmount) {
+	private static void setEveryonesKillCount(Player player, String customTag, int targetAmount, int healthGained) {
 		var playerList = player.level().players();
 		for (Player player1 : playerList) {
 			if (player1.equals(player))
-				setAmountData(player, customTag, healthGained, targetAmount);
+				setAmountData(player, customTag, targetAmount, healthGained);
 			else
-				setAmountData(player1, customTag, healthGained, targetAmount);
+				setAmountData(player1, customTag, targetAmount, healthGained);
 		}
 	}
 
-	private static void setScoreboardKillCount(Player player, String customTag, int healthGained, int targetAmount) {
+	private static void setScoreboardKillCount(Player player, String customTag, int targetAmount, int healthGained) {
 		Level level = player.level();
 		if (player.getTeam() != null) {
 			Team team = player.getTeam();
 			for (Player players : level.players()) {
 				if (players.equals(player)) {
-					setAmountData(player, customTag, healthGained, targetAmount);
+					setAmountData(player, customTag, targetAmount, healthGained);
 				} else {
 					if (players.isAlliedTo(team)) {
-						setAmountData(players, customTag, healthGained, targetAmount);
+						setAmountData(players, customTag, targetAmount, healthGained);
 					}
 				}
 			}
