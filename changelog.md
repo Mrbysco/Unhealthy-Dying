@@ -1,3 +1,4 @@
-* Fix config not loading properly on fabric
-* Fix `hearts set` command not working correctly
-* Add config option `healthLossChance` to set the chance of losing health when dying
+* Fix kill regeneration by fixing the swapped amount killed and health gained
+* Fix real player check (Fabric)
+* Fix wrong mixin (Fabric)
+* Fix some health change message issues
