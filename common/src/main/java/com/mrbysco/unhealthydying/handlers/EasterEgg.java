@@ -17,7 +17,7 @@ import java.util.List;
 public class EasterEgg {
 
 	public static void killedEntityEvent(LivingEntity livingEntity, DamageSource source) {
-		if (Services.PLATFORM.isRegenHealthEnabled()) {
+		if (Services.PLATFORM.isRegenHealthEnabled() && !livingEntity.level().isClientSide()) {
 			List<? extends String> targets = Services.PLATFORM.getRegenTargets();
 			if (!targets.isEmpty()) {
 				for (String target : targets) {
