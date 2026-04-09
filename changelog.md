@@ -1,2 +1,1 @@
-* Fix wrong mixin (Fabric)
-* Fix some health change message issues
+* Update to 26.1.2
