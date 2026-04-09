@@ -1,6 +1,7 @@
 package com.mrbysco.unhealthydying.handlers;
 
 import com.mrbysco.unhealthydying.Constants;
+import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.platform.Services;
 import com.mrbysco.unhealthydying.util.UnhealthyHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,8 +18,8 @@ import java.util.List;
 public class EasterEgg {
 
 	public static void killedEntityEvent(LivingEntity livingEntity, DamageSource source) {
-		if (Services.PLATFORM.isRegenHealthEnabled() && !livingEntity.level().isClientSide()) {
-			List<? extends String> targets = Services.PLATFORM.getRegenTargets();
+		if (UnhealthyConfig.SERVER.regenHealth.get() && !livingEntity.level().isClientSide()) {
+			List<? extends String> targets = UnhealthyConfig.SERVER.regenTargets.get();
 			if (!targets.isEmpty()) {
 				for (String target : targets) {
 					if (source.getEntity() instanceof Player player && Services.PLATFORM.isPlayer(player)) {
@@ -55,18 +56,18 @@ public class EasterEgg {
 
 	private static void processKill(Player player, String target, int healthGained, int targetAmount) {
 		float playerHealth = player.getMaxHealth();
-		float maxRegained = Services.PLATFORM.getMaxRegained();
+		float maxRegained = UnhealthyConfig.SERVER.maxRegained.get();
 
 		if (playerHealth < maxRegained) {
 			if (targetAmount == 1) {
-				switch (Services.PLATFORM.getHealthSetting()) {
+				switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 					case EVERYBODY -> UnhealthyHelper.setEveryonesHealth(player, healthGained);
 					case SCOREBOARD_TEAM -> UnhealthyHelper.setScoreboardHealth(player, healthGained);
 					default -> UnhealthyHelper.setHealth(player, healthGained);
 				}
 			} else {
 				String customTag = Constants.MOD_PREFIX + target + ":" + targetAmount;
-				switch (Services.PLATFORM.getHealthSetting()) {
+				switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 					case EVERYBODY -> setEveryonesKillCount(player, customTag, targetAmount, healthGained);
 					case SCOREBOARD_TEAM -> setScoreboardKillCount(player, customTag, targetAmount, healthGained);
 					default -> setAmountData(player, customTag, targetAmount, healthGained);

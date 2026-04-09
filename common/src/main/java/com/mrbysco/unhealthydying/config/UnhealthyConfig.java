@@ -1,8 +1,5 @@
 package com.mrbysco.unhealthydying.config;
 
-import com.mrbysco.unhealthydying.Constants;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
@@ -14,7 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.Arrays;
 import java.util.List;
 
-public class UnhealthyConfigNeoForge {
+public class UnhealthyConfig {
 	public static class Server {
 		public final DoubleValue healthLossChance;
 		public final IntValue minimumHealth;
@@ -91,15 +88,5 @@ public class UnhealthyConfigNeoForge {
 		final Pair<Server, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Server::new);
 		serverSpec = specPair.getRight();
 		SERVER = specPair.getLeft();
-	}
-
-	@SubscribeEvent
-	public static void onLoad(final ModConfigEvent.Loading configEvent) {
-		Constants.LOGGER.debug("Loaded Unhealthy Dying's config file {}", configEvent.getConfig().getFileName());
-	}
-
-	@SubscribeEvent
-	public static void onFileChange(final ModConfigEvent.Reloading configEvent) {
-		Constants.LOGGER.warn("Unhealthy Dying's config just got changed on the file system!");
 	}
 }

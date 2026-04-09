@@ -4,16 +4,17 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mrbysco.unhealthydying.Constants;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.SavedDataStorage;
 
 import java.util.UUID;
 
 public class ModifierWorldData extends SavedData {
-	private static final String DATA_NAME = Constants.MOD_ID + "_world_data";
+	private static final Identifier DATA_NAME = Constants.modLoc("modifier_data");
 	private static final String MODIFIER_TAG = "stored_modifiers";
 
 	public static final Codec<ModifierWorldData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
@@ -108,7 +109,7 @@ public class ModifierWorldData extends SavedData {
 		}
 		ServerLevel overworld = level.getServer().getLevel(Level.OVERWORLD);
 
-		DimensionDataStorage storage = overworld.getDataStorage();
+		SavedDataStorage storage = overworld.getDataStorage();
 		return storage.computeIfAbsent(type());
 	}
 }

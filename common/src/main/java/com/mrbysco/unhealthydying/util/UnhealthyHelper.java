@@ -1,6 +1,7 @@
 package com.mrbysco.unhealthydying.util;
 
 import com.mrbysco.unhealthydying.Constants;
+import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.data.ModifierWorldData;
 import com.mrbysco.unhealthydying.platform.Services;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -197,7 +198,7 @@ public class UnhealthyHelper {
 	public static void syncHealth(Player player) {
 		ModifierWorldData worldData = getSavedData(player);
 		if (worldData != null) {
-			switch (Services.PLATFORM.getHealthSetting()) {
+			switch (UnhealthyConfig.SERVER.healthSetting.get()) {
 				case EVERYBODY:
 					UnhealthyHelper.setEveryonesHealth(player, worldData.getEverybodyModifier(), false);
 					break;
@@ -226,11 +227,11 @@ public class UnhealthyHelper {
 			double health = attributeInstance.getValue();
 			double modifierRequired = healthWanted - health;
 
-			double maxRegained = Services.PLATFORM.getMaxRegained();
-			if (Services.PLATFORM.isRegenHealthEnabled() && healthWanted > maxRegained)
+			double maxRegained = UnhealthyConfig.SERVER.maxRegained.get();
+			if (UnhealthyConfig.SERVER.regenHealth.get() && healthWanted > maxRegained)
 				modifierRequired = health - maxRegained;
 
-			double minimumHealth = Services.PLATFORM.getMinimumHealth();
+			double minimumHealth = UnhealthyConfig.SERVER.minimumHealth.get();
 			if (healthWanted < minimumHealth)
 				modifierRequired = minimumHealth - health;
 
@@ -260,11 +261,11 @@ public class UnhealthyHelper {
 			double modifiedHealth = baseHealth + modifierValue;
 			double usedModifier = modifierValue;
 
-			double maxRegained = Services.PLATFORM.getMaxRegained();
-			if (Services.PLATFORM.isRegenHealthEnabled() && modifiedHealth > maxRegained)
+			double maxRegained = UnhealthyConfig.SERVER.maxRegained.get();
+			if (UnhealthyConfig.SERVER.regenHealth.get() && modifiedHealth > maxRegained)
 				usedModifier = modifiedHealth - maxRegained;
 
-			double minimumHealth = Services.PLATFORM.getMinimumHealth();
+			double minimumHealth = UnhealthyConfig.SERVER.minimumHealth.get();
 			if (modifiedHealth < minimumHealth)
 				usedModifier = minimumHealth - health;
 

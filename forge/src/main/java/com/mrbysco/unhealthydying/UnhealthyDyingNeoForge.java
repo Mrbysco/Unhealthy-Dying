@@ -1,7 +1,7 @@
 package com.mrbysco.unhealthydying;
 
 import com.mrbysco.unhealthydying.commands.UnhealthyCommands;
-import com.mrbysco.unhealthydying.config.UnhealthyConfigNeoForge;
+import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import com.mrbysco.unhealthydying.handlers.EasterEgg;
 import com.mrbysco.unhealthydying.handlers.HealthHandler;
 import net.minecraft.world.entity.player.Player;
@@ -21,8 +21,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 public class UnhealthyDyingNeoForge {
 
 	public UnhealthyDyingNeoForge(IEventBus eventBus, ModContainer container, Dist dist) {
-		container.registerConfig(ModConfig.Type.SERVER, UnhealthyConfigNeoForge.serverSpec);
-		eventBus.register(UnhealthyConfigNeoForge.class);
+		container.registerConfig(ModConfig.Type.SERVER, UnhealthyConfig.serverSpec);
 
 		NeoForge.EVENT_BUS.addListener(this::onLivingDeath);
 		NeoForge.EVENT_BUS.addListener(this::onPlayerLoggedIn);

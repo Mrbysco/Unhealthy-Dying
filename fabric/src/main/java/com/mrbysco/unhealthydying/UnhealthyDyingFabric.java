@@ -1,19 +1,16 @@
 package com.mrbysco.unhealthydying;
 
 import com.mrbysco.unhealthydying.commands.UnhealthyCommands;
-import com.mrbysco.unhealthydying.config.UnhealthyConfigFabric;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigHolder;
-import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
+import com.mrbysco.unhealthydying.config.UnhealthyConfig;
+import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.neoforged.fml.config.ModConfig;
 
 public class UnhealthyDyingFabric implements ModInitializer {
-	public static ConfigHolder<UnhealthyConfigFabric> config;
-
 	@Override
 	public void onInitialize() {
-		config = AutoConfig.register(UnhealthyConfigFabric.class, Toml4jConfigSerializer::new);
+		ConfigRegistry.INSTANCE.register(Constants.MOD_ID, ModConfig.Type.SERVER, UnhealthyConfig.serverSpec);
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> UnhealthyCommands.initializeCommands(dispatcher));
 	}

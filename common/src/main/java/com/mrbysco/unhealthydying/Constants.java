@@ -11,5 +11,9 @@ public class Constants {
 	public static final String MOD_NAME = "Unhealthy Dying";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
-	public static final Identifier HEALTH_MODIFIER_ID = Identifier.fromNamespaceAndPath(MOD_ID, "health_modifier");
+	public static final Identifier HEALTH_MODIFIER_ID = modLoc("health_modifier");
+
+	public static Identifier modLoc(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
+	}
 }

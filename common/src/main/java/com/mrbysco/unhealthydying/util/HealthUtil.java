@@ -1,6 +1,6 @@
 package com.mrbysco.unhealthydying.util;
 
-import com.mrbysco.unhealthydying.platform.Services;
+import com.mrbysco.unhealthydying.config.UnhealthyConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -15,12 +15,12 @@ public class HealthUtil {
 	 * @param gained    The amount of health gained
 	 */
 	public static void sendHealthMessage(Player player, int newHealth, int gained) {
-		if (gained > 0 && Services.PLATFORM.isRegenHealthMessageEnabled()) {
+		if (gained > 0 && UnhealthyConfig.SERVER.regenHealthMessage.get()) {
 			MutableComponent text = Component.translatable("unhealthydying:regennedHealth.message", newHealth).withStyle(ChatFormatting.DARK_GREEN);
-			player.displayClientMessage(text, true);
-		} else if (gained < 0 && Services.PLATFORM.isReducedHealthMessageEnabled()) {
+			player.sendOverlayMessage(text);
+		} else if (gained < 0 && UnhealthyConfig.SERVER.reducedHealthMessage.get()) {
 			MutableComponent text = Component.translatable("unhealthydying:reducedHealth.message", newHealth).withStyle(ChatFormatting.DARK_RED);
-			player.displayClientMessage(text, true);
+			player.sendOverlayMessage(text);
 		}
 	}
 }
